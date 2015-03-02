@@ -1,5 +1,5 @@
 Adapt <- function( g = net                  
-  ){
+){
   
   ######
   ## Useful variables
@@ -24,47 +24,47 @@ Adapt <- function( g = net
     # If the trader has neighbours
     
     if (length(neighbors(g,i)>=1)){
-    
-    # Determine richest neighbor
-    
-    richest <- neighbors(g,i)[V(g)$money[neighbors(g,i)] == max(V(g)$money[neighbors(g,i)])]
-    
-    ## If there is more than one richest neighbour (unlikely but you never know)
-    
-    if (length(richest)>1){
-      richest <- sample(richest,1)
       
-      # if the most successful neighbor does better than i
+      # Determine richest neighbor
       
-      if (V(g)$money[richest] > V(g)$money[i]) {
+      richest <- neighbors(g,i)[V(g)$money[neighbors(g,i)] == max(V(g)$money[neighbors(g,i)])]
+      
+      ## If there is more than one richest neighbour (unlikely but you never know)
+      
+      if (length(richest)>1){
+        richest <- sample(richest,1)
         
-        # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
+        # if the most successful neighbor does better than i
         
-        if (sample(1:100,1) >= V(g)$ideo[i]*100){
+        if (V(g)$money[richest] > V(g)$money[i]) {
           
-          V(g)$approx[i] <- V(g)$approx[richest]
+          # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
+          
+          if (sample(1:100,1) >= V(g)$ideo[i]*100){
+            
+            V(g)$approx[i] <- V(g)$approx[richest]
+          }
         }
       }
-    }
-    
-    ## If there is only one richest neighbour 
-    
-    if (length(richest)==1){
       
-      # if the most successful neighbor does better than i
+      ## If there is only one richest neighbour 
       
-      if (V(g)$money[richest] > V(g)$money[i]) {
+      if (length(richest)==1){
         
-        # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
+        # if the most successful neighbor does better than i
         
-        if (sample(1:100,1) >= V(g)$ideo[i]*100){
+        if (V(g)$money[richest] > V(g)$money[i]) {
           
-          V(g)$approx[i] <- V(g)$approx[richest]
+          # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
+          
+          if (sample(1:100,1) >= V(g)$ideo[i]*100){
+            
+            V(g)$approx[i] <- V(g)$approx[richest]
+          }
         }
-      }
-    }   
+      }   
     }
   }
   
-  return(g)
+  g
 }

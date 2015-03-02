@@ -1,10 +1,9 @@
- 
-Behav <- function (
-                    g     = net,
-                    data  = D
-                  )
-{
 
+Behav <- function (
+  g     = net,
+  data  = D
+)
+{
   # NOTE : In the preliminary model, there are only ZI agents, so that everyone
   # decides of buy and sell orders according to the same procedure.
   
@@ -23,10 +22,10 @@ Behav <- function (
   ### Determine bounds for securities
   ######
   
-  min.trad <- 1.0001 * min(D[,"T"])  # every temperature below 1.1 * min.temp gets  
-                                # included in a single security
-  max.trad <- 0.9999 * max(D[,"T"])  # every temperature above 0.9 * max.temp gets  
-                                # included in a single security
+  min.trad <- 1.0001 * min(D[,"temp"])  # every temperature below 1.1 * min.temp gets  
+  # included in a single security
+  max.trad <- 0.9999 * max(D[,"temp"])  # every temperature above 0.9 * max.temp gets  
+  # included in a single security
   
   #########
   ### Evaluate reservation price for securities as a function of approximate model
@@ -89,8 +88,8 @@ Behav <- function (
   V(g)$buy.price <- pmin(
     reserv[cbind(V(g)$buy.which,V(g)$approx)]*(rep(1,n.traders) + V(g)$risk.tak),
     V(g)$money)
-    
-
+  
+  
   #######
   ## Traders pick a security they have positive amount of at random to place sell offer 
   #######
@@ -104,17 +103,17 @@ Behav <- function (
   # see below
   
   
-for (i in 1:n.traders)
-{ 
-  if (length(secu.mat[i,][secu.mat[i,] >= 1]) ==1) { 
-    # if the traders own a positive amount of a single security
- sell[i] <- which(secu.mat[i,] >= 1) 
-}
-  if (length(secu.mat[i,][secu.mat[i,] >= 1]) >1) { 
-    # if the traders own a positive amount of some security
-    sell[i] <- sample(which(secu.mat[i,] >= 1),1) 
+  for (i in 1:n.traders)
+  { 
+    if (length(secu.mat[i,][secu.mat[i,] >= 1]) ==1) { 
+      # if the traders own a positive amount of a single security
+      sell[i] <- which(secu.mat[i,] >= 1) 
+    }
+    if (length(secu.mat[i,][secu.mat[i,] >= 1]) >1) { 
+      # if the traders own a positive amount of some security
+      sell[i] <- sample(which(secu.mat[i,] >= 1),1) 
+    }
   }
-}
   
   V(g)$sell.which <- sell
   
@@ -124,6 +123,6 @@ for (i in 1:n.traders)
   
   V(g)$sell.price <- reserv[cbind(V(g)$sell.which,V(g)$approx)]*(rep(1,n.traders) - V(g)$risk.tak)
   
-return(g)
-
+  g
+  
 }

@@ -89,7 +89,7 @@ D <- generate_data(h = (net$burn.in + (net$horizon * net$n.seq )))
 
 # Visualize network (optional)
 
-if (visu == 1){
+if (visu){
   net <- Colored(net)
   plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
 }
