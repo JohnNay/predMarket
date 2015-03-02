@@ -1,7 +1,17 @@
-GenerateData <- function (
-                          h = 200  # time horizon at which securities are realized
-  ){
-  
+generate_data <- function (
+  h = 200  # time horizon at which securities are realized
+  ### Parameters for construction of other time series 
+  #NOTE : these are from Sumner and Jackson' calibration, but make no sense
+  # without real time series
+  lambda = 0.9845
+  beta = 0.00017
+  omega = 0.36
+  theta = 0.0286
+  rho = 0.0125
+  kappa = 0.993
+  gamma = 0.15
+  delta = 2
+){
   ##########
   ### Fundamental explanatory variables (arbitrary at this point)
   ##########
@@ -18,22 +28,6 @@ GenerateData <- function (
   #GDP
   
   GDP <- (1.003)^(1:h) + diffinv(rnorm(h-1))/15
-  
-  ###########
-  ### Parameters for construction of other time series 
-  ###########
-  
-  #NOTE : these are from Sumner and Jackson' calibration, but make no sense
-         # without real time series
-  
-  lambda <- 0.9845
-  beta <- 0.00017
-  omega <- 0.36
-  theta <- 0.0286
-  rho <- 0.0125
-  kappa <- 0.993
-  gamma <- 0.15
-  delta <- 2
   
   ###########
   ###  Constructed explanatory varialbes
@@ -113,5 +107,5 @@ GenerateData <- function (
   
   D <- data.frame(T,T.lag,GHG,GHG.lag,G,G.lag, P, GDP, X)
   
-  return(D)
+  D
 }
