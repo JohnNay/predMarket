@@ -1,15 +1,15 @@
 generate_data <- function (
-  h = 200  # time horizon at which securities are realized
+  h = 200,  # time horizon at which securities are realized
   ### Parameters for construction of other time series 
   #NOTE : these are from Sumner and Jackson' calibration, but make no sense
   # without real time series
-  lambda = 0.9845
-  beta = 0.00017
-  omega = 0.36
-  theta = 0.0286
-  rho = 0.0125
-  kappa = 0.993
-  gamma = 0.15
+  lambda = 0.9845,
+  beta = 0.00017,
+  omega = 0.36,
+  theta = 0.0286,
+  rho = 0.0125,
+  kappa = 0.993,
+  gamma = 0.15,
   delta = 2
 ){
   ##########
@@ -62,10 +62,10 @@ generate_data <- function (
   # NOTE : T[t] will be constructed recursively, so we must choose an arbitrary 
   # initial value. Here it will be 1.
   
-  T <- 1:h
+  temp <- 1:h
   
   for (t in 2:h){
-    T[t] <- lambda*T[t-1] + beta*GHG[t] - rho*G[t] 
+    temp[t] <- lambda*temp[t-1] + beta*GHG[t] - rho*G[t] 
   }
   
   #######
@@ -92,20 +92,20 @@ generate_data <- function (
   
   ### Construct LAGGED temperatures
   
-  # NOTE : T[t] will be constructed recursively, so we must choose an arbitrary 
+  # NOtempE : temp[t] will be constructed recursively, so we must choose an arbitrary 
   # initial value. Here it will be 1.
   
-  T.lag <- 1:h
-  T.lag[1] <- NA
+  temp.lag <- 1:h
+  temp.lag[1] <- NA
   
   for (t in 2:h){
-    T.lag[t] <- T[t-1]
+    temp.lag[t] <- temp[t-1]
   }
   
   
   # Generate data frame
   
-  D <- data.frame(T,T.lag,GHG,GHG.lag,G,G.lag, P, GDP, X)
+  D <- data.frame(temp,temp.lag,GHG,GHG.lag,G,G.lag, P, GDP, X)
   
   D
 }
