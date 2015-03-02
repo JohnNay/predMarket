@@ -1,5 +1,3 @@
-setwd("Functions")
-
 ####
 ## Options
 ####
