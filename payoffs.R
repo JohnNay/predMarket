@@ -1,7 +1,6 @@
 Payoffs <- function ( g     = net,
                       data  = D
 ){
-  # package requirement
   require(igraph)
   
   ######

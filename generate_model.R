@@ -48,20 +48,18 @@ generate_model <- function (
   #####
   ## Create links in the network according to homophily in terms of approximate model
   #####
-  
-  net <- ShapeNet (g = net,
-                   seg = seg,
-                   n.edg = n.edg)
+  net <- ShapeNet(g = net,
+                  seg = seg,
+                  n.edg = n.edg)
   
   #####
   ## Set additional models parameter
   #####
-  
-  net <- SetAddParam (   g = net,
-                         burn.in = burn.in,
-                         horizon = horizon,
-                         n.seq   = n.seq,
-                         market.struct = market.struct) 
+  net <- SetAddParam(   g = net,
+                        burn.in = burn.in,
+                        horizon = horizon,
+                        n.seq   = n.seq,
+                        market.struct = market.struct) 
   
   net
 }
