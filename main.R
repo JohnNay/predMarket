@@ -9,7 +9,7 @@ source("interact.R")
 source("payoffs.R")
 source("adapt.R")
 
-main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet  = 4, ideo = 0.1) {
+main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet  = 4, outcome = "price") {
   library(igraph)
   if (visu){
     source("colored.R")
@@ -156,6 +156,9 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
       plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     }
   }
+  
+  # TODO:
+  # need to compute some set of outcome measures here, like prices of a particular indices
+  # and then return one index, the one that matches the arg of main() called "outcome" 
+  # outcome
 }
-
-main()
