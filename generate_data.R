@@ -92,7 +92,7 @@ generate_data <- function (
   
   ### Construct LAGGED temperatures
   
-  # NOtempE : temp[t] will be constructed recursively, so we must choose an arbitrary 
+  # NOTE : temp[t] will be constructed recursively, so we must choose an arbitrary 
   # initial value. Here it will be 1.
   
   temp.lag <- 1:h

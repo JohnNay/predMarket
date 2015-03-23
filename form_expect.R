@@ -7,7 +7,7 @@ FormExpect <- function(
   
   # In the preliminary model, agents simply calibrate their approximate model via pooled-OLS
   
-  # NOtempE : In the preliminary model the data matrix takes the form D <- rbind(temp,GHG,G, P, GDP, X)
+  # NOTE : In the preliminary model the data matrix takes the form D <- rbind(temp,GHG,G, P, GDP, X)
   
 {
   
