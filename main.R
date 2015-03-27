@@ -8,8 +8,10 @@ source("behav.R")
 source("interact.R")
 source("payoffs.R")
 source("adapt.R")
+source("mixing_matrix.R")
+source("assortativity_coefficient.R")
 
-main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet  = 4, outcome = "price") {
+main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet  = 4, outcome = "segreg") {
   library(igraph)
   if (visu){
     source("colored.R")
@@ -45,7 +47,7 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
     # all past trading sequences and periods)
     
     ### Timing parameters:
-    # Number of burnin periods for initial calibration
+    # Number of burning periods for initial calibration
     burn.in    = 10,
     # Number of trading sequences
     n.seq       = 20,
@@ -161,4 +163,22 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
   # need to compute some set of outcome measures here, like prices of a particular indices
   # and then return one index, the one that matches the arg of main() called "outcome" 
   # outcome
+  
+  if (outcome == "segreg"){
+    
+  # calculate the mixing matrix
+    m <- mixmat(net,'approx')
+  
+  # now calculate the assortativity coefficient
+    ac.final <- assortcoeff(m)
+  
+  # report difference in assotativity with respect to initial network. 
+        # less assortative network are "better", so ac.final<net$ac.init is "good"
+        # and the more positive the reported difference, the more powerful the market
+        # is at breaking assortativity
+    net$ac.init - ac.final  
+  
+  #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
 }
+
+
