@@ -33,6 +33,8 @@ generate_model <- function (
   source("populate_net.R")
   source("shape_net.R")
   source("set_add_param.R")
+  source("mixing_matrix.R")
+  source("assortativity_coefficient.R")
   
   #####
   ## Set model's parameters and create corresponding network
@@ -51,6 +53,17 @@ generate_model <- function (
   net <- ShapeNet(g = net,
                   seg = seg,
                   n.edg = n.edg)
+  #####
+  ## Measure and record initial assorativity
+  #####
+  
+  # calculate the mixing matrix
+  m <- mixmat(net,'approx')
+  
+  # now calculate the assortativity coefficient
+  ac <- assortcoeff(m)
+  
+  net <- set.graph.attribute(net,"ac.init",ac)
   
   #####
   ## Set additional models parameter
