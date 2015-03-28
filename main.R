@@ -95,7 +95,7 @@ main <- function(visu = TRUE, seg = 0.95,
     #####
     ## Traders form their buy and sell orders
     #####
-    net <- Behav( g = net, data = D)
+    net <- Behav( net, D)
     #####
     ## Traders exchange on the market
     #####
@@ -136,12 +136,12 @@ main <- function(visu = TRUE, seg = 0.95,
         ## Traders calibrate their approximate model and determine their 
         ## expected distribution for the future outcome
         #####
-        net <- FormExpect(g = net, ct = t, data = D) 
+        net <- FormExpect( net, t, D) 
         
         #####
         ## Traders form their buy and sell orders
         #####
-        net <- Behav( g = net, data = D)
+        net <- Behav(net, data)
         
         #####
         ## Traders exchange on the market

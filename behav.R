@@ -1,7 +1,7 @@
 
 Behav <- function (
-  g     = net,
-  data  = D
+  g ,
+  D
 )
 {
   # NOTE : In the preliminary model, there are only ZI agents, so that everyone
