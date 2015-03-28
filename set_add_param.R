@@ -1,4 +1,4 @@
-SetAddParam <- function ( g = net,
+SetAddParam <- function ( g,
                           burn.in = 100,
                           horizon = 50,
                           n.seq    = 1,

@@ -1,8 +1,8 @@
 
 FormExpect <- function(
-                        g = net,
-                        ct = t,  # the current time period
-                        data = D
+                        g,
+                        ct,  # the current time period
+                         D
                       )
   
   # In the preliminary model, agents simply calibrate their approximate model via pooled-OLS
@@ -30,7 +30,7 @@ FormExpect <- function(
    # easily explained in Model 2 because it is simpler
   
   
-  fit <- lm (temp ~ 0 + temp.lag + GHG.lag + P + GDP + G.lag + X, data = D[1:ct-1,])
+  fit <- lm (temp ~ 0 + temp.lag + GHG.lag + P + GDP + G.lag + X, data = D[1:(ct-1), ])
   
   # WARNING : signs of the coefficients are different than in Sumner and Jackson 
   # to accomodate the lm function
@@ -63,7 +63,7 @@ FormExpect <- function(
   # NOTE : at time (ct), one only knows past temperatures up to (ct-1), so calibration
   # can only use data up to ct-1, although explanatory variables at ct are known
   
-  fit <- lm (temp ~ 0 + temp.lag, data = D[1:ct-1,])
+  fit <- lm (temp ~ 0 + temp.lag, data = D[1:(ct-1), ])
   
   # Based on 
       # knowledge of T up to ct,

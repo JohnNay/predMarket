@@ -6,7 +6,7 @@ generate_model <- function (
   # network. The higher seg, the higher the initial segregation
   
   # Market structure parameters
-  market.struct   = "CDA", # chose between CDA and LMSR
+  market.struct   = c("CDA", "LMSR"), # chose between CDA and LMSR
   market.complet  = 10,   # number of securities which
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
@@ -26,10 +26,10 @@ generate_model <- function (
   horizon    = 50,
   n.seq      = 1
 ){
+  market.struct <- match.arg(market.struct)
   ####
   ## Sub functions
   ####
-  
   source("populate_net.R")
   source("shape_net.R")
   source("set_add_param.R")

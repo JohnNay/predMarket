@@ -11,7 +11,19 @@ source("adapt.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
-main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet  = 4, outcome = "segreg") {
+main <- function(visu = TRUE, seg = 0.95, 
+                 market.struct = c("CDA", "LMSR"), 
+                 market.complet  = 4, outcome = "segreg", 
+                 n.traders = 100, n.edg = 150,
+                 risk.tak = 0.0001, ideo = 10) {
+  ### Market structure parameters:
+  # market.struct, choses between CDA and LMSR
+  # market.complet is number of securities which
+  # are traded. With higher securities, traders can trade on
+  # more precise temperature intervals
+  
+  market.struct <- match.arg(market.struct)
+  
   library(igraph)
   if (visu){
     source("colored.R")
@@ -20,19 +32,13 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
   ## Set model's parameters and create corresponding network
   #####
   net <- generate_model( ### Network parameters
-    n.traders  = 100,
-    n.edg      = 150,
+    n.traders  = n.traders,
+    n.edg      = n.edg,
     seg        = seg, # determine initial segregation of the 
     # network. The higher seg, the higher the initial segregation
     
-    ### Market structure parameters:
-    market.struct   = market.struct, # chose between CDA and LMSR
-    market.complet  = market.complet,   # number of securities which
-    # are traded. With higher securities, traders can trade on
-    # more precise temperature intervals
-    
     ### Behavior parameters:
-    risk.tak = 0.0001, # IN PER/10000 Determine the distribution of risk
+    risk.tak = risk.tak, # IN PER/10000 Determine the distribution of risk
     # taking behavior. The higher risk.taking, the more agent
     # will try to buy (resp. sell) lower (resp. higher) than
     # their reservation price.
@@ -85,7 +91,7 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
     ## Traders calibrate their approximate model and determine their 
     ## expected distribution for the future outcome
     #####
-    net <- FormExpect(g = net, ct = t, data = D) 
+    net <- FormExpect(net, t, D) 
     #####
     ## Traders form their buy and sell orders
     #####
@@ -100,7 +106,7 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
   ## Pay the winning securities
   #####
   
-  net <- Payoffs(g=net, data = D)
+  net <- Payoffs(g=net, D)
   
   #####
   ## Adapt approximate model
@@ -166,19 +172,21 @@ main <- function(visu = TRUE, seg = 0.95, market.struct = "CDA", market.complet 
   
   if (outcome == "segreg"){
     
-  # calculate the mixing matrix
+    # calculate the mixing matrix
     m <- mixmat(net,'approx')
-  
-  # now calculate the assortativity coefficient
+    
+    # now calculate the assortativity coefficient
     ac.final <- assortcoeff(m)
-  
-  # report difference in assotativity with respect to initial network. 
-        # less assortative network are "better", so ac.final<net$ac.init is "good"
-        # and the more positive the reported difference, the more powerful the market
-        # is at breaking assortativity
+    
+    # report difference in assotativity with respect to initial network. 
+    # less assortative network are "better", so ac.final<net$ac.init is "good"
+    # and the more positive the reported difference, the more powerful the market
+    # is at breaking assortativity
     net$ac.init - ac.final  
+    
+    #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
+  }
   
-  #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
 }
 
 

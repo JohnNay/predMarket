@@ -1,5 +1,5 @@
-Payoffs <- function ( g     = net,
-                      data  = D
+Payoffs <- function ( g,
+                      D
 ){
   require(igraph)
   

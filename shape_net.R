@@ -1,5 +1,5 @@
 ShapeNet <- function(
-                      g = net,
+                      g,
                       n.edg = vcount(net)*2,
                       seg  = 0.5
                     )
