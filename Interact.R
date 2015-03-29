@@ -1,6 +1,6 @@
 
 Interact <- function (
-  g     = net
+  g   
 ){
   
   ######

@@ -141,7 +141,7 @@ main <- function(visu = TRUE, seg = 0.95,
         #####
         ## Traders form their buy and sell orders
         #####
-        net <- Behav(net, data)
+        net <- Behav(net, D)
         
         #####
         ## Traders exchange on the market
@@ -153,7 +153,7 @@ main <- function(visu = TRUE, seg = 0.95,
       ## Pay the winning securities
       #####
       
-      net <- Payoffs(g=net, data = D)
+      net <- Payoffs(g=net, D)
       
       #####
       ## Adapt approximate model

@@ -1,4 +1,4 @@
-Adapt <- function( g = net                  
+Adapt <- function( g                  
 ){
   
   ######
