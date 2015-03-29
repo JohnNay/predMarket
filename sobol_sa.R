@@ -36,15 +36,14 @@ create_set <- function(input_values, input_names, sample_count){
 }
 
 sobol_sa <- function(abm, input_values,
-                     out = c("avg", "firstlast"), 
+                     out = c("segreg"), 
                      sample_count = 4000, 
                      sobol_nboot = 1000, 
                      iterations = NULL,
                      parallel = TRUE){
   out <- match.arg(out)
   
-  if(out == "firstlast") output_names <- "Dynamics"
-  if(out == "avg") output_names <- "Average"
+  if(out == "segreg") output_names <- "Segregation"
   
   # Get names of input factors:
   input_names <- names(input_values)
