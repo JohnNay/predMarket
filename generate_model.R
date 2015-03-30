@@ -1,9 +1,4 @@
 generate_model <- function ( 
-  
-  # Choose true model
-  
-  t.model = 1, # by default, the true model is the full model
-  
   # Network parameters
   n.traders  = 100,
   n.edg      = 100,
@@ -33,13 +28,14 @@ generate_model <- function (
 ){
   market.struct <- match.arg(market.struct)
   ####
-  ## Sub functions
+  ## Sub functions, 
+  # these are sourced()/created in main.R, we dont need to recreate these functions everytime that generate_model() is called
   ####
-  source("populate_net.R")
-  source("shape_net.R")
-  source("set_add_param.R")
-  source("mixing_matrix.R")
-  source("assortativity_coefficient.R")
+    source("populate_net.R")
+    source("shape_net.R")
+    source("set_add_param.R")
+    source("mixing_matrix.R")
+    source("assortativity_coefficient.R")
   
   #####
   ## Set model's parameters and create corresponding network
@@ -51,11 +47,6 @@ generate_model <- function (
                       ideo = ideo
   )
   
-  ####
-  ## Set true model of the climate
-  ####
-  
-  V(net)$t.model <- t.model
   
   #####
   ## Create links in the network according to homophily in terms of approximate model

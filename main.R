@@ -1,6 +1,13 @@
 
 # Construct model
 source("generate_model.R")
+# Sub functions needed inside of generate_model():
+source("populate_net.R")
+source("shape_net.R")
+source("set_add_param.R")
+source("mixing_matrix.R")
+source("assortativity_coefficient.R")
+# Construct data for model
 source("generate_data.R")
 # Operate on model
 source("form_expect.R")
@@ -13,8 +20,7 @@ source("assortativity_coefficient.R")
 
 main <- function(visu = TRUE, seg = 0.95, 
                  market.struct = c("CDA", "LMSR"), 
-                 outcome = c("segreg","converg"),
-                 market.complet  = 4,  
+                 market.complet  = 4, outcome = "segreg", 
                  n.traders = 100, n.edg = 150,
                  risk.tak = 0.0001, ideo = 10) {
   ### Market structure parameters:
@@ -24,7 +30,6 @@ main <- function(visu = TRUE, seg = 0.95,
   # more precise temperature intervals
   
   market.struct <- match.arg(market.struct)
-  outcome <- match.arg(outcome)
   
   library(igraph)
   if (visu){
@@ -33,10 +38,7 @@ main <- function(visu = TRUE, seg = 0.95,
   #####
   ## Set model's parameters and create corresponding network
   #####
-  net <- generate_model( # True model of the climate
-    t.model = 1,
-    
-    ### Network parameters
+  net <- generate_model( ### Network parameters
     n.traders  = n.traders,
     n.edg      = n.edg,
     seg        = seg, # determine initial segregation of the 
@@ -190,14 +192,6 @@ main <- function(visu = TRUE, seg = 0.95,
     net$ac.init - ac.final  
     
     #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
-  }
-  
-  if (outcome == "converg"){
-    
-    # return difference in utility of network convergence
-    
-    converg.util(net) - net$init.converg.util
-   
   }
   
 }
