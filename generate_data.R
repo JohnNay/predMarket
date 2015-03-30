@@ -12,6 +12,12 @@ generate_data <- function (
   gamma = 0.15,
   delta = 2
 ){
+  
+  # TODO (in the long run) : Gather real date and allow the true model to vary
+  #(we also want to know what would happen if the true model was ACC is a myth).
+  # For each model, do some calibration of the parameters to get best match
+  # with real data
+  
   ##########
   ### Fundamental explanatory variables (arbitrary at this point)
   ##########
