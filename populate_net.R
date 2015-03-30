@@ -15,10 +15,10 @@ PopulateNet <- function(
   # package requirement
   require(igraph)
   
-  # construct empty graph
+  ## construct empty graph
   g <- graph.empty(n=n.traders, directed = FALSE)
   
-  # Assign attributes to agents in graph
+  ## Assign attributes to agents in graph
 
   V(g)$money  <- mon.dis
   V(g)$approx <- approx.dis 
@@ -29,22 +29,27 @@ PopulateNet <- function(
             # approx = 4  ->  ACC is true and policy are effective, but not geoingeneering (aka policy)
             # approx = 5  ->  ACC is true, geoingeneering is effective, but policy is not (aka engineer)
   
-  # Assign values for the distance between approximate models. 
+  ## Assign values for the distance between approximate models. 
   
-  V(g)$dist <- matrix(
-                c (0,3,2,1,1,
+  g <- set.graph.attribute(g,"burn.in",burn.in)
+  
+  g$dist <- matrix (c (0,3,2,1,1,
                    3,0,1,1,2,
                    2,3,0,1,1,
                    1,2,3,0,0,
                    1,2,3,0,0),
                 nrow=5,
                 ncol=5)
+
   
   # Will be used for
   # convergence analysis in order to compute some social utility associated
   # with a distribution of distances to the true model emerging from the 
   # distribution of approximate models.
   
+  ## Record convergence utility of the initial network
+  
+  g$init.converg.util <- converg.util(g)
   
   V(g)$behav  <- behav.dis  # Market behavior of the traders, only ZI in preliminary model
   
