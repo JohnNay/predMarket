@@ -13,7 +13,8 @@ source("assortativity_coefficient.R")
 
 main <- function(visu = TRUE, seg = 0.95, 
                  market.struct = c("CDA", "LMSR"), 
-                 market.complet  = 4, outcome = "segreg", 
+                 outcome = c("segreg","converg"),
+                 market.complet  = 4,  
                  n.traders = 100, n.edg = 150,
                  risk.tak = 0.0001, ideo = 10) {
   ### Market structure parameters:
@@ -23,6 +24,7 @@ main <- function(visu = TRUE, seg = 0.95,
   # more precise temperature intervals
   
   market.struct <- match.arg(market.struct)
+  outcome <- match.arg(outcome)
   
   library(igraph)
   if (visu){
@@ -31,7 +33,10 @@ main <- function(visu = TRUE, seg = 0.95,
   #####
   ## Set model's parameters and create corresponding network
   #####
-  net <- generate_model( ### Network parameters
+  net <- generate_model( # True model of the climate
+    t.model = 1,
+    
+    ### Network parameters
     n.traders  = n.traders,
     n.edg      = n.edg,
     seg        = seg, # determine initial segregation of the 
