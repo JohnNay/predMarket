@@ -3,6 +3,8 @@
 source("generate_model.R")
 # Sub functions needed inside of generate_model():
 source("populate_net.R")
+# converge.util.R wasnt sourced before, but its needed in populatenet
+source("converg_util.R")
 source("shape_net.R")
 source("set_add_param.R")
 source("mixing_matrix.R")

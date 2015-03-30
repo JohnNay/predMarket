@@ -44,7 +44,8 @@ generate_model <- function (
   net <- PopulateNet( n.traders = n.traders,
                       risk.tak = risk.tak,
                       market.complet  = market.complet,
-                      ideo = ideo
+                      ideo = ideo, 
+                      burn.in = burn.in
   )
   
   

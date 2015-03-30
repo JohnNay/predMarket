@@ -6,14 +6,15 @@ PopulateNet <- function(
                         behav.dis    = sample(1:1, n.traders, replace = TRUE),
                         risk.tak     = 1/2,
                         ideo         = 0.5,
-                        market.complet = 10              
+                        market.complet = 10,
+                        burn.in
                       ) 
   {  
 
   # Input consistency checks (to be added)
   
   # package requirement
-  require(igraph)
+  library(igraph)
   
   ## construct empty graph
   g <- graph.empty(n=n.traders, directed = FALSE)
@@ -31,7 +32,7 @@ PopulateNet <- function(
   
   ## Assign values for the distance between approximate models. 
   
-  g <- set.graph.attribute(g,"burn.in",burn.in)
+  g <- set.graph.attribute(g, "burn.in", burn.in)
   
   g$dist <- matrix (c (0,3,2,1,1,
                    3,0,1,1,2,
