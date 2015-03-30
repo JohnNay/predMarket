@@ -13,6 +13,6 @@ SetAddParam <- function ( g,
   
   g <- set.graph.attribute(g,"n.seq",n.seq)
   
-  return(g)
+  g
   
 }
