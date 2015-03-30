@@ -1,4 +1,9 @@
 generate_model <- function ( 
+  
+  # Choose true model
+  
+  t.model = 1, # by default, the true model is the full model
+  
   # Network parameters
   n.traders  = 100,
   n.edg      = 100,
@@ -46,6 +51,11 @@ generate_model <- function (
                       ideo = ideo
   )
   
+  ####
+  ## Set true model of the climate
+  ####
+  
+  V(net)$t.model <- t.model
   
   #####
   ## Create links in the network according to homophily in terms of approximate model
