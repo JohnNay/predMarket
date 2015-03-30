@@ -23,7 +23,7 @@ FormExpect <- function(
   #######
   
   
-    ### Model 1 : true model ###
+    ### Model 1 : full model ###
   
    # SEE MODEL 2 BELOW FOR A DETAILED EXPLANATION OF THE MODEL ESTIMATION AND THE 
    # PREDICTION PROCEDURE. The procedure will be the same here, but it is more
