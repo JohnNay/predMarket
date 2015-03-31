@@ -198,6 +198,16 @@ main <- function(visu = TRUE, seg = 0.95,
     #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
   }
   
+   if (outcome == "converg"){
+    
+       # return difference in utility of network convergence
+      
+       converg.util(net) - net$init.converg.util
+    
+       }
+  
+}
+  
 }
 
 
