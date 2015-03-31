@@ -12,3 +12,5 @@ source("master.R")
 Here is a snapshot of the model's network of agents at an intialization:
 
 ![alt text](figures/network.png)
+
+The colors of the node correspond to different beliefs about the climate
