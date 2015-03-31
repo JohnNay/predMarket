@@ -100,15 +100,19 @@ correct_bias <- function(x) {
 
 plot_sobol_fo <- function(x, outcome_var = "Outcome"){
   ss <- correct_bias(x$S)
-  ggplot(ss, aes(x = var, y = x_corr)) + geom_point() + xlab("Variable") + ylab("") +
+  ggplot(ss, aes(x = var, y = x_corr)) + geom_point() +
+    xlab("Variable") + ylab("Estimated Effect") +
     ggtitle(paste("First Order Effects of Variables on", outcome_var)) +
-    geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25)
+    geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25) +
+    ylim(c(0,1))
 }
 
 plot_sobol_total <- function(x, outcome_var = "Outcome"){
   tt <- correct_bias(x$T)
-  ggplot(tt, aes(x = var, y = x_corr)) + geom_point() + xlab("Variable") + ylab("") +
+  ggplot(tt, aes(x = var, y = x_corr)) + geom_point() + 
+    xlab("Variable") + ylab("Estimated Effect") +
     ggtitle(paste("Total Sensitivity Effects of Variables on", outcome_var)) +
-    geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25)
+    geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25) + 
+    ylim(c(0,1))
 }
 
