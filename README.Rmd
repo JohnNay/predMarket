@@ -24,7 +24,8 @@ assess whether such convergence is impacted by factors such
 as the initial belief-homophily in the social network or the
 time horizon at which climate securities are realized.
 
-[Martin Van der Linden](https://martinvdlinden.wordpress.com/) (Dept. of Economics, Vanderbilt University) and [John J. Nay](https://johnnay.github.io) (School of Engineering, Vanderbilt University).
+[John J. Nay](https://johnnay.github.io) (School of Engineering, Vanderbilt University)
+ and [Martin Van der Linden](https://martinvdlinden.wordpress.com/) (Dept. of Economics, Vanderbilt University).
 
 
 Master is the main script that sources everything else.
