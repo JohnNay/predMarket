@@ -20,12 +20,15 @@ source("adapt.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
-main <- function(visu = TRUE, seg = 0.95, 
-                 market.struct = c("CDA", "LMSR"), 
-                 outcome = c("segreg","converg"),
+main <- function(seg = 0.95, 
+                 risk.tak = 0.0001,
                  market.complet  = 4,
                  n.traders = 100, n.edg = 150,
-                 risk.tak = 0.0001, ideo = 10) {
+                ideo = 10,
+                 
+                 market.struct = c("CDA", "LMSR"), 
+                 out = c("segreg","converg"),
+                 visu = TRUE) {
   ### Market structure parameters:
   # market.struct, choses between CDA and LMSR
   # market.complet is number of securities which
@@ -33,7 +36,7 @@ main <- function(visu = TRUE, seg = 0.95,
   # more precise temperature intervals
   
   market.struct <- match.arg(market.struct)
-  outcome <- match.arg(outcome)
+  out <- match.arg(out)
   
   library(igraph)
   if (visu){
@@ -100,7 +103,7 @@ main <- function(visu = TRUE, seg = 0.95,
   for (t in from:to){
     #####
     ## Traders calibrate their approximate model and determine their 
-    ## expected distribution for the future outcome
+    ## expected distribution for the future out
     #####
     net <- FormExpect(net, t, D) 
     #####
@@ -181,7 +184,7 @@ main <- function(visu = TRUE, seg = 0.95,
   # and then return one index, the one that matches the arg of main() called "outcome" 
   # outcome
   
-  if (outcome == "segreg"){
+  if (out == "segreg"){
     
     # calculate the mixing matrix
     m <- mixmat(net,'approx')
@@ -193,20 +196,20 @@ main <- function(visu = TRUE, seg = 0.95,
     # less assortative network are "better", so ac.final<net$ac.init is "good"
     # and the more positive the reported difference, the more powerful the market
     # is at breaking assortativity
-    net$ac.init - ac.final  
+    result <- net$ac.init - ac.final  
     
     #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
   }
   
-   if (outcome == "converg"){
+  if (out == "converg"){
     
-       # return difference in utility of network convergence
-      
-       converg.util(net) - net$init.converg.util
+    # return difference in utility of network convergence
     
-       }
+    result <- converg.util(net) - net$init.converg.util
+    
+  }
   
-}
+  result
   
 }
 
