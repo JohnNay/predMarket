@@ -20,11 +20,7 @@ source("adapt.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
-main <- function(seg = 0.95, 
-                 risk.tak = 0.0001,
-                 market.complet  = 4,
-                 n.traders = 100, n.edg = 150,
-                ideo = 10,
+main <- function(parameters,
                  
                  market.struct = c("CDA", "LMSR"), 
                  out = c("segreg","converg"),
@@ -34,6 +30,14 @@ main <- function(seg = 0.95,
   # market.complet is number of securities which
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
+  
+  seg <- parameters[1] # = 0.95, 
+  risk.tak <- parameters[2]*0.0001 # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
+  
+  market.complet  = 4
+  n.traders = 100 
+  n.edg = 150
+  ideo = 10
   
   market.struct <- match.arg(market.struct)
   out <- match.arg(out)
