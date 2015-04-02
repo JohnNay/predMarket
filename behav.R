@@ -22,9 +22,9 @@ Behav <- function (
   ### Determine bounds for securities
   ######
   
-  min.trad <- 1.0001 * min(D[,"temp"])  # every temperature below 1.1 * min.temp gets  
+  min.trad <- 1.0001 * min(D[,"temp"])  # every temperature below 1.0001 * min.temp gets  
   # included in a single security
-  max.trad <- 0.9999 * max(D[,"temp"])  # every temperature above 0.9 * max.temp gets  
+  max.trad <- 0.9999 * max(D[,"temp"])  # every temperature above 0.9999 * max.temp gets  
   # included in a single security
   
   #########
