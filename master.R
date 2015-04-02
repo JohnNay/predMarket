@@ -4,7 +4,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
 source("main.R")
-main(parameters = c(0.5, 0.5), market.struct = "CDA")
+main(parameters = c(0.01, 0.01), market.struct = "CDA")
 
 devtools::install_github("JohnNay/eat", 
                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
@@ -21,9 +21,10 @@ input_values <- lapply(list(seg = NA, risk.tak = NA),
 sa_results <- sobol_sa(abm = main, 
                        input_values = input_values,
                        out = "segreg", 
-                       sample_count = 10, 
+                       sample_count = 30, 
                        sobol_nboot = 1000, 
-                       parallel = FALSE)
+                       parallel = TRUE,
+                       cores = 30)
 plot_sobol_fo(sa_results)
 plot_sobol_total(sa_results)
 
