@@ -3,7 +3,10 @@ generate_model <- function (
   n.traders  = 100,
   n.edg      = 100,
   seg        = 0.9, # determine initial segregation of the 
-  # network. The higher seg, the higher the initial segregation
+  # network. The higher seg, the higher the initial segregation 
+  # In the currect procedure, the probability that a link be formed is
+  #            - (1-seg)/(number of possible nodes), if the two traders have different approximate models
+  #            - 1/(number of possible nodes)      , if the two traders have the same approximate model
   
   # Market structure parameters
   market.struct   = c("CDA", "LMSR"), # chose between CDA and LMSR
