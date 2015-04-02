@@ -11,7 +11,7 @@ devtools::install_github("JohnNay/eat",
 library(eat)
 ?sobol_sa
 
-input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA
+input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",
                                         ARGS = list(min = 0.0001, max = 0.9999)))
@@ -22,10 +22,10 @@ input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA
 sa_results <- sobol_sa(abm = main, 
                        input_values = input_values,
                        out = "segreg", 
-                       sample_count = 4, 
+                       sample_count = 25, 
                        sobol_nboot = 1000, 
                        parallel = TRUE,
-                       cores = 7)
+                       cores = 30)
 plot_sobol_fo(sa_results)
 plot_sobol_total(sa_results)
 
