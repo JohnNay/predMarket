@@ -131,7 +131,8 @@ main <- function(parameters,
   
   net <- Adapt(g = net)
   
-  plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+  if (visu)
+    plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
   
   ########                            ############
   ######   Subsequent trading sequences   ########
@@ -178,7 +179,8 @@ main <- function(parameters,
       
       net <- Adapt( g = net)
       
-      plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+      if (visu)
+        plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     }
   }
   
