@@ -30,13 +30,14 @@ main <- function(parameters,
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
   
-  seg <- parameters[1] # = 0.95, 
-  n.traders <- ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
-  risk.tak <-  0.0001 # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
+  # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
+  seg <- parameters[1] # (0,1) # = 0.95, 
+  ideo <- parameters[2]*100 # (0,1) but in percentage so *100
+  risk.tak <- parameters[3] 
+  market.complet <- parameters[4] 
   
-  market.complet = 4
-  n.edg = 150
-  ideo = 10
+  n.edg <- 150
+  n.traders <- 100 #ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
   
   market.struct <- match.arg(market.struct)
   out <- match.arg(out)
