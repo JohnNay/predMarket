@@ -11,7 +11,7 @@ devtools::install_github("JohnNay/eat",
 library(eat)
 ?sobol_sa
 
-input_values <- lapply(list(seg = NA, risk.tak = NA), 
+input_values <- lapply(list(seg = NA, n.traders = NA), 
                        function(x) list(random_function = "qunif",
                                         ARGS = list(min = 0, max = 1)))
 # # if there are any params that are binary valued give them a binom prior distribution:
@@ -21,10 +21,10 @@ input_values <- lapply(list(seg = NA, risk.tak = NA),
 sa_results <- sobol_sa(abm = main, 
                        input_values = input_values,
                        out = "segreg", 
-                       sample_count = 30, 
+                       sample_count = 4, 
                        sobol_nboot = 1000, 
                        parallel = TRUE,
-                       cores = 30)
+                       cores = 7)
 plot_sobol_fo(sa_results)
 plot_sobol_total(sa_results)
 

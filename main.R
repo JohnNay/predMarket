@@ -22,7 +22,7 @@ source("assortativity_coefficient.R")
 
 main <- function(parameters,
                  market.struct = c("CDA", "LMSR"), 
-                 out = c("segreg","converg"),
+                 out = c("segreg", "converg"),
                  visu = FALSE) {
   ### Market structure parameters:
   # market.struct, choses between CDA and LMSR
@@ -31,10 +31,10 @@ main <- function(parameters,
   # more precise temperature intervals
   
   seg <- parameters[1] # = 0.95, 
-  risk.tak <- parameters[2] #0.0001 # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
+  n.traders <- ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
+  risk.tak <-  0.0001 # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
   
   market.complet = 4
-  n.traders = 100
   n.edg = 150
   ideo = 10
   
