@@ -69,7 +69,10 @@ PopulateNet <- function(
   ideo.dis <- sample(0:((1-ideo)*100)/100, n.traders, replace = TRUE)
   V(g)$ideo <- ideo.dis
   
-  secu.dis     = list(rep(1,market.complet))
+  secu.dis     = list(rep(1,market.complet + 2))    # The "+2" accounts for the fact
+                  # that in the market implementation in behav.r, we have 2 default
+                  # securities that cover temperature below 1.0001 * min.temp (empirical min)
+                  # and above 0.9999 * max.temp (empirical max)
   V(g)$secu   <- secu.dis   # Securities held by the traders
   
     
