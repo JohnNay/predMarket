@@ -30,11 +30,18 @@ main <- function(parameters,
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
   
+#   change_extremes <- function(val, epsilon = 0.0001){
+#     if (val == 1)
+#       val <- val - epsilon
+#     if (val == 0)
+#       val <- val + epsilon
+#   }
+  
   # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
-  seg <- parameters[1] # (0,1) # = 0.95, 
-  ideo <- parameters[2]*100 # (0,1) but in percentage so *100
-  risk.tak <- parameters[3] 
-  market.complet <- parameters[4] 
+  seg <- parameters[1] # continuous value in (0,1)
+  ideo <- parameters[2] # continuous value in (0,1)
+  risk.tak <- parameters[3] # continuous value in (0,1)
+  market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[2]*1000)) # integer in (1, 1000)
   
   n.edg <- 150
   n.traders <- 100 #ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))

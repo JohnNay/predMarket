@@ -4,16 +4,17 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
 source("main.R")
-main(parameters = c(0.01, 0.01), market.struct = "CDA")
+main(parameters = rep(runif(1), 4), market.struct = "CDA")
 
 devtools::install_github("JohnNay/eat", 
                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
 library(eat)
 ?sobol_sa
 
-input_values <- lapply(list(seg = NA, n.traders = NA), 
+input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA
+                            market.complet = NA), 
                        function(x) list(random_function = "qunif",
-                                        ARGS = list(min = 0, max = 1)))
+                                        ARGS = list(min = 0.0001, max = 0.9999)))
 # # if there are any params that are binary valued give them a binom prior distribution:
 # input_values[["param2"]] <- list(random_function = "qbinom",
 #                                  ARGS = list(size = 1, prob = 0.5))
