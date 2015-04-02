@@ -55,10 +55,11 @@ main <- function(parameters,
     # network. The higher seg, the higher the initial segregation
     
     ### Behavior parameters:
-    risk.tak = risk.tak, # IN PER/10000 Determine the distribution of risk
+    risk.tak = risk.tak, # IN PERCENT. Determines the distribution of risk
     # taking behavior. The higher risk.taking, the more agent
     # will try to buy (resp. sell) lower (resp. higher) than
-    # their reservation price.
+    # their reservation price. Agent i tries to buy at (resrv_i * (1 - risk.tak_i))
+    # and tries to sell at (resrv_i * (1 + risk.tak_i))
     ideo = ideo,     # IN PERCENT. Determines the degree of "ideology" embedded
     # in the approximate models. If ideo is high, traders will not
     # revise their approximate models easily, even when faced with
