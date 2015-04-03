@@ -4,7 +4,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
 source("main.R")
-s <- rep(runif(1, min = 0.0001, max = 0.9999), 4)
+s <- runif(4, min = 0.0001, max = 0.9999)
 main(parameters = s)
 
 devtools::install_github("JohnNay/eat", 
