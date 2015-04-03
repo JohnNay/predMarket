@@ -28,31 +28,11 @@ PopulateNet <- function(
             # approx = 4  ->  ACC is true and policy are effective, but not geoingeneering (aka policy)
             # approx = 5  ->  ACC is true, geoingeneering is effective, but policy is not (aka engineer)
   
-  ## Assign values for the distance between approximate models. 
-  
   g <- set.graph.attribute(g, "burn.in", burn.in)
-  
-  g$dist <- matrix (c (0,3,2,1,1,
-                   3,0,1,1,2,
-                   2,3,0,1,1,
-                   1,2,3,0,0,
-                   1,2,3,0,0),
-                nrow=5,
-                ncol=5)
 
+  # Assign behavioral parameters to traders
   
-  # Will be used for
-  # convergence analysis in order to compute some social utility associated
-  # with a distribution of distances to the true model emerging from the 
-  # distribution of approximate models.
-  
-  ## Record convergence utility of the initial network
-  
-  g$init.converg.util <- converg.util(g)
-#   
   V(g)$behav  <- behav.dis  # Market behavior of the traders, only ZI in preliminary model
-  
-  
   
   risk.tak.dis <- sample(0:(risk.tak*10000)/10000, n.traders, replace = TRUE)
   V(g)$risk.tak <- risk.tak.dis # Tendency of a player to take risk on the market by 

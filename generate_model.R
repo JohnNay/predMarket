@@ -51,9 +51,33 @@ generate_model <- function (
                   n.edg = n.edg)
   
 #   #####
-#   ## Measure and record initial assorativity
+#   ## Record initial of outcomes 
 #   #####
-#   
+
+### Convergence utility ###
+
+## Assign values for the distance between approximate models. 
+
+net$dist <- matrix (c (0,3,2,1,1,
+                     3,0,1,1,2,
+                     2,3,0,1,1,
+                     1,2,3,0,0,
+                     1,2,3,0,0),
+                  nrow=5,
+                  ncol=5)
+
+
+# Will be used for
+# convergence analysis in order to compute some social utility associated
+# with a distribution of distances to the true model emerging from the 
+# distribution of approximate models.
+
+## Record convergence utility of the initial network
+
+net$init.converg.util <- converg.util(net)
+
+### Assortativity ###
+
 #   # calculate the mixing matrix
 #   m <- mixmat(net, 'approx')
 #   
