@@ -9,8 +9,6 @@
 
 mixmat <- function(mygraph, attrib, use.density=TRUE) {
   
-  require(igraph)
-  
   # get unique list of characteristics of the attribute
   attlist <- sort(unique(get.vertex.attribute(mygraph,attrib)))
   
@@ -19,7 +17,7 @@ mixmat <- function(mygraph, attrib, use.density=TRUE) {
   # build an empty mixing matrix by attribute
   mm <- matrix(nrow=numatts, 
                ncol=numatts,
-               dimnames=list(attlist,attlist))
+               dimnames=list(attlist, attlist))
   
   # calculate edge density for each matrix entry by pairing type
   # lends itself to parallel if available

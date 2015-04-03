@@ -30,15 +30,6 @@ generate_model <- function (
   n.seq      = 1
 ){
   market.struct <- match.arg(market.struct)
-  ####
-  ## Sub functions, 
-  # these are sourced()/created in main.R, we dont need to recreate these functions everytime that generate_model() is called
-  ####
-    source("populate_net.R")
-    source("shape_net.R")
-    source("set_add_param.R")
-    source("mixing_matrix.R")
-    source("assortativity_coefficient.R")
   
   #####
   ## Set model's parameters and create corresponding network
@@ -63,7 +54,7 @@ generate_model <- function (
   #####
   
   # calculate the mixing matrix
-  m <- mixmat(net,'approx')
+  m <- mixmat(net, 'approx')
   
   # now calculate the assortativity coefficient
   ac <- assortcoeff(m)
@@ -73,11 +64,13 @@ generate_model <- function (
   #####
   ## Set additional models parameter
   #####
-  net <- SetAddParam(   g = net,
-                        burn.in = burn.in,
-                        horizon = horizon,
-                        n.seq   = n.seq,
-                        market.struct = market.struct) 
+  net <- set.graph.attribute(net,"burn.in",burn.in)
+  
+  net <- set.graph.attribute(net,"horizon",horizon)
+  
+  net <- set.graph.attribute(net,"market.struct",market.struct)
+  
+  net <- set.graph.attribute(net,"n.seq",n.seq)
   
   net
 }

@@ -6,7 +6,6 @@ source("populate_net.R")
 # converge.util.R wasnt sourced before, but its needed in populatenet
 source("converg_util.R")
 source("shape_net.R")
-source("set_add_param.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 # Construct data for model
@@ -41,7 +40,9 @@ main <- function(parameters,
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
-  market.complet <- 1 #ifelse(parameters[4]*1000 < 1, 1, round(parameters[2]*1000)) # integer in (1, 1000)
+  market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[2]*1000)) # integer in (1, 1000)
+  
+  cat(paste("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet, "\n"))
   
   n.edg <- 150
   n.traders <- 100 #ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
