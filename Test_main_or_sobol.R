@@ -6,6 +6,7 @@ for ( j in 1:10000){
   source("main.R")
   s <- runif(4, min = 0.0001, max = 0.9999)
   result <- main(parameters = s, out = "converg")
+  print(result)
 }
   
   
