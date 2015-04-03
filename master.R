@@ -22,11 +22,11 @@ input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
 
 sa_results <- sobol_sa(abm = main, 
                        input_values = input_values,
-                       out = "segreg", 
-                       sample_count = 25, 
+                       out = "converg", 
+                       sample_count = 10, 
                        sobol_nboot = 1000, 
                        parallel = TRUE,
-                       cores = 7)
+                       cores = 20)
 plot_sobol_fo(sa_results)
 plot_sobol_total(sa_results)
 
