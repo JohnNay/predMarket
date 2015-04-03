@@ -5,7 +5,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
 source("main.R")
 s <- runif(4, min = 0.0001, max = 0.9999)
-main(parameters = s)
+main(parameters = s, out = "converg")
 
 devtools::install_github("JohnNay/eat", 
                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
