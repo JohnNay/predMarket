@@ -60,6 +60,10 @@ converg.util <- function (g,
 
   n.traders <- length(V(g))  
   
+  ######
+  ## Compute converg util
+  ######
+  
   ## Distances to true model
   
   V(g)$dist <- g$dist[V(g)$approx]
