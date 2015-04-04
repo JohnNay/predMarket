@@ -28,7 +28,9 @@ PopulateNet <- function(
             # approx = 4  ->  ACC is true and policy are effective, but not geoingeneering (aka policy)
             # approx = 5  ->  ACC is true, geoingeneering is effective, but policy is not (aka engineer)
   
-  g <- set.graph.attribute(g, "burn.in", burn.in)
+  g <- set.graph.attribute(g,"n.approx",5)
+  
+  g <- set.graph.attribute(g, "burn.in", burn.in)  # this should eventually be transfered to generate_model.r
 
   # Assign behavioral parameters to traders
   

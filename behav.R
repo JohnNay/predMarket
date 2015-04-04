@@ -16,7 +16,7 @@ Behav <- function (
   
   n.secu    <- length((V(g)$secu)[[1]])
   n.traders <- length(V(g))
-  n.approx  <- length(unique(V(g)$approx))
+  n.approx  <- g$n.approx
   
   ######
   ### Determine bounds for securities
@@ -58,7 +58,7 @@ Behav <- function (
   from <- 2
   to <- (n.secu - 1)
   
-  # Determine size of intervals corresponding to the intermediate securitis
+  # Determine size of intervals corresponding to the intermediate securities
   
   inter <- (max.trad - min.trad)/(to - 1)
   
