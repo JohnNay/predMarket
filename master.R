@@ -20,12 +20,24 @@ input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
 # input_values[["param2"]] <- list(random_function = "qbinom",
 #                                  ARGS = list(size = 1, prob = 0.5))
 
-sa_results <- sobol_sa(abm = main, 
+sobol <- sobol_sa(abm = main, 
                        input_values = input_values,
                        out = "converg", 
-                       sample_count = 50, 
+                       sample_count = 400, 
                        sobol_nboot = 1000, 
                        parallel = TRUE,
                        cores = 25)
-plot_sobol(sa_results, "Convergence of Beliefs")
+save(sobol, file = "output/sobol.Rda")
+plot_sobol(sobol, "Convergence of Beliefs")
+
+pc <- eat::pc_sa(abm = main, 
+                 input_values = input_values,
+                 out = "converg", 
+                 sample_count = 600, 
+                 sobol_nboot = 1000, 
+                 parallel = TRUE,
+                 cores = 25
+                 rank = TRUE, method = "pcc") 
+save(pc, file = "output/pc.Rda")
+plot_pc(pc, "Convergence of Beliefs")
 
