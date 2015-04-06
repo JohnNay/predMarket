@@ -27,5 +27,5 @@ sa_results <- sobol_sa(abm = main,
                        sobol_nboot = 1000, 
                        parallel = TRUE,
                        cores = 25)
-plot_sobol(sa_results)
+plot_sobol(sa_results, "Convergence of Beliefs")
 
