@@ -33,10 +33,10 @@ plot_sobol(sobol, "Convergence of Beliefs")
 pc <- eat::pc_sa(abm = main, 
                  input_values = input_values,
                  out = "converg", 
-                 sample_count = 600, 
-                 sobol_nboot = 1000, 
+                 sample_count = 800, 
+                 nboot = 1000, 
                  parallel = TRUE,
-                 cores = 25
+                 cores = 25,
                  rank = TRUE, method = "pcc") 
 save(pc, file = "output/pc.Rda")
 plot_pc(pc, "Convergence of Beliefs")
