@@ -17,8 +17,14 @@ outcome.evolution <- main(parameters = s, out = "converg", record = TRUE)
 
 for (j in 1:99){
   s <- runif(4, min = 0.0001, max = 0.9999)
-  outcome.evolution <- rbind(outcom.evolution, main(parameters = s, out = "converg", record = TRUE))
+  outcome.evolution <- rbind(outcome.evolution, main(parameters = s, out = "converg", record = TRUE))
 }
+
+average.convergence <- colMeans(outcome.evolution)
+
+plot(average.convergence, type = "b", main = "Average convergence \nas a function of the number of trading sequences",
+                                      xlab = "Number of trading sequences",
+                                      ylab = "Average convergence (n = 100)")
 
 #####
 ## Sensitivity analysis
