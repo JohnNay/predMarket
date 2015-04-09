@@ -22,7 +22,8 @@ source("assortativity_coefficient.R")
 main <- function(parameters,
                  market.struct = c("CDA", "LMSR"), 
                  out = c("segreg", "converg"),
-                 visu = FALSE) {
+                 visu = FALSE,
+                 record = FALSE) {
   ### Market structure parameters:
   # market.struct, choses between CDA and LMSR
   # market.complet is number of securities which
@@ -141,8 +142,26 @@ main <- function(parameters,
   
   net <- Adapt(g = net)
   
-  if (visu)
-    plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+  if (visu){
+    plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)}
+  
+  if(record){
+    if (out == "segreg"){
+      
+      # calculate the mixing matrix
+      m <- mixmat(net,'approx')
+      
+      # now calculate the assortativity coefficient
+      result <- assortcoeff(m)
+      
+    }
+    
+    if(out == "converg"){
+      
+      result <- converg.util(net)
+      
+    }
+  }
   
   ########                            ############
   ######   Subsequent trading sequences   ########
@@ -189,8 +208,27 @@ main <- function(parameters,
       
       net <- Adapt( g = net)
       
-      if (visu)
-        plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+      if (visu){
+        plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)}
+      
+      if(record){
+        if (out == "segreg"){
+          
+          # calculate the mixing matrix
+          m <- mixmat(net,'approx')
+          
+          # now calculate the assortativity coefficient
+          result <- append(result,assortcoeff(m))
+
+        }
+        
+        if(out == "converg"){
+          
+          result <- append(result,converg.util(net))
+          
+        }
+      }
+      
     }
   }
   
@@ -199,7 +237,7 @@ main <- function(parameters,
   # and then return one index, the one that matches the arg of main() called "outcome" 
   # outcome
   
-  if (out == "segreg"){
+  if (out == "segreg" && record == FALSE){
     
     # calculate the mixing matrix
     m <- mixmat(net,'approx')
@@ -216,7 +254,7 @@ main <- function(parameters,
     #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
   }
   
-  if (out == "converg"){
+  if (out == "converg" && record == FALSE){
     
     # return difference in utility of network convergence
     

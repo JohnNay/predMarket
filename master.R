@@ -7,6 +7,23 @@ source("main.R")
 s <- runif(4, min = 0.0001, max = 0.9999)
 main(parameters = s, out = "converg")
 
+
+######
+##   Record values of outcomes through time and plot average through iterations
+######
+
+s <- runif(4, min = 0.0001, max = 0.9999)
+outcome.evolution <- main(parameters = s, out = "converg", record = TRUE)
+
+for (j in 1:99){
+  s <- runif(4, min = 0.0001, max = 0.9999)
+  outcome.evolution <- rbind(outcom.evolution, main(parameters = s, out = "converg", record = TRUE))
+}
+
+#####
+## Sensitivity analysis
+#####
+
 devtools::install_github("JohnNay/eat", 
                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
 library(eat)
