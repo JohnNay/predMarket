@@ -3,7 +3,6 @@
 source("generate_model.R")
 # Sub functions needed inside of generate_model():
 source("populate_net.R")
-# converge.util.R wasnt sourced before, but its needed in populatenet
 source("shape_net.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
@@ -157,7 +156,7 @@ main <- function(parameters,
     
     if(out == "converg"){
       
-      result <- converg.util(net)
+      result <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
       
     }
   }
@@ -223,7 +222,7 @@ main <- function(parameters,
         
         if(out == "converg"){
           
-          result <- append(result,converg.util(net))
+          result <- append(result,length(V(net)$approx[V(net)$approx == 1])/length(V(net)))
           
         }
       }
