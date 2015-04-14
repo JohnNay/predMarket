@@ -4,7 +4,6 @@ source("generate_model.R")
 # Sub functions needed inside of generate_model():
 source("populate_net.R")
 # converge.util.R wasnt sourced before, but its needed in populatenet
-source("converg_util.R")
 source("shape_net.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
@@ -258,7 +257,7 @@ main <- function(parameters,
     
     # return difference in utility of network convergence
     
-    result <- converg.util(net) - net$init.converg.util
+    result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
     
   }
   

@@ -54,27 +54,9 @@ generate_model <- function (
 #   ## Record initial of outcomes 
 #   #####
 
-### Convergence utility ###
+## Record convergence of the initial network
 
-## Assign values for the distance between approximate models. 
-
-net$dist <- matrix (c (0,3,2,1,1,
-                     3,0,1,1,2,
-                     2,3,0,1,1,
-                     1,2,3,0,0,
-                     1,2,3,0,0),
-                  nrow=5,
-                  ncol=5)
-
-
-# Will be used for
-# convergence analysis in order to compute some social utility associated
-# with a distribution of distances to the true model emerging from the 
-# distribution of approximate models.
-
-## Record convergence utility of the initial network
-
-net$init.converg.util <- converg.util(net)
+net$init.converg.util <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
 
 ### Assortativity ###
 
