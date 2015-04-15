@@ -51,7 +51,7 @@ sobol <- sobol_sa(abm = main,
                        parallel = TRUE,
                        cores = 25)
 save(sobol, file = "output/sobol.Rda")
-plot_sobol(sobol, "Convergence of Beliefs")
+plot_sobol(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
 
 pc <- eat::pc_sa(abm = main, 
                  input_values = input_values,
