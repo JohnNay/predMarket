@@ -2,9 +2,15 @@
 PopulateNet <- function( 
                         n.traders    = 100,
                         mon.dis      = rep(1,n.traders),
-                        approx.dis   = sample(1:5, n.traders, replace = TRUE),
+                        approx.dis   = 
+                          sample ( 
+                            append( 
+                              rep(1,n.traders%/%2),
+                              append(rep(2,n.traders%/%2),sample(1:2,n.traders%%2))
+                                  )
+                                 ),
                         behav.dis    = sample(1:1, n.traders, replace = TRUE),
-                        risk.tak     = 1/2,
+                        risk.tak     = 0.5,
                         ideo         = 0.5,
                         market.complet = 10,
                         burn.in
@@ -21,14 +27,10 @@ PopulateNet <- function(
 
   V(g)$money  <- mon.dis
   V(g)$approx <- approx.dis 
-    #NOTE : in the preliminary version, approximate models are taken from Sumner and Jackson (2008) 
-            # approx = 1  ->  Full model : ACC true, both geoingeneering and policy effective (aka full)
-            # approx = 2  ->  ACC is a myth (aka myth)
-            # approx = 3  ->  ACC is true but all measures are ineffective (aka ineff)
-            # approx = 4  ->  ACC is true and policy are effective, but not geoingeneering (aka policy)
-            # approx = 5  ->  ACC is true, geoingeneering is effective, but policy is not (aka engineer)
-  
-  g <- set.graph.attribute(g,"n.approx",5)
+            # approx = 1  ->  ACC is a myth (aka myth)
+            # approx = 3  ->  ACC is true and temp are fction of GHG
+           
+  g <- set.graph.attribute(g,"n.approx",length(unique(approx.dis)))
   
   g <- set.graph.attribute(g, "burn.in", burn.in)  # this should eventually be transfered to generate_model.r
 
@@ -36,8 +38,7 @@ PopulateNet <- function(
   
   V(g)$behav  <- behav.dis  # Market behavior of the traders, only ZI in preliminary model
   
-  risk.tak.dis <- sample(0:(risk.tak*10000)/10000, n.traders, replace = TRUE)
-  V(g)$risk.tak <- risk.tak.dis # Tendency of a player to take risk on the market by 
+  V(g)$risk.tak <- runif(n.traders,0,risk.tak) # Tendency of a player to take risk on the market by 
                                     # - placing buy orders way below reservation price
                                     # - placing sell orders way above reservation price
                                 # each period a risk parameter 'r' is drawn 
@@ -46,8 +47,7 @@ PopulateNet <- function(
                                     # - buy orders r percents below reservetation price
                                     # - sell orders r percents above reservation price
   
-  ideo.dis <- sample(0:((1-ideo)*100)/100, n.traders, replace = TRUE)
-  V(g)$ideo <- ideo.dis
+  V(g)$ideo <- runif(n.traders,0,ideo)
   
   secu.dis     = list(rep(1,market.complet + 2))    # The "+2" accounts for the fact
                   # that in the market implementation in behav.r, we have 2 default

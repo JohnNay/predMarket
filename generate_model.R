@@ -25,9 +25,9 @@ generate_model <- function (
   # strong evidence (conversely if low).
   
   # Timing parameters
-  burn.in    = 100,
-  horizon    = 50,
-  n.seq      = 1
+  burn.in    = 16,
+  horizon    = 5,
+  n.seq      = 20
 ){
   market.struct <- match.arg(market.struct)
   
