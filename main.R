@@ -7,6 +7,7 @@ source("shape_net.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 # Construct data for model
+library(pracma)
 source("generate_data.R")
 # Operate on model
 source("form_expect.R")
@@ -28,20 +29,16 @@ main <- function(parameters,
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
   
-#   change_extremes <- function(val, epsilon = 0.0001){
-#     if (val == 1)
-#       val <- val - epsilon
-#     if (val == 0)
-#       val <- val + epsilon
-#   }
   
   # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
   market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
+  true.model <- parameters[5] # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
   
-  cat(paste("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet, "\n"))
+  cat(paste("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
+            "true.model", true.model, "\n"))
   
   n.edg <- 150
   n.traders <- 100 #ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
@@ -59,9 +56,8 @@ main <- function(parameters,
   net <- generate_model( ### Network parameters
     n.traders  = n.traders,
     n.edg      = n.edg,
-    seg        = seg, # determine initial segregation of the 
+    seg        = seg, # determine initial segregation of the
     # network. The higher seg, the higher the initial segregation
-    
     ### Behavior parameters:
     risk.tak = risk.tak, # IN PERCENT. Determines the distribution of risk
     # taking behavior. The higher risk.taking, the more agent
@@ -79,18 +75,24 @@ main <- function(parameters,
     # all past trading sequences and periods)
     
     ### Timing parameters:
-    # Number of burning periods for initial calibration
-    burn.in    = 10,
+    
+    # Number of periods burned for initial calibration
+    burn.in    = 16,
     # Number of trading sequences
     n.seq       = 20,
-    # Number of trading periods in each sequence
-    horizon    = 10
+    # The number of periods in each sequence (= number of trading periods + 1)
+    horizon    = 5
+    
+    ###############
+    ### WARNING ### timing parameters must match empirical data used in generate_data
+    ###############
   )
   
   #####
   ## Construct "true" time series (random at this point, to be later calibrated with actual data)
   #####
-  D <- generate_data(h = (net$burn.in + (net$horizon * net$n.seq )))
+  D <- generate_data(t.mod = true.model,
+                     t.fin = (net$burn.in + (net$horizon * net$n.seq )))
   
   
   # Visualize network (optional)
@@ -111,15 +113,14 @@ main <- function(parameters,
   to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
   # are realized. The -1 accounts for the fact that no trade occurs in the last
   # periods. Securities are just realized and payoffs distributed.
-  
   for (t in from:to){
     #####
-    ## Traders calibrate their approximate model and determine their 
+    ## Traders calibrate their approximate model and determine their
     ## expected distribution for the future out
     #####
-    net <- FormExpect(net, t, D) 
+    net <- FormExpect(net, ct = t, D)
     #####
-    ## Traders form their buy and sell orders
+    ## Traders chose their buy and sell orders
     #####
     net <- Behav( net, D)
     #####
@@ -127,17 +128,13 @@ main <- function(parameters,
     #####
     net <- Interact(g = net)
   }
-  
   #####
   ## Pay the winning securities
   #####
-  
   net <- Payoffs(g=net, D)
-  
   #####
   ## Adapt approximate model
   #####
-  
   net <- Adapt(g = net)
   
   if (visu){
@@ -166,45 +163,36 @@ main <- function(parameters,
   ########                            ############
   
   if (net$n.seq>1){
-    
     toto <- net$n.seq  # the number of trading sequences
-    
     for (ts in 2:toto){
-      
       from <- net$burn.in + (net$horizon * ts) + 1 # the period at which the sequence starts
       to <- net$burn.in + (net$horizon * ts) - 1 # the period at which trading stops and securities
       # are realized. The -1 accounts for the fact that no trade occurs in the last
       # periods. Securities are just realized and payoffs distributed.
-      
       for (t in from:to){
         #####
-        ## Traders calibrate their approximate model and determine their 
+        ## Traders calibrate their approximate model and determine their
         ## expected distribution for the future outcome
         #####
-        net <- FormExpect( net, t, D) 
-        
+        net <- FormExpect( net, ct = t, D)
         #####
         ## Traders form their buy and sell orders
         #####
         net <- Behav(net, D)
-        
         #####
         ## Traders exchange on the market
         #####
         net <- Interact(g = net)
       }
-      
       #####
       ## Pay the winning securities
       #####
-      
       net <- Payoffs(g=net, D)
-      
       #####
       ## Adapt approximate model
       #####
-      
       net <- Adapt( g = net)
+      
       
       if (visu){
         plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)}
