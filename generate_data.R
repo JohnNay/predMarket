@@ -1,117 +1,91 @@
 generate_data <- function (
-  h = 200,  # time horizon at which securities are realized
-  ### Parameters for construction of other time series 
-  #NOTE : these are from Sumner and Jackson' calibration, but make no sense
-  # without real time series
-  lambda = 0.9845,
-  beta = 0.00017,
-  omega = 0.36,
-  theta = 0.0286,
-  rho = 0.0125,
-  kappa = 0.993,
-  gamma = 0.15,
-  delta = 2
+  t.fin, # final time period  
+  t.mod # the true model, 1 for AAC is a myth, 2 for AAC is fction of GHG
 ){
   
-  # TODO (in the long run) : Gather real date and allow the true model to vary
-  #(we also want to know what would happen if the true model was ACC is a myth).
-  # For each model, do some calibration of the parameters to get best match
-  # with real data
+  ########
+  ### Read empirical data
+  ########
+  
+  ### Temperatures
+  
+  # SOURCE : http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp
+  # RETRIEVED : May 5th 2015
+  
+  temp.emp <- scan("temp_clean.txt")
+  
+  # Useful variable
+  
+  n <- length(temp.emp)
+  
+  ### (empirical) Temperatures LAGGED
+  
+  temp.emp.lag <- append(NA, temp.emp[1:n-1])
+  
+  # record distribution of residuals around mean of (linearly) detrended temp
+  
+  temp.detrend.resid <- ( detrend(temp.emp, tt = 'linear', bp = c())
+                          - mean(detrend(temp.emp, tt = 'linear', bp = c())) )
+  ### CO2 concentration
+  
+  # SOURCE : http://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt
+  # RETRIVED : May 5th 2015
+  
+  CO2.emp <- scan("CO2_clean.txt")
+  
+  ### Emprical data frame
+  
+  Emp.D <- data.frame(temp.emp, temp.emp.lag, CO2.emp)
   
   ##########
-  ### Fundamental explanatory variables (arbitrary at this point)
+  ## Generate time series from true model based on calibration
   ##########
   
-  #Geoingeneering expenditures
+  # The calibration of the true model based on empirical temperatures is meant to
+  # ensure that the simulated time series are somewhat realistic
+  # Similarly, the choice of sample(temp.detrend.resid,1) to generate noise around
+  # the trend is meant to guarantee that the simulated time series have roughly
+  # the same kind of variation around the trend as in the empirical temperature time series.
   
-  X <- (1:h)/10 + diffinv(rnorm(h-1))
+  ### If the true model is the autoregressive one (no anthropogenic effect)
   
-  #Policy expenditures
-  
-  P <- abs((1:h)/10 + diffinv(rnorm(h-1)))
-  P <- P^(1/2)
-  
-  #GDP
-  
-  GDP <- (1.003)^(1:h) + diffinv(rnorm(h-1))/15
-  
-  ###########
-  ###  Constructed explanatory varialbes
-  ###########
-  
-  ### Construct "effect of geoingeneering" variable
-  
-  G <- 1:h
-  
-  # NOTE : G[t] will be constructed recursively, so we must choose an arbitrary 
-  # initial value. Here it will be 1.
-  
-  for (t in 2:h){
-    G[t] <- omega*G[t-1] + theta*X[t] + rnorm(1)
+  if (t.mod == 1){
+    
+    fit <- lm (temp.emp ~ 0 + temp.emp.lag, data = Emp.D[2:n, ])
+    
+    temp <- 1:t.fin
+    temp[1] <- temp.emp[1]
+    
+    for (t in 2:t.fin){
+      temp[t] <- (coef(fit)[[1]])*temp[t-1] + sample(temp.detrend.resid,1)
+    }
   }
   
-  ### Construct Green-house gases
+  ### If the true model is a function of GHG  (anthropogenic)
   
-  GHG <- 1:h
-  
-  # NOTE : GHG[t] will be constructed recursively, so we must choose an arbitrary 
-  # initial value. Here it will be 1.
-  
-  for (t in 2:h){
-    GHG[t] <- kappa*GHG[t-1] - (rho*P[t])^(0.5) + delta*GDP[t]  + rnorm(1)
+  if (t.mod == 2){
+    
+    fit <- lm (temp.emp ~ 0 + CO2.emp, data = Emp.D[2:n, ])
+    
+    temp <- 1:t.fin
+    
+    for (t in 1:t.fin){
+      temp[t] <- (coef(fit)[[1]])*CO2.emp[t] + sample(temp.detrend.resid,1)
+    }
   }
   
-  ###########
-  ###  Constructed dependent variable (e.g. temperature)
-  ###########
+  #### Generate temperature LAGGED
   
-  # NOTE : T[t] will be constructed recursively, so we must choose an arbitrary 
-  # initial value. Here it will be 1.
+  temp.lag <- append(NA, temp[1:n-1])
   
-  temp <- 1:h
+  ### Identify GHG with CO2.emp
   
-  for (t in 2:h){
-    temp[t] <- lambda*temp[t-1] + beta*GHG[t] - rho*G[t] 
-  }
+  GHG <- CO2.emp
   
-  #######
-  ### Construct laged time series for regression
+  ######
+  ### Generate data frame
   ######
   
-  ### Construct LAGGED "effect of geoingeneering" 
-  
-  G.lag <- 1:h
-  G.lag[1] <- NA
-  
-  for (t in 2:h){
-    G.lag[t] <- G[t-1]
-  }
-  
-  ### Construct LAGGED Green-house gases
-  
-  GHG.lag <- 1:h
-  GHG.lag[1] <- NA
-  
-  for (t in 2:h){
-    GHG.lag[t] <- GHG[t-1]
-  }
-  
-  ### Construct LAGGED temperatures
-  
-  # NOTE : temp[t] will be constructed recursively, so we must choose an arbitrary 
-  # initial value. Here it will be 1.
-  
-  temp.lag <- 1:h
-  temp.lag[1] <- NA
-  
-  for (t in 2:h){
-    temp.lag[t] <- temp[t-1]
-  }
-  
-  
-  # Generate data frame
-  
-  D <- data.frame(temp,temp.lag,GHG,GHG.lag,G,G.lag, P, GDP, X)
-  
+  D <- data.frame(temp,temp.lag,GHG)
   D
 }
