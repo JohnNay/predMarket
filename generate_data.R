@@ -1,18 +1,34 @@
+### Temperatures
+
+# SOURCE : http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp
+# RETRIEVED : May 5th 2015
+
+temp_emp <- scan("temp_clean.txt")
+
+### CO2 concentration
+
+# SOURCE : http://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt
+# RETRIVED : May 5th 2015
+
+CO2_emp <- scan("CO2_clean.txt")
+
 generate_data <- function (
   t.fin, # final time period  
-  t.mod # the true model, 1 for AAC is a myth, 2 for AAC is fction of GHG
+  t.mod, # the true model, 1 for AAC is a myth, 2 for AAC is fction of GHG
+  temp.emp = temp_emp,
+  CO2.emp = CO2_emp
 ){
   
   ########
   ### Read empirical data
   ########
   
-  ### Temperatures
-  
-  # SOURCE : http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp
-  # RETRIEVED : May 5th 2015
-  
-  temp.emp <- scan("temp_clean.txt")
+#   ### Temperatures
+#   
+#   # SOURCE : http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp
+#   # RETRIEVED : May 5th 2015
+#   
+#   temp.emp <- scan("temp_clean.txt")
   
   # Useful variable
   
@@ -26,12 +42,6 @@ generate_data <- function (
   
   temp.detrend.resid <- ( detrend(temp.emp, tt = 'linear', bp = c())
                           - mean(detrend(temp.emp, tt = 'linear', bp = c())) )
-  ### CO2 concentration
-  
-  # SOURCE : http://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt
-  # RETRIVED : May 5th 2015
-  
-  CO2.emp <- scan("CO2_clean.txt")
   
   ### Emprical data frame
   
