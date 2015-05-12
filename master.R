@@ -39,6 +39,8 @@ input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",
                                         ARGS = list(min = 0.0001, max = 0.9999)))
+input_values$true.model <- list(random_function = "qbinom",
+                                ARGS = list(size = 1, prob = 0.5))
 # # if there are any params that are binary valued give them a binom prior distribution:
 # input_values[["param2"]] <- list(random_function = "qbinom",
 #                                  ARGS = list(size = 1, prob = 0.5))
@@ -46,7 +48,7 @@ input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
 sobol <- sobol_sa(abm = main, 
                        input_values = input_values,
                        out = "converg", 
-                       sample_count = 400, 
+                       sample_count = 100, 
                        sobol_nboot = 1000, 
                        parallel = TRUE,
                        cores = 25)
@@ -56,7 +58,7 @@ plot_sobol(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
 pc <- eat::pc_sa(abm = main, 
                  input_values = input_values,
                  out = "converg", 
-                 sample_count = 800, 
+                 sample_count = 500, 
                  nboot = 1000, 
                  parallel = TRUE,
                  cores = 25,
