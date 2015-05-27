@@ -66,3 +66,31 @@ pc <- eat::pc_sa(abm = main,
 save(pc, file = "output/pc.Rda")
 plot_pc(pc, "Convergence of Beliefs")
 
+##############################################################################
+## collecting the value of outcome.converge for the same value of the parameters 
+# we test on the sa, and plot them as an histogram
+devtools::install_github("JohnNay/eat", 
+                         auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
+library(eat)
+input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
+                            market.complet = NA), 
+                       function(x) list(random_function = "qunif",
+                                        ARGS = list(min = 0.0001, max = 0.9999)))
+input_values$true.model <- list(random_function = "qbinom",
+                                ARGS = list(size = 1, prob = 0.5))
+# Get names of input factors:
+input_names <- names(input_values)
+cores <- parallel::detectCores() - 1
+input.set <- create_set(input_values, input_names, sample_count=5000,
+                        constraints = "none")
+# Simulation runs with generated input factor sets:
+doParallel::registerDoParallel(cores = cores)
+sim <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input.set)), .combine='c'), {
+  main(as.numeric(input.set[i, ]), out = "converg")
+})
+
+
+
+
+
+
