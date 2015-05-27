@@ -88,7 +88,13 @@ doParallel::registerDoParallel(cores = cores)
 sim <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input.set)), .combine='c'), {
   main(as.numeric(input.set[i, ]), out = "converg")
 })
-
+library(ggplot2)
+d <- data.frame(convergence = sim)
+ggplot2::ggplot(d, aes(x=convergence)) + geom_histogram(binwidth=0.04) +
+  xlim(c(-0.6, 0.6)) +
+  ylab("Count") + xlab("Convergence of Beliefs") + 
+  ggtitle("5000 Convergence of Belief Outcomes with LHS Input Parameters") +
+  theme_bw()
 
 
 
