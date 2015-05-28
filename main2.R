@@ -18,7 +18,7 @@ source("adapt.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
-main <- function(parameters,
+main2 <- function(parameters,
                  market.struct = c("CDA", "LMSR"), 
                  out = c("segreg", "converg"),
                  visu = FALSE,
@@ -36,12 +36,12 @@ main <- function(parameters,
   risk.tak <- parameters[3] # continuous value in (0,1)
   market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
   true.model <- parameters[5] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
+  n.edg <- round(parameters[6]*100) + 100 # integer in (100, 200)
+  n.traders <- round(parameters[7]*100) + 50 # integer in (50, 250)
   
-  cat(paste("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
-            "true.model", true.model, "\n"))
   
-  n.edg <- 150
-  n.traders <- 100 #ifelse(round(parameters[2]*100) < 1, 1, round(parameters[2]*100))
+  cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
+            "true.model", true.model, "\n")
   
   market.struct <- match.arg(market.struct)
   out <- match.arg(out)
