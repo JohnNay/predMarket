@@ -4,27 +4,28 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
 source("main.R")
-s <- append(runif(4, min = 0.0001, max = 0.9999),sample(1:2,1))
+# test
+s <- append(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1))
 main(parameters = s, out = "converg")
 
 
-######
-##   Record values of outcomes through time and plot average through iterations
-######
-
-s <- runif(4, min = 0.0001, max = 0.9999)
-outcome.evolution <- main(parameters = s, out = "converg", record = TRUE)
-
-for (j in 1:99){
-  s <- runif(4, min = 0.0001, max = 0.9999)
-  outcome.evolution <- rbind(outcome.evolution, main(parameters = s, out = "converg", record = TRUE))
-}
-
-average.convergence <- colMeans(outcome.evolution)
-
-plot(average.convergence, type = "b", main = "Average convergence \nas a function of the number of trading sequences",
-                                      xlab = "Number of trading sequences",
-                                      ylab = "Average convergence (n = 100)")
+# ######
+# ##   Record values of outcomes through time and plot average through iterations
+# ######
+# 
+# s <- runif(4, min = 0.0001, max = 0.9999)
+# outcome.evolution <- main(parameters = s, out = "converg", record = TRUE)
+# 
+# for (j in 1:99){
+#   s <- runif(4, min = 0.0001, max = 0.9999)
+#   outcome.evolution <- rbind(outcome.evolution, main(parameters = s, out = "converg", record = TRUE))
+# }
+# 
+# average.convergence <- colMeans(outcome.evolution)
+# 
+# plot(average.convergence, type = "b", main = "Average convergence \nas a function of the number of trading sequences",
+#                                       xlab = "Number of trading sequences",
+#                                       ylab = "Average convergence (n = 100)")
 
 #####
 ## Sensitivity analysis
