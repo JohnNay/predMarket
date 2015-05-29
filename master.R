@@ -173,6 +173,7 @@ plot_pc(pc, "Convergence of Beliefs")
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
 # we test on the sa, and plot them as an histogram
+##############################################################################
 devtools::install_github("JohnNay/eat", 
                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
 library(eat)
@@ -201,9 +202,9 @@ ggplot2::ggplot(d, aes(x=convergence)) + geom_histogram(binwidth=0.04) +
   theme_bw()
 
 
-#####
+##############################################################################
 ## Sensitivity analysis on all variables
-#####
+##############################################################################
 rm(list=ls())
 source("main2.R")
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
