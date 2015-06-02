@@ -65,7 +65,7 @@ pc <- eat::pc_sa(abm = main,
                  cores = 25,
                  rank = TRUE, method = "pcc") 
 save(pc, file = "output/pc.Rda")
-plot(pc, "Convergence of Beliefs")
+plot(pc, outcome_var = "Convergence of Beliefs")
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
@@ -157,7 +157,7 @@ sobol <- sobol_sa(abm = main,
                   parallel = TRUE,
                   cores = 25)
 save(sobol, file = "output/sobol.Rda")
-plot(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
+plot(sobol, outcome_var = "Convergence of Beliefs", legend_pos = "bottomright")
 
 pc <- eat::pc_sa(abm = main, 
                  input_values = input_values,
@@ -227,7 +227,7 @@ pc2 <- eat::pc_sa(abm = main2,
                   cores = 30,
                   rank = TRUE, method = "pcc") 
 save(pc2, file = "output/pc2.Rda")
-plot(pc2, "Convergence of Beliefs")
+plot(pc2, outcome_var = "Convergence of Beliefs")
 
 # Standardized Regression Coefficient
 src2 <- eat::pc_sa(abm = main2, 
@@ -239,5 +239,5 @@ src2 <- eat::pc_sa(abm = main2,
                   cores = 30,
                   rank = TRUE, method = "src") 
 save(src2, file = "output/src2.Rda")
-plot(sr2, paste0("Convergence of Beliefs (R^2= " src2@r_squared, ")"))
+plot(src2, outcome_var = paste0("Convergence of Beliefs (R^2= ", src2@r_squared, ")"))
 
