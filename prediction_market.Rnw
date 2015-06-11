@@ -2,38 +2,48 @@
 
 \begin{document}
 
-\title{Climate Prediction Markets and Convergence of Predictive Models: An Agent-based Simulation Analysis}
+\title{Climate Prediction Markets and Convergence of Predictive Models}
 \author{not sure about the author order}
 
 \maketitle
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Abstract}
-We present an agent-based model of a climate prediction market in which traders adapt their belief about the climate based on the monetary performance of their neighboring traders in a social network. We use the model to test whether climate prediction markets foster a convergence of market participants' beliefs regarding a ``true'' climate model by conducting a sensitivity analysis of the impact of a variety of factors. We find that only the imposed ``true model'' itself significantly affects the convergence of beliefs. If the true model from which the temperature data is generated is auto-regressive, with no human-induced effect, there is, on average. no convergence of traders' models due to participation in the prediction market. On other hand, if anthropogenic climate change is real, traders' beliefs are more likely than not to converge toward the correct model of the world after participation in the market.
+We present an agent-based model of a climate prediction market in which traders adapt their belief about the climate based on the monetary performance of their neighboring traders in a social network. We analyze the model to determine how a variety of factors affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the earth's climate. We find that only the imposed ``true model'' itself significantly affects the convergence of beliefs. If the true model from which the temperature data is generated is auto-regressive, with no human-induced effects, participation in the prediction market, on average, does not cause convergence of traders' beliefs. On other hand, if anthropogenic climate change is real, traders' beliefs are more likely than not to converge toward the correct climate model due to participation in the market.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
 	
-The previous two decades saw a strong polarization of the climate change debate. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, the average belief about anthropogenic climate change did not evolve much within the public (see \cite{Vandenbergh2013f} for all the claims in this paragraph). In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily, indicating that the question is becoming increasingly politicized and potentially disconnected from scientific evidence.
-
-This is troubling given the costs of a misinformed climate policy. If anthropocentric climate change is a myth but is taken to be true, a tremendous amount of public resources will be wasted on adaptation and mitigation efforts. On the other hand, if climate change is human induced but not recognized as so, the costs of inaction would be huge. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
+The previous two decades saw a strong polarization of the climate change debate. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, the average belief about anthropogenic climate change did not evolve much within the public \cite{Vandenbergh2013f}. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily, indicating that the question is becoming increasingly politicized and potentially disconnected from scientific evidence. This is troubling given the costs of a misinformed climate policy. If anthropocentric climate change is a myth but is taken to be true, a tremendous amount of public resources will be wasted on adaptation and mitigation efforts. On the other hand, if climate change is human induced but not recognized as so, the costs of inaction would be huge. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 	
-Attempts to foster such consensus face many social and psychological challenges. Recently, people have argued that such challenges could be met by setting up climate prediction markets (see for instance \cite{Hsu2011}, and \cite{Vandenbergh2013f}). The idea of using prediction markets to efficiently aggregate information about uncertain events has been discussed for decades (see \cite{Horn2014c} for a recent review). Prediction markets have been shown to have interesting theoretical properties (e.g. \cite{Set1998}, \cite{Hanson2012}) and to perform well in terms of prediction accuracy in experiments (e.g \cite{Hanson2006}, \cite{Healy2010}), agent-based models (henceforth ABM) ( e.g \cite{Klingert2012c}, \cite{Jumadinova2011a}), and in the real-world (see \cite{Wolfers2006} for a review).
+Attempts to foster such consensus face many social and psychological challenges. Recently, people have argued that such challenges could be met by setting up climate prediction markets \cite{Hsu2011,Vandenbergh2013f}. The idea of using prediction markets to efficiently aggregate information about uncertain events has been discussed for decades \cite{Horn2014c}. Prediction markets have been shown to have interesting theoretical properties \cite{Set1998,Hanson2012} and to perform well in terms of prediction accuracy in experiments \cite{Hanson2006,Healy2010}, agent-based models (ABM) \cite{Klingert2012c,Jumadinova2011a}, and in the real-world \cite{Wolfers2006}.
 
-% NOTE: the follwing two paragraphs is some good lit reivew, but whether it is included in the main article text depends on the potential journal we are submitting to. journals like science and nature do not want lit review, or claims to priority. So, do not delete these following two paragraphs that are commented out until we are accepted into a journal that doesnt want this.
+% NOTE: the follwing two paragraphs is some good lit reivew, but whether it is included in the main article text depends on the potential journal we are submitting to. journals like science and nature do not want lit review, or claims to priority. So, do not delete these following two paragraphs that are commented out until we are accepted into a journal that doesnt want this. For Nature CC we could put this in an SI Appendix.
 
 % \cite{Tseng2010a} study an ABM of a continuous double auction model with various types of market strategies (including two variants of the zero-intelligence agents). They compare the behavior of their simulation with data from a prediction market for the outcome of political elections. They find that despite their simplicity, zero-intelligence agents capture some salient features of real market data. \cite{Klingert2012c} reach similar conclusions with respect to experimental data from  \cite{Hanson2006}. In their simulation, \cite{Klingert2012c} compare continuous double auctions with logarithmic market scoring rules and find that the latter generally outperform continuous double auctions in terms of prediction accuracy. In some variants of the two last models, agents' strategies feature learning, but these are rather basic and unrelated to a formal predictive model. 
 % 	
 % \cite{Jumadinova2011a} conducted research more similar to our project, as they explicitly include information about uncertain events in their model. The paper studies a continuous double auction model in which agents update their beliefs about the uncertain events based on information on the event. New beliefs are modeled as a weighted sum of the last period's beliefs and market prices. The agent's information set changes every period. The better the information set, the more likely the agent is to put higher weights on last period's prices when revising their beliefs. Not much structure is imposed on the information set and the way it is used to generate the weights in the update function. Therefore, the model does not allow for investigating the convergence of predictive models. \cite{Ontanon2009} study the effect of deliberation on a simulated prediction market. They assume that agents use Case-Based Reasoning \cite{Aamodt1994} to debate about  uncertain outcomes with their neighbors in a social network.  Although the model could in theory be used to assess convergence of predictive models by looking at the arguments agents adopt after the deliberation, this is not done by the authors. Also, the way beliefs are formed and revised through argumentation is rather abstract and might not be ideal to study climate prediction markets.
 
-However, to the best of our knowledge, the idea that prediction markets can generate a consensus \emph{on the factors} affecting  uncertain events has never been quantitatively tested. ABMs of prediction markets have been studied ( e.g. \cite{Klingert2012c}, \cite{Tseng2010a}, or\cite{Jumadinova2011a}), some of which feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents would derive causal implications. Therefore, although convergence of beliefs could be studied in previous ABMs, these models do not investigate the convergence of the underlying explanatory models agents use for prediction.
+However, to the best of our knowledge, the idea that prediction markets can generate consensus \emph{on the factors} affecting  uncertain events has never been quantitatively explored. ABMs of prediction markets have been studied \cite{Klingert2012c,Tseng2010a,Jumadinova2011a}, some of which feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, and therefore these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
 
-From a public policy perspective, this is a crucial point. Effective climate policy not only requires an accurate consensus on future climate \emph{outcomes}. It also requires an accurate consensus on the causal \emph{mechanisms}  influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policy will may be implemented. Our model is designed to investigate whether prediction markets can foster such convergence in predictive models.
+From a public policy perspective, changing explanatory models is crucial. Effective climate policy not only requires an accurate consensus on future climate \emph{outcomes}. It also requires an accurate consensus on the causal \emph{mechanisms} influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented. Our model is designed to investigate whether, and under what conditions, prediction markets can foster such convergence in predictive models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Model}
+\section*{Model Design}
 
 TODO: Martin use this text below (it is commented out) from the original document and flesh it out for the Supplementary Material and then write a couple paragraph summary and the key equations to put in this main article right here.
+
+In particular, lets go over main design and then define what each of these mean in our model: 	
+\begin{itemize}
+	\item \texttt{ideo} $\sim Unif(0,1)$
+	\item \texttt{market.complet} $\sim Unif(0,1000)$ (mapped into integer)
+	\item  \texttt{n.edge} $\sim Unif(100,200)$ (mapped into integer)
+	\item  \texttt{n.traders} $\sim Unif(50,250)$ (mapped into integer)
+	\item \texttt{risk.tak}  $\sim Unif(0,1)$
+	\item  \texttt{seg} $\sim Unif(0,1)$
+	\item  \texttt{true.model} $\sim Binom(0.5)$
+\end{itemize}
+
 % 	\section{Model}
 % 	
 % 	\label{model}
@@ -204,25 +214,25 @@ TODO: Martin use this text below (it is commented out) from the original documen
 % \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Results}
+\section*{Model Analysis}
 	
-In this section, we present an analysis of the sensitivity of the parameters of our model on the difference between the fraction of traders who believe in the true model at the beginning of the experiment, and the fraction who believe in the true model at the end of all trading sequences. The sensitivity analysis is based on a Latin Hypercube Sampling of the parameters from the following distributions:
+We estimated the effects of the parameters of our model on the difference between the fraction of traders who believe in the true model at the beginning of the experiment and the fraction who believe in the true model at the end of all trading sequences. The sensitivity analysis is based on a Latin Hypercube Sampling of 10,000 parameter sets from the following distributions \cite{beachkofski_improved_2002,carnell_lhs_2012}. 
 
 \begin{itemize}
-	\item \texttt{ideo} : $Unif(0,1)$
-	\item \texttt{market.complet} : $Unif(0,1000)$ (mapped into integer),  
-	\item  \texttt{n.edge} : $Unif(100,200)$ (mapped into integer),
-	\item  \texttt{n.traders} : $Unif(50,250)$ (mapped into integer),
-	\item \texttt{risk.tak}  : $Unif(0,1)$,
-	\item  \texttt{seg} : $Unif(0,1)$,
-	\item  \texttt{true.model} : $Binom(0.5)$
+	\item \texttt{ideo} $\sim Unif(0,1)$
+	\item \texttt{market.complet} $\sim Unif(0,1000)$ (mapped into integer)
+	\item  \texttt{n.edge} $\sim Unif(100,200)$ (mapped into integer)
+	\item  \texttt{n.traders} $\sim Unif(50,250)$ (mapped into integer)
+	\item \texttt{risk.tak}  $\sim Unif(0,1)$
+	\item  \texttt{seg} $\sim Unif(0,1)$
+	\item  \texttt{true.model} $\sim Binom(0.5)$
 \end{itemize}
 
-We conduct a partial \emph{rank} correlation coefficient analysis on the resulting simulated data \cite{Marino2008}. Partial correlation computes the linear relationship between the part of the variation of $x_i$ and $Y$ that are linearly independent of other $x_j$  ($j \neq i$).  The only difference with the partial correlation and partial \emph{rank} correlation (which we use here), is that the dependent variable $Y$ is first ranked-transformed in order to foster more uniform residuals.\footnote{That is every $Y_s$ in the data set is replace by a number $f(Y_s) \equiv |\{Y_r~|~ Y_s > Y_r\}|$, where $Y_r$ are the other observed values of $Y$ in the data set.} Such transformation preserves the sign of the correlation coefficient.
+We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ \cite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial \emph{rank} correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships.\footnote{That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.}
 
-Our model suggests that the strength of the convergence to the true model is dependent of what the true model actually is: if anthropogenic climate change is true, a prediction market is likely to cause convergence to the true model; while if anthropogenic climate change is false, and the model of the climate is in fact auto-regressive, convergence is unlikely.
+Our sensitivity analysis, illustrated by Fig.~\ref{fig:pc_sa}, strongly suggests that the magnitude of convergence to the true model is conditional on what the true model actually is: if anthropogenic climate change is true, a prediction market is likely to cause convergence to the true model; while if anthropogenic climate change is false, and the model of the climate is in fact auto-regressive, convergence to this true model is unlikely (Fig.~\ref{fig:hist}).
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 <<pc_sa, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE>>=
 load("output/pc2.Rda")
@@ -248,7 +258,7 @@ plot_pc <- function(x, outcome_var = "Outcome",
 
 plot_pc(pc2, outcome_var = "Convergence of Beliefs", xlab="")
 @
-\caption{Partial rank correlation coefficient analysis of the effects of ... on convergence of beliefs; lines are bootstrapped 95\% confidence intervals.}
+\caption{Partial rank correlation coefficient analysis \cite{pujol_sensitivity:_2014,saltelli_sensitivity_2009} of the effects of ideology, market completeness, number of edges in social network, number of traders in market, risk taking propensities, segregation measure of the social network, and the true climate model on the convergence of traders' beliefs. Lines are bootstrapped 95\% confidence intervals.}
 \label{fig:pc_sa}
 \end{figure}
 
@@ -274,13 +284,15 @@ ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) +
   theme_bw() + 
   theme(legend.justification=c(0,1), legend.position=c(0,1)) 
 @
-\caption{Convergence of belief outcomes with Latin Hypercube Sampled input parameters. Dashed lines are the medians of the densities (\Sexpr{cdat$outcome_summary[1]}, \Sexpr{cdat$outcome_summary[2]}).}
+\caption{Density of \Sexpr{sample_count} convergence of belief model outcomes with \Sexpr{formatC(sample_count, big.mark=',')} Latin Hypercube Sampled input parameter sets. \Sexpr{formatC(sum(ifelse(d$true.model=="Human-Induced", 1, 0)), big.mark=',')} of the Latin Hypercube Sampled input parameter sets have ``human-induced'' climate change as the true model and \Sexpr{formatC(sum(ifelse(d$true.model=="Natural Change", 1, 0)), big.mark=',')} have ``natural change'' climate change as the true model. Dashed lines are the medians of the two densities (\Sexpr{cdat$outcome_summary[1]}, \Sexpr{cdat$outcome_summary[2]}).}
 \label{fig:hist}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Discussion}
-An important argument in favor of a climate prediction market is that it is supposed to be an apartisan proposal. Defenders of climate prediction markets argue that climate prediction markets will foster convergence to the best approximate model, whatever the actual true model is. If climate change is not anthropogenic -- so the argument goes, traders will converge to non-anthropogenic in pretty much the same way as they would converge to anthropogenic models if the climate is truly influenced by human activities. Our findings contradict this assumption.
+Proponents of climate prediction markets argue that climate prediction markets will foster convergence to the best approximate model, whatever the actual true model is. It is framed as an apartisan proposal: if climate change is not anthropogenic, traders will converge to non-anthropogenic beliefs similar to how they would converge to anthropogenic beliefs if the climate is truly influenced by human activities. Our findings contradict this assumption. 
+
+TODO: Jonathan, perhaps talk about the policy implications of this finding...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgements}
