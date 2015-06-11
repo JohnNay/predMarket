@@ -100,11 +100,18 @@ ggplot2::ggplot(d, aes(x = convergence)) + geom_histogram(binwidth = 0.04) +
   ggtitle(paste(sample_count, 
                  "Convergence of Belief Outcomes with LHS Input Parameters")) +
   theme_bw()
-ggplot2::ggplot(d, aes(x = convergence)) + geom_histogram(binwidth = 0.04) +
-  xlim(c(-0.6, 0.6)) +
-  ylab("Count") + xlab("Convergence of Beliefs") + 
+
+d$true.model <- factor(d$true.model)
+library(plyr)
+cdat <- plyr::ddply(d, "true.model", summarize, outcome_mean = mean(convergence))
+ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) + 
+  geom_density(alpha = 0.3) +
+  # xlim(c(-0.6, 0.6)) +
+  ylab("Density") + xlab("Convergence of Beliefs") + 
   ggtitle(paste(sample_count, 
                 "Convergence of Belief Outcomes with LHS Input Parameters")) +
+  geom_vline(data=cdat, aes(xintercept= outcome_mean,  color = true.model),
+             linetype="dashed", size=1) + 
   theme_bw()
 
 ##############################################################################
