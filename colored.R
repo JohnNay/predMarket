@@ -1,7 +1,6 @@
-Colored <- function(
-  g = net,
-  attri = "approx"
-){
+Colored <- function(g,
+  attri = "approx"){
+  
   V(g)$color<- get.vertex.attribute(g,attri)
   
   d <- length(unique(V(g)$color))

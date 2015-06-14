@@ -1,4 +1,6 @@
 
+library(igraph)
+
 # Construct model:
 source("generate_model.R")
 # Sub functions needed inside of generate_model():
@@ -29,7 +31,6 @@ main <- function(parameters,
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
   
-  
   # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
@@ -46,7 +47,6 @@ main <- function(parameters,
   market.struct <- match.arg(market.struct)
   out <- match.arg(out)
   
-  library(igraph)
   if (visu){
     source("colored.R")
   }
@@ -98,7 +98,7 @@ main <- function(parameters,
   # Visualize network (optional)
   if (visu){
     net <- Colored(net)
-    plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+    igraph::plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
   }
   #############################################
   #############################################

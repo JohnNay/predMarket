@@ -6,7 +6,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 source("main.R")
 # test
 s <- append(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1))
-main(parameters = s, out = "converg")
+main(parameters = s, out = "converg", visu = TRUE)
 
 
 # ######

@@ -1,4 +1,6 @@
 
+library(igraph)
+
 # Construct model:
 source("generate_model.R")
 # Sub functions needed inside of generate_model():
@@ -46,7 +48,6 @@ main2 <- function(parameters,
   market.struct <- match.arg(market.struct)
   out <- match.arg(out)
   
-  library(igraph)
   if (visu){
     source("colored.R")
   }
@@ -98,7 +99,7 @@ main2 <- function(parameters,
   # Visualize network (optional)
   if (visu){
     net <- Colored(net)
-    plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+    igraph::plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
   }
   #############################################
   #############################################
