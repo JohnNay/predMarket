@@ -293,7 +293,7 @@ ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) +
 <<temporal, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE, fig.width=10, fig.height=6>>=
 sample_count <- 1000
 load("output/average_convergence.Rda")
-dat <- average_convergence[average_convergence$true_mod != "Both", ]
+dat <- average_convergence
 dat$true_mod <- factor(dat$true_mod, levels = c("Natural", "Human-Induced"), 
                        labels = c("Natural Change", "Human-Induced"))
 library(ggplot2)
