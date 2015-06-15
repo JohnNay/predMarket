@@ -8,25 +8,6 @@ source("main.R")
 s <- append(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1))
 main(parameters = s, out = "converg", visu = TRUE)
 
-
-# ######
-# ##   Record values of outcomes through time and plot average through iterations
-# ######
-# 
-# s <- runif(4, min = 0.0001, max = 0.9999)
-# outcome.evolution <- main(parameters = s, out = "converg", record = TRUE)
-# 
-# for (j in 1:99){
-#   s <- runif(4, min = 0.0001, max = 0.9999)
-#   outcome.evolution <- rbind(outcome.evolution, main(parameters = s, out = "converg", record = TRUE))
-# }
-# 
-# average.convergence <- colMeans(outcome.evolution)
-# 
-# plot(average.convergence, type = "b", main = "Average convergence \nas a function of the number of trading sequences",
-#                                       xlab = "Number of trading sequences",
-#                                       ylab = "Average convergence (n = 100)")
-
 #####
 ## Sensitivity analysis
 #####
@@ -119,6 +100,25 @@ ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) +
 ##############################################################################
 rm(list=ls())
 source("main2.R")
+# test once
+s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
+outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
+# run 100
+doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
+runs <- 100
+outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(runs), .combine='rbind'), {
+  main2(parameters = c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999)), 
+        out = "converg", visu = FALSE, record = TRUE)
+})
+average_convergence <- data.frame(avg = colMeans(outcome.evolution), 
+                                  trading_seq = seq(length(colMeans(outcome.evolution))))
+save(average_convergence, file = "output/average_convergence.Rda")
+library(ggplot2)
+ggplot(data=average_convergence, aes(x= trading_seq, y=avg)) +
+  geom_line() + ggtitle("Average convergence \nas a function of the number of trading sequences") +
+  xlab("Number of trading sequences") + ylab(paste0("Average convergence (n = ", runs, ")"))
+
+# SA
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",

@@ -219,11 +219,6 @@ main2 <- function(parameters,
     }
   }
   
-  # TODO:
-  # need to compute some set of outcome measures here, like prices of a particular indices
-  # and then return one index, the one that matches the arg of main() called "outcome" 
-  # outcome
-  
   if (out == "segreg" && record == FALSE){
     
     # calculate the mixing matrix
