@@ -124,14 +124,47 @@ outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)),
   main2(parameters = as.numeric(input_set[i, ]), 
         out = "converg", visu = FALSE, record = TRUE)
 })
+# TRUE model is even prob between Human-induced and Natural
 average_convergence <- data.frame(avg = colMeans(outcome.evolution), 
-                                  trading_seq = seq(length(colMeans(outcome.evolution))))
+                                  trading_seq = seq(length(colMeans(outcome.evolution))),
+                                  true_mod = "Both")
+# TRUE model is Human-induced
+input_values$true.model <- list(random_function = "qbinom",
+                                ARGS = list(size = 1, prob = 1))
+input_set <- create_set(input_values, input_names, sample_count = sample_count,
+                        constraints = "none")
+doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
+outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
+  main2(parameters = as.numeric(input_set[i, ]), 
+        out = "converg", visu = FALSE, record = TRUE)
+})
+average_convergence <- rbind(average_convergence,
+                             data.frame(avg = colMeans(outcome.evolution), 
+                                        trading_seq = seq(length(colMeans(outcome.evolution))),
+                                        true_mod = "Human-Induced"))
+# TRUE model is Natural Change
+input_values$true.model <- list(random_function = "qbinom",
+                                ARGS = list(size = 1, prob = 0))
+input_set <- create_set(input_values, input_names, sample_count = sample_count,
+                        constraints = "none")
+doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
+outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
+  main2(parameters = as.numeric(input_set[i, ]), 
+        out = "converg", visu = FALSE, record = TRUE)
+})
+average_convergence <- rbind(average_convergence,
+                             data.frame(avg = colMeans(outcome.evolution), 
+                                        trading_seq = seq(length(colMeans(outcome.evolution))),
+                                        true_mod = "Natural"))
 save(average_convergence, file = "output/average_convergence.Rda")
 library(ggplot2)
-ggplot(data=average_convergence, aes(x= trading_seq, y=avg)) +
-  geom_line() + ggtitle("Average Convergence Over Trading Sequences") +
+ggplot(data=average_convergence[
+  average_convergence$true_mod != "Both", ], aes(x= trading_seq, y=avg, color = true_mod)) +
+  geom_smooth(method = "loess") + 
+  ggtitle("Average Convergence Over Trading Sequences") +
   xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
-  theme_bw()
+  theme_bw() + theme(legend.justification=c(0,1), legend.position=c(0,1)) + 
+  scale_color_discrete(name="True Model")
 
 # SA
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
