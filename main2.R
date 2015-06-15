@@ -154,7 +154,7 @@ main2 <- function(parameters,
     
     if(out == "converg"){
       
-      result <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
+      result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
       
     }
   }
@@ -211,7 +211,7 @@ main2 <- function(parameters,
         
         if(out == "converg"){
           
-          result <- append(result,length(V(net)$approx[V(net)$approx == 1])/length(V(net)))
+          result <- append(result, (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util)
           
         }
       }
