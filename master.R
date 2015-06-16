@@ -105,7 +105,6 @@ s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.00
 outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 # run many
 sample_count <- 1000
-# SA
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",
@@ -148,7 +147,8 @@ average_convergence <- rbind(average_convergence,
 save(average_convergence, file = "output/average_convergence.Rda")
 library(ggplot2)
 ggplot(data=average_convergence, aes(x= trading_seq, y=avg, color = true_mod)) +
-  geom_smooth(method = "loess") + 
+  #geom_smooth(method = "loess") + 
+  geom_line() +
   ggtitle("Average Convergence Over Trading Sequences") +
   xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
   theme_bw() + theme(legend.justification=c(0,1), legend.position=c(0,1)) + 

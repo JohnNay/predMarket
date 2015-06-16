@@ -29,6 +29,11 @@ generate_model <- function (
   horizon    = 5,
   n.seq      = 20
 ){
+  
+  # BC of the empirical data: (There are 116 data points in the data set.)
+  stopifnot((burn.in + n.seq * horizon) == 116)
+  # Otherwise, agents will start to try to access inexistent data
+  
   market.struct <- match.arg(market.struct)
   
   #####
