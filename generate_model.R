@@ -25,9 +25,9 @@ generate_model <- function (
   # strong evidence (conversely if low).
   
   # Timing parameters
-  burn.in    = 16,
-  horizon    = 5,
-  n.seq      = 20
+  burn.in,
+  horizon,
+  n.seq
 ){
   
   # BC of the empirical data: (There are 116 data points in the data set.)

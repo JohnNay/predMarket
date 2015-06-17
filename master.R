@@ -147,8 +147,7 @@ average_convergence <- rbind(average_convergence,
 save(average_convergence, file = "output/average_convergence.Rda")
 library(ggplot2)
 ggplot(data=average_convergence, aes(x= trading_seq, y=avg, color = true_mod)) +
-  #geom_smooth(method = "loess") + 
-  geom_line() +
+  geom_smooth(method = "loess") + #geom_line() +
   ggtitle("Average Convergence Over Trading Sequences") +
   xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
   theme_bw() + theme(legend.justification=c(0,1), legend.position=c(0,1)) + 

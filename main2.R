@@ -78,11 +78,11 @@ main2 <- function(parameters,
     ### Timing parameters:
     
     # Number of periods burned for initial calibration
-    burn.in    = 6, # 16
+    burn.in    = 4, # 16
     # Number of trading sequences
-    n.seq       = 22, # 20
+    n.seq       = 28, # 20
     # The number of periods in each sequence (= number of trading periods + 1)
-    horizon    = 5
+    horizon    = 4 # 5
     
     ###############
     ### WARNING ### timing parameters must match empirical data used in generate_data
