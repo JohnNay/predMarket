@@ -21,10 +21,16 @@ source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
 main2 <- function(parameters,
+                  burn.in = 4,
+                  n.seq = 28,
+                  horizon = 4,
                  market.struct = c("CDA", "LMSR"), 
                  out = c("segreg", "converg"),
                  visu = FALSE,
                  record = FALSE) {
+  
+  stopifnot((burn.in + n.seq * horizon) == 116)
+  
   ### Market structure parameters:
   # market.struct, choses between CDA and LMSR
   # market.complet is number of securities which
@@ -78,11 +84,11 @@ main2 <- function(parameters,
     ### Timing parameters:
     
     # Number of periods burned for initial calibration
-    burn.in    = 4, # 16
+    burn.in    = burn.in, # 16
     # Number of trading sequences
-    n.seq       = 28, # 20
+    n.seq       = n.seq, # 20
     # The number of periods in each sequence (= number of trading periods + 1)
-    horizon    = 4 # 5
+    horizon    = horizon # 5
     
     ###############
     ### WARNING ### timing parameters must match empirical data used in generate_data
