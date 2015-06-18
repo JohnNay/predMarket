@@ -3,66 +3,68 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # lines of code work without error, ensuring that the working of the model is not 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code that is sourced in the next two lines of code.
-source("main.R")
-# test
-s <- append(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1))
-main(parameters = s, out = "converg", visu = TRUE)
 
-#####
-## Sensitivity analysis
-#####
+# #####
+# ## Sensitivity analysis
+# #####
+# input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
+#                             market.complet = NA), 
+#                        function(x) list(random_function = "qunif",
+#                                         ARGS = list(min = 0.0001, max = 0.9999)))
+# input_values$true.model <- list(random_function = "qbinom",
+#                                 ARGS = list(size = 1, prob = 0.5))
+# # # if there are any params that are binary valued give them a binom prior distribution:
+# # input_values[["param2"]] <- list(random_function = "qbinom",
+# #                                  ARGS = list(size = 1, prob = 0.5))
+# 
+# sobol <- sobol_sa(abm = main, 
+#                        input_values = input_values,
+#                        out = "converg", 
+#                        sample_count = 3000, 
+#                        sobol_nboot = 1000, 
+#                        parallel = TRUE,
+#                        cores = 25)
+# save(sobol, file = "output/sobol.Rda")
+# plot(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
+# 
+# pc <- pc_sa(abm = main, 
+#                  input_values = input_values,
+#                  out = "converg", 
+#                  sample_count = 5000, 
+#                  nboot = 1000, 
+#                  parallel = TRUE,
+#                  cores = 25,
+#                  rank = TRUE, method = "pcc") 
+# save(pc, file = "output/pc.Rda")
+# plot(pc, outcome_var = "Convergence of Beliefs")
 
-devtools::install_github("JohnNay/eat", 
-                         auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
-library(eat)
-?sobol_sa
+source("main2.R")
 
-input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
-                            market.complet = NA), 
-                       function(x) list(random_function = "qunif",
-                                        ARGS = list(min = 0.0001, max = 0.9999)))
-input_values$true.model <- list(random_function = "qbinom",
-                                ARGS = list(size = 1, prob = 0.5))
-# # if there are any params that are binary valued give them a binom prior distribution:
-# input_values[["param2"]] <- list(random_function = "qbinom",
-#                                  ARGS = list(size = 1, prob = 0.5))
-
-sobol <- sobol_sa(abm = main, 
-                       input_values = input_values,
-                       out = "converg", 
-                       sample_count = 3000, 
-                       sobol_nboot = 1000, 
-                       parallel = TRUE,
-                       cores = 25)
-save(sobol, file = "output/sobol.Rda")
-plot(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
-
-pc <- eat::pc_sa(abm = main, 
-                 input_values = input_values,
-                 out = "converg", 
-                 sample_count = 5000, 
-                 nboot = 1000, 
-                 parallel = TRUE,
-                 cores = 25,
-                 rank = TRUE, method = "pcc") 
-save(pc, file = "output/pc.Rda")
-plot(pc, outcome_var = "Convergence of Beliefs")
+# test once
+s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
+outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
 # we test on the sa, and plot them as an histogram
 ##############################################################################
-if (!require(eat)) devtools::install_github("JohnNay/eat", 
-                                            auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
+
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",
                                         ARGS = list(min = 0.0001, max = 0.9999)))
 input_values$true.model <- list(random_function = "qbinom",
                                 ARGS = list(size = 1, prob = 0.5))
+input_values$n.edg <- list(random_function = "qunif",
+                           ARGS = list(min = 0.0001, max = 0.9999))
+input_values$n.traders <- list(random_function = "qunif",
+                               ARGS = list(min = 0.0001, max = 0.19999))
 input_names <- names(input_values)
+
 cores <- parallel::detectCores() - 1
 sample_count <- 7000
+
+source("utilities/create_set.R")
 input_set <- create_set(input_values, input_names, sample_count = sample_count,
                         constraints = "none")
 # Simulation runs with generated input factor sets:
@@ -96,14 +98,8 @@ ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) +
   theme_bw()
 
 ##############################################################################
-## Sensitivity analysis on all variables
+## random analysis on all variables
 ##############################################################################
-rm(list=ls())
-source("main2.R")
-# test once
-s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
-outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
-# run many
 set <- list()
 set[[1]] <- list(burn.in = 4, n.seq = 28, horizon = 4)
 set[[2]] <- list(burn.in = 6, n.seq = 22, horizon = 5)
@@ -126,7 +122,7 @@ for(j in set){
   # TRUE model is Human-induced
   input_values$true.model <- list(random_function = "qbinom",
                                   ARGS = list(size = 1, prob = 1))
-  input_set <- eat::create_set(input_values, input_names, sample_count = sample_count,
+  input_set <- create_set(input_values, input_names, sample_count = sample_count,
                                constraints = "none")
   doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
@@ -156,6 +152,7 @@ for(j in set){
                                           true_mod = "Natural",
                                           set = paste(as.character(j), collapse = ", ")))
 }
+
 save(average_convergence, file = "output/average_convergence.Rda")
 
 library(ggplot2)
@@ -169,7 +166,9 @@ ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
   theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
   scale_color_discrete(name="True Model")
 
-# SA
+##############################################################################
+## Sensitivity analysis on all variables
+##############################################################################
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
                             market.complet = NA), 
                        function(x) list(random_function = "qunif",
@@ -180,27 +179,28 @@ input_values$n.edg <- list(random_function = "qunif",
                            ARGS = list(min = 0.0001, max = 0.9999))
 input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
-library(eat)
-pc2 <- eat::pc_sa(abm = main2, 
-                  input_values = input_values,
-                  out = "converg", 
-                  sample_count = 10000, 
-                  nboot = 1000, 
-                  parallel = TRUE,
-                  cores = 30,
-                  rank = TRUE, method = "pcc") 
+
+source("utilities/pc_sa.R") # Need to have package "sensitivity" installed.
+pc2 <- pc_sa(abm = main2, 
+             input_values = input_values,
+             out = "converg", 
+             sample_count = 10000, 
+             nboot = 1000, 
+             parallel = TRUE,
+             cores = 30,
+             rank = TRUE, method = "pcc") 
 save(pc2, file = "output/pc2.Rda")
 plot(pc2, outcome_var = "Convergence of Beliefs")
 
 # Standardized Regression Coefficient
-src2 <- eat::pc_sa(abm = main2, 
-                  input_values = input_values,
-                  out = "converg", 
-                  sample_count = 10000, 
-                  nboot = 1000, 
-                  parallel = TRUE,
-                  cores = 30,
-                  rank = TRUE, method = "src") 
+src2 <- pc_sa(abm = main2, 
+              input_values = input_values,
+              out = "converg", 
+              sample_count = 10000, 
+              nboot = 1000, 
+              parallel = TRUE,
+              cores = 30,
+              rank = TRUE, method = "src") 
 save(src2, file = "output/src2.Rda")
 plot(src2, outcome_var = paste0("Convergence of Beliefs (R^2= ", src2@r_squared, ")"))
 plot(src2, outcome_var = "Convergence of Beliefs")
