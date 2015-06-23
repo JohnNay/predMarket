@@ -79,11 +79,11 @@ coef_var <- function(x, na.rm = FALSE){
 compute_iters <- function(abm, 
                           input_values,
                           out, 
-                          sample_count = 50,
+                          sample_count = 30,
                           repeats = 10,
                           thresh = 0.05,
-                          initial_iters = 100,
-                          max_iters = 10000,
+                          initial_iters = 1,
+                          max_iters = 1000,
                           constraints = "none",
                           parallel = FALSE,
                           cores = NULL,
@@ -121,7 +121,7 @@ compute_iters <- function(abm,
         measured <- coef_var(output)
       }
       
-      if (iters >= max_iters | measured >= thresh){
+      if (iters >= max_iters | measured <= thresh){
         break
       } else {
         iters <- iters + 1

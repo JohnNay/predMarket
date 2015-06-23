@@ -58,11 +58,11 @@ input_values$n.edg <- list(random_function = "qunif",
                            ARGS = list(min = 0.0001, max = 0.9999))
 input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
-cores <- parallel::detectCores() - 1
-doParallel::registerDoParallel(cores = cores)
 source("utilities/create_set.R")
 source("utilities/compute_iters.R")
-compute_iters(main2, input_values, "converg", initial_iters = 10)
+iters_res <- compute_iters(main2, input_values, "converg", initial_iters = 1,
+                           thresh = 0.03, repeats = 30,
+                           parallel = TRUE, cores = 25)
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
