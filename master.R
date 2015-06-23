@@ -60,9 +60,10 @@ input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
 source("utilities/create_set.R")
 source("utilities/compute_iters.R")
-iters_res <- compute_iters(main2, input_values, "converg", initial_iters = 1,
-                           thresh = 0.03, repeats = 30,
-                           parallel = TRUE, cores = 25)
+iters_res <- compute_iters(main2, input_values, "converg", initial_iters = 2,
+                           max_iters = 20,
+                           thresh = 0.05, repeats = 10,
+                           parallel = TRUE, cores = 30)
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
