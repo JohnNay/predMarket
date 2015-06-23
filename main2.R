@@ -21,6 +21,7 @@ source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
 main2 <- function(parameters,
+                  iterations = 10,
                   burn.in = 4,
                   n.seq = 28,
                   horizon = 4,
@@ -57,6 +58,10 @@ main2 <- function(parameters,
   if (visu){
     source("colored.R")
   }
+  
+  result_final <- rep(NA, iterations)
+  
+  for(iteration in seq(iterations)){
   #####
   ## Set model's parameters and create corresponding network
   #####
@@ -212,7 +217,7 @@ main2 <- function(parameters,
           
           # now calculate the assortativity coefficient
           result <- append(result,assortcoeff(m))
-
+          
         }
         
         if(out == "converg"){
@@ -250,7 +255,10 @@ main2 <- function(parameters,
     
   }
   
-  result
+  result_final[iteration] <- result
+  }
+  
+  mean(result_final)
   
 }
 

@@ -44,6 +44,26 @@ source("main2.R")
 s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
 outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 
+
+##############################################################################
+## Estimate number of replicates needed for each param set
+##############################################################################
+input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
+                            market.complet = NA), 
+                       function(x) list(random_function = "qunif",
+                                        ARGS = list(min = 0.0001, max = 0.9999)))
+input_values$true.model <- list(random_function = "qbinom",
+                                ARGS = list(size = 1, prob = 0.5))
+input_values$n.edg <- list(random_function = "qunif",
+                           ARGS = list(min = 0.0001, max = 0.9999))
+input_values$n.traders <- list(random_function = "qunif",
+                               ARGS = list(min = 0.0001, max = 0.19999))
+cores <- parallel::detectCores() - 1
+doParallel::registerDoParallel(cores = cores)
+source("utilities/create_set.R")
+source("utilities/compute_iters.R")
+compute_iters(main2, input_values, "converg", initial_iters = 10)
+
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
 # we test on the sa, and plot them as an histogram
@@ -64,7 +84,6 @@ input_names <- names(input_values)
 cores <- parallel::detectCores() - 1
 sample_count <- 7000
 
-source("utilities/create_set.R")
 input_set <- create_set(input_values, input_names, sample_count = sample_count,
                         constraints = "none")
 # Simulation runs with generated input factor sets:
