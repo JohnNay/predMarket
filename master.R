@@ -41,8 +41,8 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 source("main2.R")
 
 # test once
-s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
-outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
+# s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
+# outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 
 
 ##############################################################################
@@ -60,10 +60,13 @@ input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
 source("utilities/create_set.R")
 source("utilities/compute_iters.R")
-iters_res <- compute_iters(main2, input_values, "converg", initial_iters = 2,
-                           max_iters = 20,
-                           thresh = 0.05, repeats = 10,
-                           parallel = TRUE, cores = 30)
+iters_res <- compute_iters(main2, input_values, "converg", 
+                           initial_iters = 1,
+                           max_iters = 20, 
+                           sample_count = 30, parallel = TRUE, cores = 30,
+                           measure = "sd", thresh = 0.05, repeats = 100)
+plot(iters_res, ylab = "Standard Deviation")
+summary(iters_res)
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
