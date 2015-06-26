@@ -65,7 +65,9 @@ iters_res <- compute_iters(main2, input_values, "converg",
                            max_iters = 20, 
                            sample_count = 30, parallel = TRUE, cores = 30,
                            measure = "sd", thresh = 0.05, repeats = 100)
-plot(iters_res, ylab = "Standard Deviation")
+save(iters_res, file = "output/iters_res.Rda")
+plot(iters_res, ylab = "100 Standard Deviations", 
+     outcome = "30 Convergence of Beliefs Outcomes")
 summary(iters_res)
 
 ##############################################################################

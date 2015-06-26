@@ -11,9 +11,9 @@ setClass(Class = "computeIters",
 
 setMethod("summary", "computeIters",
           function(object, digits = 3) {
-            cat("\n\nThis process took", object@timing, "seconds (", 
-                object@timing/60/60, "hours).")
-            cat("Average number of iterations found to be sufficient is", object@result)
+            cat(paste0("\n This process took ", object@timing, " seconds (", 
+                       round(object@timing/60/60, 2), " hours)."))
+            cat("\n Average number of iterations found to be sufficient is", object@result)
             invisible(object)
           }
 )
