@@ -60,14 +60,15 @@ input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
 source("utilities/create_set.R")
 source("utilities/compute_iters.R")
+## SD
 iters_res <- compute_iters(main2, input_values, "converg", 
                            initial_iters = 1,
                            max_iters = 20, 
-                           sample_count = 30, parallel = TRUE, cores = 30,
+                           sample_count = 60, parallel = TRUE, cores = 30,
                            measure = "sd", thresh = 0.05, repeats = 100)
 save(iters_res, file = "output/iters_res.Rda")
 plot(iters_res, ylab = "100 Standard Deviations", 
-     outcome = "30 Convergence of Beliefs Outcomes")
+     outcome = "Samples of 60 Convergence of Beliefs Outcomes")
 summary(iters_res)
 
 ##############################################################################
