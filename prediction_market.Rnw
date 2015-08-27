@@ -2,8 +2,8 @@
 
 \begin{document}
 
-\title{Climate Prediction Markets and Convergence of Predictive Models}
-\author{not sure about the author order}
+\title{Simulated Climate Prediction Markets and Convergence of Predictive Models}
+\author{ }
 
 \maketitle
 	
@@ -290,22 +290,24 @@ ggplot2::ggplot(d, aes(x = convergence, fill = true.model)) +
 
 \begin{figure}
 \centering
-<<temporal, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE, fig.width=10, fig.height=6>>=
-sample_count <- 1000
+<<temporal, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE, fig.width=10, fig.height=10>>=
+# set[[1]] <- list(burn.in = 4, n.seq = 28, horizon = 4)
+# set[[2]] <- list(burn.in = 6, n.seq = 22, horizon = 5)
+# set[[3]] <- list(burn.in = 16, n.seq = 20, horizon = 5)
 load("output/average_convergence.Rda")
-dat <- average_convergence
-dat$true_mod <- factor(dat$true_mod, levels = c("Natural", "Human-Induced"), 
-                       labels = c("Natural Change", "Human-Induced"))
+sample_count <- 1000
 library(ggplot2)
-ggplot(data= dat, aes(x= trading_seq, y=avg, color = true_mod)) +
-  geom_smooth(method = "loess") + 
+plot_data <- average_convergence
+plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
+ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
+  geom_smooth(method = "loess") + #geom_line() +
+  ggplot2::facet_wrap(~set, ncol = 1) +
   ggtitle("Average Convergence Over Trading Sequences") +
-  xlab("Trading Sequences") + 
-  ylab(paste0("Average Convergence (n = ", formatC(sample_count, big.mark = ','), ")")) + 
-  theme_bw() + theme(legend.justification=c(0,1), legend.position=c(0,1)) + 
+  xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
+  theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
   scale_color_discrete(name="True Model")
 @
-\caption{Temporal evolution of convergence of beliefs for the ABM with \Sexpr{formatC(sample_count, big.mark=',')} model runs with ``True Model'' parameter set to natural climate change and \Sexpr{formatC(sample_count, big.mark=',')} model runs with ``True Model'' parameter set to human-induced climate change. All other parameters are sampled from their full support with Latin Hypercube Sampling; therefore, the plot represents, in effect, a marginalizing out of the effects of all other parameters to show the moderating effect that the true model has on the effect of the prediction market on the convergence of traders' beliefs about what the true model is. The prediction market causes opposite convergence effects for the two true climate models.}
+\caption{Temporal evolution of convergence of beliefs for the ABM with \Sexpr{formatC(sample_count, big.mark=',')} model runs with ``True Model'' parameter set to natural climate change and \Sexpr{formatC(sample_count, big.mark=',')} model runs with ``True Model'' parameter set to human-induced climate change. All other parameters besides burn.in, n.seq, and horizon are sampled from their full support with Latin Hypercube Sampling; therefore, the plot represents, in effect, a marginalizing out of the effects of all other parameters to show the moderating effect that the true model has on the effect of the prediction market on the convergence of traders' beliefs about what the true model is. The prediction market causes opposite convergence effects for the two true climate models. The top figure used the timing settings: burn.in = 4, n.seq = 28, horizon = 4. Middle figure: burn.in = 6, n.seq = 22, horizon = 5. Bottom figure: burn.in = 16, n.seq = 20, horizon = 5.}
 \label{fig:temporal}
 \end{figure}
 
@@ -317,7 +319,7 @@ TODO: Jonathan, perhaps talk about the policy implications of this finding...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgements}
-We gratefully acknowledge the authors of \textsf{R} \cite{r_core}. This manuscript was prepared using knitr \cite{xie_knitr_2014} and benefited from our exposure to the literature on reproducible research \cite{stodden_reproducible_research_2014}. We would like to thank Yevgeniy Vorobeychik for feedback on this project.
+We gratefully acknowledge the authors of \textsf{R} \cite{r_core}. This manuscript was prepared using knitr \cite{xie_knitr_2014}. We would like to thank Yevgeniy Vorobeychik for feedback on this project.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{plain}
