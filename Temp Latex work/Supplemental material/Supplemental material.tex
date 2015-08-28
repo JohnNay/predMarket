@@ -1,0 +1,161 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{animate}
+\usepackage[linktocpage, breaklinks, colorlinks = true, linkcolor = Brown, citecolor = blue]{hyperref}
+\usepackage{enumerate}
+\usepackage[dvips]{graphicx}
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+\usepackage{float}
+\usepackage{bm}
+\usepackage{nameref}
+\usepackage{xfrac}
+\usepackage{accents}
+\usepackage[stable]{footmisc}
+\usepackage[nice]{nicefrac}
+\usepackage{thmtools}
+\usepackage{blindtext}
+\usepackage{tcolorbox} 
+\tcbuselibrary{breakable}
+
+\newcounter{test}
+
+\newtcolorbox{framet}[2][%
+breakable,
+arc=7pt,
+outer arc=0pt,
+coltitle=black,
+fonttitle=\bfseries,
+boxrule=2pt,
+colframe=Brown,
+colback=Apricot,
+title after break={Frame~\thetest\ (Continued)}
+]{%
+before upper={
+  \stepcounter{test}\textbf{Frame~\thetest.\ }%
+},
+label={#2},
+#1}
+
+\newcommand{\aligncom}[1]{%
+  \text{\phantom{(#1)}} \tag{#1}
+}
+  
+
+\newcounter{frame} \setcounter{frame}{0}
+
+\renewcommand{\theframe}{\Roman{frame}}
+
+\newenvironment{FFrame}[1]%
+{
+\refstepcounter{frame}
+\vspace{1ex} \flushleft\makebox[13ex][l]{\textbf{Frame} \theframe} \texttt{#1}
+}
+
+
+
+
+
+
+\graphicspath{{graphics/}}
+
+\declaretheorem [name = Theorem]{theo}
+\declaretheorem [name = Lemma]{lem}
+\declaretheorem [name = Axiom]{ax}
+\declaretheorem [name = Preference axiom]{pref}
+\declaretheorem [name = Observation]{obs}
+\declaretheorem [name = Definition]{defi}
+\declaretheorem [name = Example]{expl}
+\declaretheorem [name = Social ordering function]{sof}
+\declaretheorem [name = Problem]{prob}
+\declaretheorem [name = Assumption]{ass}
+\declaretheorem [name = Proposition]{prop}
+
+\DeclareFontFamily{OT1}{pzc}{}
+\DeclareFontShape{OT1}{pzc}{m}{it}%
+              {<-> s * [0.900] pzcmi7t}{}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}%
+                                 {m}{it}
+
+
+
+
+%\newtheorem{ax}{Axiom}
+%\newtheorem{pref}{Preference axiom}
+%\newtheorem{obs}{Observation}
+%\newtheorem{defi}{Definition}
+%\newtheorem{sof}{Social ordering function}
+
+
+
+\newcommand{\nref}{\nameref}
+
+% %Short commands for math mode
+
+%Style
+\newcommand{\mb}[1]{\mathbf{#1}}     % bold letters in mathmode
+\newcommand{\bs}[1]{\boldsymbol{#1}} % bold symbols in mathmode
+\newcommand{\bb}[1]{\mathbb{#1}}     % Doppelstrichbuchstaben im Mathematikmodus
+\newcommand{\mc}[1]{\mathcal{#1}}    % calligraphy style
+%Sets
+\newcommand{\rr}{\bb{R}} % set of reals in mathmode
+%Fractions
+\newcommand{\pfraca}[2]{\bigl(\frac{#1}{#2}\bigr)}    % ratios with small parantheses
+\newcommand{\pfracb}[2]{\Bigl(\frac{#1}{#2}\Bigr)}    % ratios with big parantheses
+\newcommand{\pfracc}[2]{\biggl(\frac{#1}{#2}\biggr)}  % ratios with bigger parantheses
+\newcommand{\pfracd}[2]{\Biggl(\frac{#1}{#2}\Biggr)}  % ratios with huge parantheses
+%Partial derivatives
+\newcommand{\di}[1]{\frac{\partial}{\partial #1}}     % shortcut for first partial derivative
+\newcommand{\dii}[1]{\frac{\partial^2}{\partial #1^2}}% shortcut for second partial derivative
+%other
+\newcommand{\ra}{\rightarrow}            % convergence
+%Convergence
+\newcommand{\cd}{\overset{d}{\rightarrow}}    % convergence in distribution
+\newcommand{\cp}{\overset{p}{\rightarrow}}    % convergence in probability
+\newcommand{\cas}{\overset{as}{\rightarrow}}  % convergence almost surely
+%Text in math environment
+\newcommand{\sgn}{~\text{sgn}~}
+\newcommand{\f}{~\text{if}~}
+\newcommand{\frall}{~\text{for all}~}
+\newcommand{\ow}{~\text{otherwise}~}
+\newcommand{\nd}{~\text{and}~}
+\newcommand{\thn}{~\text{then}~}
+\newcommand{\id}{\coloneqq}
+%Variant of variables (tilde, lower bar,...)
+\newcommand{\lbar}[1]{\underline{#1\mkern-4mu}\mkern4mu }
+\newcommand{\x}{\bm{x}}
+\newcommand{\m}{\bm{m}}
+\newcommand{\z}{\bm{z}}
+\newcommand{\g}{\bm{\gamma}}
+\newcommand{\h}{\bm{h}}
+\newcommand{\y}{\bm{y}}
+\newcommand{\e}{\bm{e}}
+\newcommand{\la}{\bm{\lambda}}
+\newcommand{\ce}{\bm{c}}
+\renewcommand{\b}{\bm{\beta}}
+\newcommand{\hb}{\hat{\b}}
+
+\title{}
+\author{Martin Van der Linden}
+
+\begin{document}
+
+\maketitle
+
+
+
+\bibliography{library.bib}
+\bibliographystyle{apalike}
+
+
+
+\end{document}
