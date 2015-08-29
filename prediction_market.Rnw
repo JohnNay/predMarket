@@ -404,7 +404,7 @@ TODO: Jonathan, perhaps talk about the policy implications of this finding...
  		\begin{center}
  		\includegraphics[width = 0.8\textwidth]{figures/segregated.png}
  		\end{center}
- 		\caption{An example of the initial state of a belief network with 50 traders. Red nodes are traders who initially believe in \eqref{eq:true0} and black nodes are traders who initially believe in \eqref{eq:true1}. Notice that the  \label{socnet}}
+ 		\caption{An example of the initial state of a belief network with 50 traders. Red nodes are traders who initially believe in \eqref{eq:true0} and black nodes are traders who initially believe in \eqref{eq:true1}. Notice how red (resp. black) nodes preferentially attach with red (resp. black) nodes.\label{socnet}}
  	\end{figure}
  	
  	\subsubsection{Timing}
