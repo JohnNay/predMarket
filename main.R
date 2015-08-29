@@ -96,10 +96,20 @@ main <- function(parameters,
   
   
   # Visualize network (optional)
+  
+  
+  
   if (visu){
+    # color the network
     net <- Colored(net)
-    igraph::plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
+    # set weights on edges
+    E(net)$weights = as.numeric(V(net)$approx[get.edges(g, E(g))[,1]] 
+                              - V(net)$approx[get.edges(g, E(g))[,2]] == 0)
+    l<-layout.fruchterman.reingold(net,weights=E(net)$weight)
+    # plot the network 
+    igraph::plot.igraph(net,vertex.label=NA,layout=l, vertex.size = 7)
   }
+  
   #############################################
   #############################################
   #########           RUN             #########

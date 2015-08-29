@@ -1,5 +1,4 @@
 \documentclass[10pt,a4paper]{article}
-\usepackage{fullpage}
 \usepackage[latin1]{inputenc}
 \usepackage{natbib}
 \usepackage{amsmath}
@@ -151,6 +150,187 @@ label={#2},
 
 \maketitle
 
+
+   \subsection{Detailed description of the model}
+ 	
+ 	\label{model}
+ 	
+ 	\subsubsection{Elements of the model}
+ 	
+ 	The ABM is made of the following elements.
+ 	
+ 	\begin{description}
+ 		\setlength\itemsep{0em}
+ 		\item [A simple ``true" model of world temperatures.] 
+ 		The true model is determined by parameter  \texttt{true.model}. 
+ 		
+ 		\begin{description}
+ 			\item[If \texttt{true.model} = 0,] then anthropogenic climate change is a myth and the temperatures follow the autoregressive process 
+ 			\begin{align}
+ 			\label{eq:true0}
+ 			\begin{split}
+ 			T_t ~ =~  \lambda T_{t-1} +  \epsilon_t, 
+ 			\end{split}
+ 			\end{align}
+ 			where $T_t$ is the temperature at time $t$, and $\epsilon^T_t$ is a random error term. 
+ 			
+ 			The value of $\lambda$ is obtained by calibration on actual data. Specifically, $\lambda$ is the ordinary least square estimator of \eqref{eq:true0}, where the temperature time series are US yearly averages based from 1895 to 2010, based on US monthly averages from \url{http://www7.ncdc.noaa.gov/CDO/CDODivisionalSelect.jsp} ( TAVG in the data set, retrieved on May 5th 2015). 
+ 			
+ 			The distribution of $\epsilon_t$ is the empirical distribution of the residual from this linear regression.
+ 			
+ 			\item[If \texttt{true.model} = 1,] then anthropogenic climate is true and the temperatures follow the process 
+ 			\begin{align}
+ 			\label{eq:true1}
+ 			\begin{split}
+ 			T_t ~ =~  \beta GHG_{t-1} +  \mu_t, 
+ 			\end{split}
+ 			\end{align}
+ 			where $GHG_t$ is the level of greenhouse gas emissions at time $t$, and $\epsilon^{GHG}_t$ is a random error term.
+ 			
+ 			Again, the value of $\beta$ is obtained by calibration on actual data. Specifically, $\beta$ is the ordinary least square estimator of \eqref{eq:true1}, where the temperature time series are as in \texttt{true.model} = 0, and the $GHG$ time series are Global Mean CO2 Mixing Ratios (ppm) on the same time period from \url{http://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt} ( MixR in the data set, retrieved on May 5th 2015). 
+ 			
+ 			The distribution of $\mu_t$ is the empirical distribution of the residual from this linear regression.
+ 		\end{description}
+
+ 		In either cases (\texttt{true.model} = 0 and \texttt{true.model} = 1), the chosen true model is used to generate and artificial temperature time series $\{\hat{T}_t\}_{t=1895}^{t=2010}$.
+
+		We emphasize the artificial time series is in general different from the temperature in the empirical data set.	
+		\begin{itemize}
+			\item When  \texttt{true.model} = 0, $\hat{T}_{1895}$ is chosen to be the  temperature in 1895 from the empirical data set, and $\{\hat{T}_t\}_{t=1896}^{t=2010}$ are computed recursively using \eqref{eq:true0}.
+			\item When  \texttt{true.model} = 1, the value of $GHG_t$ for all $t \in \{1895,\dots,2010\}$ is taken from the empirical data set and $\{\hat{T}_t\}_{t=1895}^{t=2010}$ are computed using \eqref{eq:true1}.
+		\end{itemize}
+		
+	 	
+ 		
+ 		
+ 		
+ 		
+ 		\item[ Beliefs.]  Traders use either \eqref{eq:true0} or \eqref{eq:true1} to  forecast future temperatures in order to trade on the prediction market. These $2$ models are interpreted as the trader's beliefs about the true climate model. They are meant to represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the US, model \eqref{eq:true0} is randomly assigned to half of the traders, while \eqref{eq:true1} is assigned to the other half of the traders.
+ 		
+ 		Thus, both when \texttt{true.model} = 0 and when  \texttt{true.model} = 1,  some traders use the true model to make predictions. However, this does not mean that traders using the true model make perfectly accurate predictions. Although these traders believe in the correct \emph{functional form} of the model, they still need to calibrate it based on limited noisy data. Therefore, the values they use as  the \emph{parameters} of the model will typically still be different from $\lambda$ and $\beta$ (see description of the model's timing below).
+ 		
+ 		\item[ Traders.] Traders are initial endowed with one single unit Experimental Currency Unit (ECU).  
+ 		Traders use their believed model to forecast the distribution of future temperatures and determine their reservation price for different securities. Securities pay 1 ECU  if the actual temperature at some time $t^*$ falls between a certain range. Traders are assumed to be \emph{risk-neutral expected utility maximizers}. Therefore, their reservation price for a security $\tilde{s}$ is simply their assessment of the probability that the temperature at time $t^*$ falls in the range covered by $\tilde{s}$.
+ 		
+ 		 Based on their reservation price, traders behave as ``\emph{zero-intelligence}" agents \citep{Gode1993}, that is they sell at a random price above their reservation, and buy at a random price below their reservation. The distribution from which buy and sell prices are drawn is determined by the traders risk attitude, characterized by parameter \texttt{risk.tak}$_i$ (more details below). These strategies are simple but have been shown to provide good approximations of the behavior on prediction markets (see for instance \cite{Klingert2012c}), and in financial markets more broadly. 
+ 		 
+ 		 
+ 		  
+ 		\item[Continuous-Double Auction (CDA) market structure.] Continuous-Double auctions (or some variants thereof) are common \emph{market mechanisms}, i.e. procedures to match buy and sell orders. CDA are notably used on large stock markets (see for instance \cite{Tseng2010a}). Our model features a particular version of CDA through which traders exchange securities (more in section \ref{implem}). 
+ 		
+ 		\item[A social network.] Traders are part of a social network. Every time a security is realized, each trader $i$ looks at the performance of their neighbors in the network. If one of $i$'s neighbors, say $j$, is richer than $i$, $i$ interprets this has an indication that $j$ has a better approximate model. Then $i$ considers adopting $j$'s approximate model.\footnote{Traders start with the same initial amount of money, so differences in money among traders can only come from  traders' interactions through the market.} For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is characterized by parameter \texttt{ideo}$_i$.
+ 		
+ 		An example of such social network is depicted in Figure \ref{socnet}.
+ 		We assume that the initial network is segregated, that is traders who believe in \eqref{eq:true0} (resp. \eqref{eq:true1}) are more likely to be linked with other traders who believe in \eqref{eq:true0}  (resp. \eqref{eq:true1}). The degree of segregation is determined by parameter \texttt{seg} (more details below). Although traders can change their approximate model as time passes, the \emph{connections} between traders do not change as the market unfolds (i.e. the edges are fixed).
+ 	\end{description}
+ 	
+ 	\begin{figure}
+ 		\begin{center}
+ 		\includegraphics[width = 0.8\textwidth]{figures/segregated.png}
+ 		\end{center}
+ 		\caption{An example of the initial state of a belief network with 50 traders. Red nodes are traders who initially believe in \eqref{eq:true0} and black nodes are traders who initially believe in \eqref{eq:true1}. Notice that the  \label{socnet}}
+ 	\end{figure}
+ 	
+ 	\subsubsection{Timing}
+ 	
+ 	The time periods $t$ are grouped in trading \emph{sequences}. In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. For instance, the third trading sequence might start in period $t=1964$ and end in period $t = 1970$. In this case, a security traded in the third sequence pay 1 ECU if the temperature at $t=1970$ falls into the range of temperatures covered by the security. 
+ 	
+ 	   At each time $t$, traders are assumed to know the past value of the temperature $\hat{T}_{0:t}$ and greenhouse gas emissions  $GHG_{0:t}$. In a sequence finishing at time $t^*$,  traders also have common knowledge of $GHG_{t:t^*}$, the future values of greenhouse gas emissions up to $t^*$. However, at any $t$, traders do not know the value of any future \emph{temperatures}. In particular, in a given sequence, traders do not know the value of $\hat{T}_{t^*}$. Traders can only predict $\hat{T}_{t^*}$ using their approximate model and their knowledge of $\hat{T}_{0:t}$ and  $GHG_{0:t^*}$. Notice that because $GHG_{0:t^*}$ is common knowledge, in each period $t$ every trader $i$ with the same approximate model forms the same \emph{pseudo}-expectation (see footnote \ref{foot:pseudo}) 
+ 	   \begin{align}
+ 	   \label{eqref:distrib}
+ 	  \mu_{ti} \equiv E_t( \hat{T}_{t^*} ~|~ \hat{T}_{0:t}, GHG_{0:t^*},   i's \text{ approximate model of } \text { at } t).
+ 	   \end{align}
+ 	   We assume that the believed probability distribution of $\hat{T}_{t^*}$ for trader $i$  at any time $t$ is
+ 	   \begin{align*}
+ 	   \mu_{ti} + \eta_t,
+ 	   \end{align*}
+ 	   
+ 	   where the distribution $\eta_t$ is obtained by trader $i$ by bootstrapping the residuals from the regression of her believed true model over the past periods.\footnote{This explains the use of the term \emph{pseudo}-expectation. Because $\eta_t$ is not bound to have expected value zero, a traders' effective expected value of $\hat{T}_{t^*}$ may be different from $\mu_{ti}$.  \label{foot:pseudo}}       
+ 	   
+ 	    At each time $t$, traders
+ 	\begin{itemize}
+ 		\setlength\itemsep{0em}
+ 		\item recalibrate their approximate model based on the new set of past data available at $t$ (via pooled ordinary least squares),
+ 		\item compute their belief-density for $\hat{T}_{t^*}$ and use it to determine the expected value they attached to each security,
+ 		\item and trade on the CDA market based on their zero-intelligence decision rule as follows. 
+ 		\begin{enumerate}
+ 			\setlength\itemsep{0em}
+ 			\item Every trader $i$ choses at random a security $s_i^B$ she will try to buy.
+ 			\item Every trader $i$ also chooses at random among the securities she owns a positive amount of (if any) a security $s_i^S$ she will try to sell.
+ 			\item Traders then decide of their selling $p_i^S$ and buying price $p_i^S$. To do so, they compute the expected value of the securities $s_i^B$ and $s_i^S$ according to \eqref{eqref:distrib}. Then they set a selling and a buying price following the zero-intelligence rule described above.
+ 			\item Traders go to the market one at the time, in a random order.
+ 			\item When $i$ comes to the market, she place \emph{limit orders} in the order book. These orders  specify that $i$ is willing to buy $s_i^B$ at  any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
+ 			\item The market maker then tries to match $i$'s orders with some order which was put in the order book \emph{before} $i$ came to the market.
+ 			\item If there are  outstanding sell offers for $s_i^B$ at price $p$ lower than $p_i^B$, then a trade is concluded. Trader $i$ buys one unit from the sellers who sells at the \emph{highest} price below $p_i^B$, and the sell and buy offers are removed from the order book.
+ 			\item If there are  outstanding buy offers for $s_i^S$ at price $p$ higher than $p_i^S$, then a trade is concluded. Trader $i$ sells one unit to the buyer who buys at the \emph{highest} price above $p_i^S$, and the  sell and buy offers are removed from the order book.
+ 			\item Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
+ 		\end{enumerate} 
+ 	\end{itemize}
+ 	
+ 	
+ 	At $t^*$, when the sequence ends, there is only one security $s^*$ associated with a range of temperatures including the actual $\hat{T}_{t^*}$. Thus,
+ 	\begin{itemize}
+ 			\setlength\itemsep{0em}
+ 		\item traders receive 1 ECU per unit of $s^*$ they own, and
+ 		\item  consider adapting their neighbors' approximate model as described above.
+ 	\end{itemize}
+ 	
+ 	\subsubsection{The models' parameters and details about their effects}
+ 	\label{param}
+ 	
+ The model depends on the following parameters. 
+ \begin{description}
+ 	\setlength\itemsep{0em}
+ 	\item[Network parameters.]~
+ 	\begin{description}
+ 			\setlength\itemsep{0em}
+ 		\item [\texttt{n.traders}:] the number of traders.
+ 		\item [\texttt{n.edg} :] the number of edges in the social network. This number is fixed throughout the experiments.   
+ 		\item [\texttt{seg} :] determines the initial degree of homophily in the network. The higher \texttt{seg}, the higher the initial homophily. 
+ 		
+ 		When constructing the \texttt{n.edg} edges of the network, the probability that a link between two traders be formed depends on whether the traders share the same approximate model in the following way
+ 			\begin{align*}
+ 			\begin{cases}
+ 			\frac{(1-\texttt{seg})}{\texttt{n.edg}},  &\text{if the traders have different approximate models}\\
+ 			\frac{1}{\texttt{n.edg}},  & \text{otherwise}
+ 			\end{cases}
+ 			\end{align*}
+ 	\end{description}
+ 
+ \item[Market structure parameter.]~
+ 
+ 		\begin{description}
+ 			\setlength\itemsep{0em}
+ 			\item [\texttt{market.complet}.] Determines market's completeness, i.e. the number of securities which can be traded. With more securities, the interval of temperatures corresponding to each security is smaller. Traders can then trade on more precise temperature intervals. Higher values of \texttt{market.complet} may, however, reduce the number of exchanges. Because traders pick the securities they buy and sell at random, the probability that a match between sellers and buyers is found is lower for higher values of \texttt{market.complet}.
+ 		\end{description}
+ 	 
+ \item[Behavioral parameters.]~
+ 
+ \begin{description}
+ 	\setlength\itemsep{0em}
+ 	\item [\texttt{risk.tak}.] Determines the distribution of risk taking behavior. The higher \texttt{risk.tak}, the more traders	will try to buy (resp. sell) lower (resp. higher) than their reservation price. Formally, at time $t$, trader $i$ picks her buying (resp. selling) prices randomly in the interval  $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it}  * (1 - \texttt{risk.tak}_i)]$ (resp. $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it} * (1  + \texttt{risk.tak}_i)]$), where $\texttt{reserv}_{it}$ is $i$'s reservation price at time $t$ for the security $i$ picked to buy (resp. sell).
+ 	
+ 	For each trader $i$, the level of \texttt{risk.tak}$_i$ is drawn uniformly at random from $[0,$\texttt{risk.tak} $]$
+ 	
+ 	\item [\texttt{ideo}$_i$.]  Determines the degree of ``ideology" of traders. If \texttt{ideo} is high, traders will not
+ 	 revise their approximate models easily, even when faced with
+ 	 strong evidence that their neighbors are doing better than them.
+ 	 
+ 	  For each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. The value of $d_{i}$ is the probability that $i$ adopts one of her neighbors' approximate model if this neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
+ 	  
+ 	  For each trader $i$, the level of \texttt{ideo}$_i$ is drawn uniformly at random from $[0,$\texttt{ideo} $]$
+ \end{description}	 
+ 	
+ 	\item[Timing parameters.]~
+ 	
+ 	\begin{description}
+ 			\setlength\itemsep{0em}
+ 		\item [\texttt{burn.in}.] The number of burn-in periods in which no securities are traded (necessary to allow believed models to be estimated in the first period).
+ 		\item [\texttt{n.seq}.] Number of trading sequences.
+ 		\item [\texttt{horizon}.] Number of trading periods in each trading sequence.
+ 	\end{description}
+ 
+ \end{description}
 
 
 \bibliography{library.bib}

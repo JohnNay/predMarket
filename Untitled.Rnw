@@ -1,0 +1,15 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{Simulated Climate Prediction Markets and Convergence of Predictive Models}
+\author{ }
+
+\maketitle
+
+
+
+\includegraphics[width = \textwidth]{figures/Segregated.png}
+
+
+\end{document}
