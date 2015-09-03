@@ -507,6 +507,20 @@ TODO: Jonathan, perhaps talk about the policy implications of this finding...
  	\end{description}
  
  \end{description}
+ 
+ \subsection{Additional sensitivity analyses}
+ 
+We also conducted a standardized rank regression coefficient analysis to confirm that our results are robust to the analysis technique \cite{pujol_sensitivity:_2014,saltelli_sensitivity_2009}. We obtain the almost identical results as the partial rank correlation coefficient analysis (Fig.~\ref{fig:src_sa}).
+ 
+ \begin{figure}[h]
+\centering
+<<src_sa, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE>>=
+load("output/src2.Rda")
+eat::plot(src2, outcome_var = "Convergence of Beliefs", xlab="")
+@
+\caption{Standardized rank regression coefficient analysis based on 10,000 simulated parameter sets \cite{pujol_sensitivity:_2014,saltelli_sensitivity_2009} of the effects of ideology, market completeness, number of edges in social network, number of traders in market, risk taking propensities, segregation measure of the social network, and the true climate model on the convergence of traders' beliefs. Lines are bootstrapped 95\% confidence intervals.}
+\label{fig:src_sa}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgements}
