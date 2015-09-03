@@ -516,7 +516,8 @@ We also conducted a standardized rank regression coefficient analysis to confirm
 \centering
 <<src_sa, eval=TRUE, echo=FALSE, message=FALSE, cache=TRUE>>=
 load("output/src2.Rda")
-eat::plot(src2, outcome_var = "Convergence of Beliefs", xlab="")
+eat::plot(src2, outcome_var = "Convergence of Beliefs",
+          ylab = "Standardized Rank Regression Coefficient", xlab="")
 @
 \caption{Standardized rank regression coefficient analysis based on 10,000 simulated parameter sets \cite{pujol_sensitivity:_2014,saltelli_sensitivity_2009} of the effects of ideology, market completeness, number of edges in social network, number of traders in market, risk taking propensities, segregation measure of the social network, and the true climate model on the convergence of traders' beliefs. Lines are bootstrapped 95\% confidence intervals.}
 \label{fig:src_sa}
