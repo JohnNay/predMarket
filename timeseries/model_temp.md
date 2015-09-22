@@ -1,16 +1,7 @@
----
-title: "Modeling Temperature"
-author: "Jonathan Gilligan"
-date: "September 17, 2015"
-output:
-  pdf_document: default
-  html_document:
-    keep_md: yes
----
-```{r, include=FALSE}
-library(knitr)
-opts_chunk$set(cache=TRUE)
-```
+# Modeling Temperature
+Jonathan Gilligan  
+September 17, 2015  
+
 # Modeling the temperature
 
 We model the temperature as a time-series with ARMA noise.
@@ -18,7 +9,8 @@ We model the temperature as a time-series with ARMA noise.
 
 
 First, we load the data.
-```{r load_data}
+
+```r
 library(dplyr)
 source('load_giss.R')
 source('load_keeling.R')
@@ -59,7 +51,8 @@ data.solar <- merge(data.solar, tsi, all.x = TRUE)
 ```
 
 Now fit a linear model of $t$ vs. $\mathrm{CO}_2$.
-```{r, lin_model, dependson=c("load_data"), cache.extra=c(data)}
+
+```r
 d <- na.omit(data %>% select(time, t, co2))
 co2.lin <- lm(t ~ co2, data = d)
 co2.res <- data.frame(time = d$time, r = residuals(co2.lin))
@@ -68,7 +61,8 @@ p <- predict(co2.lin)
 ```
 
 Plot the data vs. model to check whether things look sensible:
-```{r plot_lin_model, dependson=c("lin_model"), cache.extra=c(d,p)}
+
+```r
 library(ggplot2)
 
 ggplot(cbind(d,predict = p), aes(x = co2, y = t)) + geom_point(size = 2, color = "dark blue", alpha=0.5) + 
@@ -76,11 +70,13 @@ ggplot(cbind(d,predict = p), aes(x = co2, y = t)) + geom_point(size = 2, color =
   labs(x = expression(paste(CO[2]," (ppm)")), 
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size=20)
-
 ```
 
+![](model_temp_files/figure-html/plot_lin_model-1.png) 
+
 Next, we look at the autocorrelation characteristics of the fit residuals:
-```{r test_acf, fig.scap=c('Autocorrelation','Partial autocorrelation'), fig.cap="Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.", dependson=c("lin_model"), cache.extra=c(d,co2.res), warning=FALSE}
+
+```r
 library(tseries)
 library(nlme)
 
@@ -93,11 +89,19 @@ co2.aic <- c(ar1 = summary(co2.ar1)$aic, arma11 = summary(co2.arma11)$aic)
 use_arma_co2 <- co2.aic['ar1'] > co2.aic['arma11']
 
 acftest(co2.res, co2.arma11, co2.ar1, ci.type='ma')
+```
+
+![Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.](model_temp_files/figure-html/test_acf-1.png) 
+
+```r
 acftest(co2.res, co2.arma11, co2.ar1, type='partial', ci.type='ma')
 ```
 
-According to the Akaike Information Criterion, the `r ifelse(use_arma_co2, 'ARMA(1,1)', 'AR(1)')` model is \(`r scinot(exp((max(co2.aic)-min(co2.aic))/2),2,3)`\) times more likely than the the `r ifelse(!use_arma_co2, 'ARMA(1,1)', 'AR(1)')` model. 
-```{r fit_gls, dependson=c("line_model", "test_acf"), cache.extra=c(co2.arma11,d)}
+![Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.](model_temp_files/figure-html/test_acf-2.png) 
+
+According to the Akaike Information Criterion, the ARMA(1,1) model is \(1.9 \times 10^{9}\) times more likely than the the AR(1) model. 
+
+```r
 if (use_arma_co2) {
   cs <- corARMA(coef(co2.arma11), p=1, q=1, form=~1)
 } else {
@@ -108,13 +112,18 @@ model.gls <- gls(t ~ co2, data = d, correlation=model.cst)
 p <- predict(model.gls)
 d$predicted <- predict(model.gls)
 ```
-```{r plot_gls, dependson=c('fit_gls'), cache.extra=c(model.gls, data)}
+
+```r
 ggplot(d, aes(x = co2, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
   geom_line(aes(y = predicted), size=1) + 
   labs(x = expression(paste(CO[2]," (ppm)")), 
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
+```
 
+![](model_temp_files/figure-html/plot_gls-1.png) 
+
+```r
 ggplot(d, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
   geom_line(aes(y = predicted), size=1) + 
   labs(x = "Year",
@@ -122,8 +131,11 @@ ggplot(d, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha 
   theme_bw(base_size = 20)
 ```
 
+![](model_temp_files/figure-html/plot_gls-2.png) 
+
 Now fit a linear model of $t$ vs. TSI #.
-```{r lin_model_tsi, dependson=c("load_data"), cache.extra=c(data)}
+
+```r
 d.tsi <- na.omit(data.solar %>% select(time, t, tsi = xtsi))
 tsi.lin <- lm(t ~ tsi, data = d.tsi)
 tsi.res <- data.frame(time = d.tsi$time, r = residuals(tsi.lin))
@@ -132,7 +144,8 @@ p.tsi <- predict(tsi.lin)
 ```
 
 Plot the data vs. model to check whether things look sensible:
-```{r plot_lin_model_tsi, dependson=c("lin_model_tsi"), cache.extra=c(tsi.lin, d.tsi, p.tsi)}
+
+```r
 library(ggplot2)
 
 ggplot(cbind(d.tsi,predict = p.tsi), aes(x = tsi, y = t)) + geom_point(size = 2, color = "dark blue", alpha=0.5) + 
@@ -140,12 +153,13 @@ ggplot(cbind(d.tsi,predict = p.tsi), aes(x = tsi, y = t)) + geom_point(size = 2,
   labs(x = expression(paste("Total Solar Irradiance ", W / m^2)),
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size=20)
-
 ```
 
-Next, we look at the autocorrelation characteristics of the fit residuals:
-```{r test_acf_tsi, fig.scap=c('Autocorrelation','Partial autocorrelation'), fig.cap="Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.", dependson=c("lin_model_tsi"), warning=FALSE}
+![](model_temp_files/figure-html/plot_lin_model_tsi-1.png) 
 
+Next, we look at the autocorrelation characteristics of the fit residuals:
+
+```r
 tsi.ar1 <- arma(tsi.res$r, order=c(1,0), include.intercept = FALSE, method="BFGS")
 tsi.arma11 <- arma(tsi.res$r, order=c(1,1), include.intercept = FALSE, method="BFGS")
 
@@ -153,12 +167,20 @@ tsi.aic <- c(ar1 = summary(tsi.ar1)$aic, arma11 = summary(tsi.arma11)$aic)
 use_arma_tsi <- tsi.aic['ar1'] > tsi.aic['arma11']
 
 acftest(tsi.res, tsi.arma11, tsi.ar1, ci.type='ma')
+```
+
+![Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.](model_temp_files/figure-html/test_acf_tsi-1.png) 
+
+```r
 acftest(tsi.res, tsi.arma11, tsi.ar1, type='partial', ci.type='ma')
 ```
 
-According to the Akaike Information Criterion, the `r ifelse(use_arma_tsi, 'ARMA(1,1)', 'AR(1)')` model is \(`r scinot(exp((max(tsi.aic)-min(tsi.aic))/2),2,3)`\) times more likely than the the `r ifelse(!use_arma_tsi, 'ARMA(1,1)', 'AR(1)')` model. 
-Now that this is settled, let's do a generalized least-squares fit using an `r ifelse(use_arma_tsi, 'ARMA(1,1)', 'AR(1)')` noise model:
-```{r fit_gls_tsi, dependson=c("line_model", "test_acf")}
+![Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.](model_temp_files/figure-html/test_acf_tsi-2.png) 
+
+According to the Akaike Information Criterion, the AR(1) model is \(1.2\) times more likely than the the ARMA(1,1) model. 
+Now that this is settled, let's do a generalized least-squares fit using an AR(1) noise model:
+
+```r
 if (use_arma_tsi) {
   cs.tsi <- corARMA(coef(tsi.arma11), p = 1, q = 1, form = ~1)
 } else {
@@ -168,16 +190,23 @@ model.cst.tsi <- Initialize(cs.tsi, data = d.tsi)
 model.gls.tsi <- gls(t ~ tsi, data = d.tsi, correlation=model.cst.tsi)
 d.tsi$predicted.tsi <- predict(model.gls.tsi)
 ```
-```{r plot_gls_tsi, dependson=c("fit_gls_tsi")}
+
+```r
 ggplot(d.tsi, aes(x = tsi, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
   geom_line(aes(y = predicted.tsi), size=1) + 
   labs(x = expression(paste("Total Solar Irradiance ", W / m^2)),
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
+```
 
+![](model_temp_files/figure-html/plot_gls_tsi-1.png) 
+
+```r
 ggplot(d.tsi, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
   geom_line(aes(y = predicted.tsi), size=1) + 
   labs(x = "Year",
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
 ```
+
+![](model_temp_files/figure-html/plot_gls_tsi-2.png) 

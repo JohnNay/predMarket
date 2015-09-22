@@ -3,5 +3,4 @@
 .RData
 .DS_Store
 mixing_matrix.R
-/timeseries/model_temp_files
 /timeseries/model_temp_cache
