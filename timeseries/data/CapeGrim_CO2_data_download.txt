@@ -1,0 +1,564 @@
+This file contains the monthly mean baseline (background) carbon dioxide (CO2) concentration
+measured at the Cape Grim Baseline Air Pollution Station (CGBAPS), 
+located near the north-west tip of Tasmania, Australia.
+CGBAPS is funded and managed by the Australian Bureau of Meteorology, and
+the scientific program is jointly supervised with CSIRO Oceans & Atmosphere Flagship.
+Please acknowledge these two institutions if these data are used in publications or presentations.
+
+For more information on Cape Grim please see:
+http://www.csiro.au/greenhouse-gases/
+http://www.csiro.au/places/Cape-Grim.html
+http://www.bom.gov.au/inside/cgbaps/
+
+The CO2 units are parts per million in dry air (ppm).
+
+The most recent year of data is provided in this file on
+a provisional basis only. These data may be subject to further revision. 
+CSIRO & the Bureau make every effort to produce the most accurate and 
+precise measurements possible. However, they reserve the right to make
+corrections to the data based on recalibration of standard gases
+or for other reasons deemed scientifically justified.
+Please see the full terms & conditions at the end of this file.
+
+Release Date: July 2015
+ 
+YYYY MM DD   DATE     CO2(ppm)   SD(ppm)    Source
+1976 05 15  1976.3689   328.86     0.17     in situ
+1976 06 15  1976.4536   328.99     0.28     in situ
+1976 07 15  1976.5355   329.65     0.28     in situ
+1976 08 15  1976.6202   330.55     0.20     in situ
+1976 09 15  1976.7049   330.87     0.23     in situ
+1976 10 15  1976.7869   330.90     0.01     in situ
+1976 11 15  1976.8716   330.88     0.24     in situ
+1976 12 15  1976.9536   330.68     0.19     in situ
+1977 01 15  1977.0384   330.53     0.23     in situ
+1977 02 15  1977.1233   330.54     0.20     in situ
+1977 03 15  1977.2000   330.72     0.12     in situ
+1977 04 15  1977.2849   330.80     0.18     in situ
+1977 05 15  1977.3671   331.01     0.13     in situ
+1977 06 15  1977.4521   331.50     0.20     in situ
+1977 07 15  1977.5342   331.80     0.21     in situ
+1977 08 15  1977.6192   332.33     0.22     in situ
+1977 09 15  1977.7041   332.94     0.11     in situ
+1977 10 15  1977.7863   333.03     0.20     in situ
+1977 11 15  1977.8712   332.78     0.23     in situ
+1977 12 15  1977.9534   332.38     0.26     in situ
+1978 01 15  1978.0384   332.09     0.20     in situ
+1978 02 15  1978.1233   332.17     0.25     in situ
+1978 03 15  1978.2000   332.40     0.20     in situ
+1978 04 15  1978.2849   332.47     0.20     in situ
+1978 05 15  1978.3671   332.65     0.20     in situ
+1978 06 15  1978.4521   333.02     0.10     in situ
+1978 07 15  1978.5342   333.32     0.24     in situ
+1978 08 15  1978.6192   333.93     0.36     in situ
+1978 09 15  1978.7041   334.98     0.39     in situ
+1978 10 15  1978.7863   335.33     0.20     in situ
+1978 11 15  1978.8712   334.83     0.20     in situ
+1978 12 15  1978.9534   334.53     0.20     in situ
+1979 01 15  1979.0384   334.50     0.21     in situ
+1979 02 15  1979.1233   334.58     0.21     in situ
+1979 03 15  1979.2000   334.76     0.20     in situ
+1979 04 15  1979.2849   334.70     0.22     in situ
+1979 05 15  1979.3671   334.63     0.18     in situ
+1979 06 15  1979.4521   334.89     0.20     in situ
+1979 07 15  1979.5342   335.45     0.26     in situ
+1979 08 15  1979.6192   335.94     0.17     in situ
+1979 09 15  1979.7041   335.98     0.21     in situ
+1979 10 15  1979.7863   335.98     0.02     in situ
+1979 11 15  1979.8712   335.97     0.22     in situ
+1979 12 15  1979.9534   335.73     0.24     in situ
+1980 01 15  1980.0383   335.68     0.20     in situ
+1980 02 15  1980.1230   335.78     0.19     in situ
+1980 03 15  1980.2022   335.90     0.18     in situ
+1980 04 15  1980.2869   336.06     0.18     in situ
+1980 05 15  1980.3689   336.18     0.20     in situ
+1980 06 15  1980.4536   336.53     0.23     in situ
+1980 07 15  1980.5355   336.93     0.22     in situ
+1980 08 15  1980.6202   337.10     0.17     in situ
+1980 09 15  1980.7049   337.19     0.22     in situ
+1980 10 15  1980.7869   337.12     0.20     in situ
+1980 11 15  1980.8716   336.94     0.24     in situ
+1980 12 15  1980.9536   336.92     0.23     in situ
+1981 01 15  1981.0384   337.09     0.18     in situ
+1981 02 15  1981.1233   337.23     0.23     in situ
+1981 03 15  1981.2000   337.23     0.13     in situ
+1981 04 15  1981.2849   337.17     0.17     in situ
+1981 05 15  1981.3671   337.35     0.18     in situ
+1981 06 15  1981.4521   337.59     0.17     in situ
+1981 07 15  1981.5342   337.83     0.09     in situ
+1981 08 15  1981.6192   338.09     0.20     in situ
+1981 09 15  1981.7041   338.17     0.21     in situ
+1981 10 15  1981.7863   338.07     0.23     in situ
+1981 11 15  1981.8712   338.00     0.23     in situ
+1981 12 15  1981.9534   337.77     0.13     in situ
+1982 01 15  1982.0384   337.31     0.19     in situ
+1982 02 15  1982.1233   337.13     0.18     in situ
+1982 03 15  1982.2000   337.27     0.29     in situ
+1982 04 15  1982.2849   337.70     0.24     in situ
+1982 05 15  1982.3671   338.03     0.19     in situ
+1982 06 15  1982.4521   338.19     0.15     in situ
+1982 07 15  1982.5342   338.55     0.19     in situ
+1982 08 15  1982.6192   338.90     0.15     in situ
+1982 09 15  1982.7041   338.82     0.21     in situ
+1982 10 15  1982.7863   338.63     0.19     in situ
+1982 11 15  1982.8712   338.56     0.16     in situ
+1982 12 15  1982.9534   338.33     0.17     in situ
+1983 01 15  1983.0384   338.31     0.17     in situ
+1983 02 15  1983.1233   338.43     0.18     in situ
+1983 03 15  1983.2000   338.52     0.19     in situ
+1983 04 15  1983.2849   339.11     0.24     in situ
+1983 05 15  1983.3671   339.53     0.14     in situ
+1983 06 15  1983.4521   339.60     0.16     in situ
+1983 07 15  1983.5342   340.34     0.45     in situ
+1983 08 15  1983.6192   341.20     0.24     in situ
+1983 09 15  1983.7041   341.35     0.16     in situ
+1983 10 15  1983.7863   341.26     0.18     in situ
+1983 11 15  1983.8712   341.30     0.16     in situ
+1983 12 15  1983.9534   341.31     0.11     in situ
+1984 01 15  1984.0383   341.27     0.11     in situ
+1984 02 15  1984.1230   341.27     0.12     in situ
+1984 03 15  1984.2022   341.24     0.11     in situ
+1984 04 15  1984.2869   341.23     0.14     in situ
+1984 05 15  1984.3689   341.39     0.13     in situ
+1984 06 15  1984.4536   341.62     0.16     in situ
+1984 07 15  1984.5355   341.93     0.17     in situ
+1984 08 15  1984.6202   342.36     0.16     in situ
+1984 09 15  1984.7049   342.51     0.14     in situ
+1984 10 15  1984.7869   342.47     0.17     in situ
+1984 11 15  1984.8716   342.43     0.17     in situ
+1984 12 15  1984.9536   342.34     0.15     in situ
+1985 01 15  1985.0384   342.33     0.14     in situ
+1985 02 15  1985.1233   342.29     0.10     in situ
+1985 03 15  1985.2000   342.32     0.12     in situ
+1985 04 15  1985.2849   342.49     0.14     in situ
+1985 05 15  1985.3671   342.77     0.15     in situ
+1985 06 15  1985.4521   343.16     0.18     in situ
+1985 07 15  1985.5342   343.66     0.19     in situ
+1985 08 15  1985.6192   344.07     0.15     in situ
+1985 09 15  1985.7041   344.20     0.15     in situ
+1985 10 15  1985.7863   344.20     0.18     in situ
+1985 11 15  1985.8712   343.95     0.21     in situ
+1985 12 15  1985.9534   343.71     0.17     in situ
+1986 01 15  1986.0384   343.71     0.16     in situ
+1986 02 15  1986.1233   343.74     0.10     in situ
+1986 03 15  1986.2000   343.77     0.12     in situ
+1986 04 15  1986.2849   343.78     0.14     in situ
+1986 05 15  1986.3671   343.92     0.17     in situ
+1986 06 15  1986.4521   344.24     0.19     in situ
+1986 07 15  1986.5342   344.68     0.20     in situ
+1986 08 15  1986.6192   345.06     0.16     in situ
+1986 09 15  1986.7041   345.24     0.16     in situ
+1986 10 15  1986.7863   345.31     0.13     in situ
+1986 11 15  1986.8712   345.20     0.18     in situ
+1986 12 15  1986.9534   344.95     0.17     in situ
+1987 01 15  1987.0384   344.72     0.15     in situ
+1987 02 15  1987.1233   344.70     0.10     in situ
+1987 03 15  1987.2000   344.86     0.13     in situ
+1987 04 15  1987.2849   345.05     0.14     in situ
+1987 05 15  1987.3671   345.44     0.19     in situ
+1987 06 15  1987.4521   346.01     0.22     in situ
+1987 07 15  1987.5342   346.47     0.16     in situ
+1987 08 15  1987.6192   346.96     0.21     in situ
+1987 09 15  1987.7041   347.26     0.17     in situ
+1987 10 15  1987.7863   347.30     0.17     in situ
+1987 11 15  1987.8712   347.41     0.10     in situ
+1987 12 15  1987.9534   347.40     0.14     in situ
+1988 01 15  1988.0383   347.36     0.16     in situ
+1988 02 15  1988.1230   347.37     0.16     in situ
+1988 03 15  1988.2022   347.43     0.12     in situ
+1988 04 15  1988.2869   347.61     0.19     in situ
+1988 05 15  1988.3689   347.81     0.15     in situ
+1988 06 15  1988.4536   348.25     0.26     in situ
+1988 07 15  1988.5355   348.91     0.22     in situ
+1988 08 15  1988.6202   349.16     0.14     in situ
+1988 09 15  1988.7049   349.05     0.10     in situ
+1988 10 15  1988.7869   348.95     0.14     in situ
+1988 11 15  1988.8716   348.87     0.13     in situ
+1988 12 15  1988.9536   348.83     0.15     in situ
+1989 01 15  1989.0384   348.72     0.12     in situ
+1989 02 15  1989.1233   348.76     0.15     in situ
+1989 03 15  1989.2000   348.98     0.15     in situ
+1989 04 15  1989.2849   349.06     0.09     in situ
+1989 05 15  1989.3671   349.07     0.12     in situ
+1989 06 15  1989.4521   349.30     0.20     in situ
+1989 07 15  1989.5342   349.68     0.13     in situ
+1989 08 15  1989.6192   350.05     0.16     in situ
+1989 09 15  1989.7041   350.22     0.12     in situ
+1989 10 15  1989.7863   350.15     0.17     in situ
+1989 11 15  1989.8712   350.07     0.11     in situ
+1989 12 15  1989.9534   349.97     0.13     in situ
+1990 01 15  1990.0384   349.85     0.13     in situ
+1990 02 15  1990.1233   349.89     0.10     in situ
+1990 03 15  1990.2000   350.05     0.14     in situ
+1990 04 15  1990.2849   350.35     0.17     in situ
+1990 05 15  1990.3671   350.61     0.23     in situ
+1990 06 15  1990.4521   350.89     0.17     in situ
+1990 07 15  1990.5342   351.37     0.18     in situ
+1990 08 15  1990.6192   351.74     0.16     in situ
+1990 09 15  1990.7041   351.77     0.15     in situ
+1990 10 15  1990.7863   351.78     0.14     in situ
+1990 11 15  1990.8712   351.81     0.13     in situ
+1990 12 15  1990.9534   351.61     0.15     in situ
+1991 01 15  1991.0384   351.45     0.18     in situ
+1991 02 15  1991.1233   351.55     0.18     in situ
+1991 03 15  1991.2000   351.70     0.12     in situ
+1991 04 15  1991.2849   351.88     0.16     in situ
+1991 05 15  1991.3671   352.28     0.17     in situ
+1991 06 15  1991.4521   352.65     0.22     in situ
+1991 07 15  1991.5342   352.86     0.13     in situ
+1991 08 15  1991.6192   353.19     0.14     in situ
+1991 09 15  1991.7041   353.33     0.14     in situ
+1991 10 15  1991.7863   353.98     0.16     flask
+1991 11 15  1991.8712   353.74     0.11     flask
+1991 12 15  1991.9534   353.63     0.45     flask
+1992 01 15  1992.0383   353.42     0.21     flask
+1992 02 15  1992.1230   353.31     0.61     flask
+1992 03 15  1992.2022   353.24     0.08     flask
+1992 04 15  1992.2869   353.41     0.19     flask
+1992 05 15  1992.3689   353.79     0.16     flask
+1992 06 15  1992.4536   354.23     0.22     flask
+1992 07 15  1992.5355   354.70     0.18     flask
+1992 08 15  1992.6202   354.83     0.21     flask
+1992 09 15  1992.7049   354.95     0.19     flask
+1992 10 15  1992.7869   355.00     0.15     flask
+1992 11 15  1992.8716   354.78     0.11     flask
+1992 12 15  1992.9536   354.52     0.23     flask
+1993 01 15  1993.0384   354.19     0.18     flask
+1993 02 15  1993.1233   354.12     0.12     flask
+1993 03 15  1993.2000   354.33     0.12     flask
+1993 04 15  1993.2849   354.26     0.19     flask
+1993 05 15  1993.3671   354.23     0.20     flask
+1993 06 15  1993.4521   354.67     0.24     flask
+1993 07 15  1993.5342   355.13     0.34     flask
+1993 08 15  1993.6192   355.55     0.24     flask
+1993 09 15  1993.7041   355.78     0.10     flask
+1993 10 15  1993.7863   355.82     0.21     flask
+1993 11 15  1993.8712   355.72     0.21     flask
+1993 12 15  1993.9534   355.39     0.12     flask
+1994 01 15  1994.0384   355.02     0.07     flask
+1994 02 15  1994.1233   355.02     0.35     flask
+1994 03 15  1994.2000   355.34     0.33     flask
+1994 04 15  1994.2849   355.62     0.19     flask
+1994 05 15  1994.3671   355.85     0.23     flask
+1994 06 15  1994.4521   356.11     0.20     flask
+1994 07 15  1994.5342   356.58     0.27     flask
+1994 08 15  1994.6192   357.15     0.19     flask
+1994 09 15  1994.7041   357.47     0.10     flask
+1994 10 15  1994.7863   357.48     0.15     flask
+1994 11 15  1994.8712   357.37     0.12     flask
+1994 12 15  1994.9534   357.34     0.22     flask
+1995 01 15  1995.0384   357.41     0.21     flask
+1995 02 15  1995.1233   357.52     0.34     flask
+1995 03 15  1995.2000   357.55     0.17     flask
+1995 04 15  1995.2849   357.51     0.15     flask
+1995 05 15  1995.3671   357.80     0.20     flask
+1995 06 15  1995.4521   358.20     0.18     flask
+1995 07 15  1995.5342   358.48     0.17     flask
+1995 08 15  1995.6192   358.82     0.17     flask
+1995 09 15  1995.7041   359.11     0.18     flask
+1995 10 15  1995.7863   359.21     0.21     flask
+1995 11 15  1995.8712   359.29     0.16     flask
+1995 12 15  1995.9534   359.55     0.18     flask
+1996 01 15  1996.0383   359.44     0.21     flask
+1996 02 15  1996.1230   359.10     0.13     flask
+1996 03 15  1996.2022   359.09     0.29     flask
+1996 04 15  1996.2869   359.14     0.17     flask
+1996 05 15  1996.3689   359.33     0.15     flask
+1996 06 15  1996.4536   359.82     0.23     flask
+1996 07 15  1996.5355   360.24     0.15     flask
+1996 08 15  1996.6202   360.58     0.18     flask
+1996 09 15  1996.7049   360.72     0.19     flask
+1996 10 15  1996.7869   360.59     0.15     flask
+1996 11 15  1996.8716   360.44     0.21     flask
+1996 12 15  1996.9536   360.31     0.15     flask
+1997 01 15  1997.0384   360.33     0.21     flask
+1997 02 15  1997.1233   360.46     0.26     flask
+1997 03 15  1997.2000   360.50     0.18     flask
+1997 04 15  1997.2849   360.56     0.16     flask
+1997 05 15  1997.3671   360.73     0.18     flask
+1997 06 15  1997.4521   360.94     0.15     flask
+1997 07 15  1997.5342   361.33     0.25     flask
+1997 08 15  1997.6192   361.80     0.18     flask
+1997 09 15  1997.7041   362.06     0.14     flask
+1997 10 15  1997.7863   362.18     0.19     flask
+1997 11 15  1997.8712   362.16     0.18     flask
+1997 12 15  1997.9534   362.08     0.15     flask
+1998 01 15  1998.0384   362.04     0.19     flask
+1998 02 15  1998.1233   362.18     0.18     flask
+1998 03 15  1998.2000   362.48     0.17     flask
+1998 04 15  1998.2849   362.75     0.12     flask
+1998 05 15  1998.3671   363.13     0.21     flask
+1998 06 15  1998.4521   363.55     0.18     flask
+1998 07 15  1998.5342   364.06     0.20     flask
+1998 08 15  1998.6192   364.69     0.18     flask
+1998 09 15  1998.7041   365.07     0.21     flask
+1998 10 15  1998.7863   365.08     0.17     flask
+1998 11 15  1998.8712   364.96     0.16     flask
+1998 12 15  1998.9534   364.88     0.08     flask
+1999 01 15  1999.0384   365.02     0.21     flask
+1999 02 15  1999.1233   365.08     0.18     flask
+1999 03 15  1999.2000   364.89     0.17     flask
+1999 04 15  1999.2849   364.94     0.17     flask
+1999 05 15  1999.3671   365.19     0.16     flask
+1999 06 15  1999.4521   365.34     0.24     flask
+1999 07 15  1999.5342   365.63     0.24     flask
+1999 08 15  1999.6192   366.07     0.22     flask
+1999 09 15  1999.7041   366.43     0.14     flask
+1999 10 15  1999.7863   366.58     0.30     flask
+1999 11 15  1999.8712   366.53     0.18     flask
+1999 12 15  1999.9534   366.54     0.13     flask
+2000 01 15  2000.0383   366.58     0.18     flask
+2000 02 15  2000.1230   366.40     0.30     flask
+2000 03 15  2000.2022   366.17     0.21     flask
+2000 04 15  2000.2869   366.10     0.22     flask
+2000 05 15  2000.3689   366.33     0.18     flask
+2000 06 15  2000.4536   366.78     0.15     flask
+2000 07 15  2000.5355   367.18     0.16     flask
+2000 08 15  2000.6202   367.43     0.19     flask
+2000 09 15  2000.7049   367.65     0.21     flask
+2000 10 15  2000.7869   367.77     0.07     flask
+2000 11 15  2000.8716   367.71     0.05     flask
+2000 12 15  2000.9536   367.62     0.14     flask
+2001 01 15  2001.0384   367.56     0.14     flask
+2001 02 15  2001.1233   367.51     0.04     flask
+2001 03 15  2001.2000   367.50     0.14     flask
+2001 04 15  2001.2849   367.67     0.18     flask
+2001 05 15  2001.3671   367.91     0.19     flask
+2001 06 15  2001.4521   368.16     0.23     flask
+2001 07 15  2001.5342   368.57     0.17     flask
+2001 08 15  2001.6192   369.12     0.27     flask
+2001 09 15  2001.7041   369.63     0.25     flask
+2001 10 15  2001.7863   369.71     0.23     flask
+2001 11 15  2001.8712   369.45     0.23     flask
+2001 12 15  2001.9534   369.29     0.21     flask
+2002 01 15  2002.0384   369.37     0.23     flask
+2002 02 15  2002.1233   369.43     0.17     flask
+2002 03 15  2002.2000   369.49     0.15     flask
+2002 04 15  2002.2849   369.65     0.08     flask
+2002 05 15  2002.3671   369.90     0.15     flask
+2002 06 15  2002.4521   370.37     0.20     flask
+2002 07 15  2002.5342   370.93     0.22     flask
+2002 08 15  2002.6192   371.43     0.20     flask
+2002 09 15  2002.7041   371.77     0.14     flask
+2002 10 15  2002.7863   371.90     0.09     flask
+2002 11 15  2002.8712   371.79     0.11     flask
+2002 12 15  2002.9534   371.60     0.22     flask
+2003 01 15  2003.0384   371.57     0.06     flask
+2003 02 15  2003.1233   371.65     0.10     flask
+2003 03 15  2003.2000   371.85     0.14     flask
+2003 04 15  2003.2849   372.13     0.28     flask
+2003 05 15  2003.3671   372.42     0.11     flask
+2003 06 15  2003.4521   372.77     0.25     flask
+2003 07 15  2003.5342   373.22     0.17     flask
+2003 08 15  2003.6192   373.76     0.16     flask
+2003 09 15  2003.7041   374.06     0.17     flask
+2003 10 15  2003.7863   373.98     0.12     flask
+2003 11 15  2003.8712   373.77     0.14     flask
+2003 12 15  2003.9534   373.58     0.11     flask
+2004 01 15  2004.0383   373.55     0.27     flask
+2004 02 15  2004.1230   373.69     0.27     flask
+2004 03 15  2004.2022   373.77     0.08     flask
+2004 04 15  2004.2869   373.90     0.19     flask
+2004 05 15  2004.3689   374.30     0.25     flask
+2004 06 15  2004.4536   374.77     0.19     flask
+2004 07 15  2004.5355   375.17     0.17     flask
+2004 08 15  2004.6202   375.52     0.14     flask
+2004 09 15  2004.7049   375.67     0.12     flask
+2004 10 15  2004.7869   375.69     0.15     flask
+2004 11 15  2004.8716   375.69     0.14     flask
+2004 12 15  2004.9536   375.51     0.10     flask
+2005 01 15  2005.0384   375.35     0.26     flask
+2005 02 15  2005.1233   375.40     0.10     flask
+2005 03 15  2005.2000   375.43     0.18     flask
+2005 04 15  2005.2849   375.55     0.10     flask
+2005 05 15  2005.3671   376.17     0.34     flask
+2005 06 15  2005.4521   376.92     0.30     flask
+2005 07 15  2005.5342   377.29     0.27     flask
+2005 08 15  2005.6192   377.58     0.12     flask
+2005 09 15  2005.7041   377.86     0.05     flask
+2005 10 15  2005.7863   377.92     0.10     flask
+2005 11 15  2005.8712   377.87     0.03     flask
+2005 12 15  2005.9534   377.76     0.07     flask
+2006 01 15  2006.0384   377.84     0.24     flask
+2006 02 15  2006.1233   377.98     0.20     flask
+2006 03 15  2006.2000   377.99     0.11     flask
+2006 04 15  2006.2849   378.05     0.21     flask
+2006 05 15  2006.3671   378.18     0.12     flask
+2006 06 15  2006.4521   378.41     0.09     flask
+2006 07 15  2006.5342   378.79     0.18     flask
+2006 08 15  2006.6192   379.25     0.14     flask
+2006 09 15  2006.7041   379.48     0.09     flask
+2006 10 15  2006.7863   379.40     0.14     flask
+2006 11 15  2006.8712   379.36     0.24     flask
+2006 12 15  2006.9534   379.43     0.11     flask
+2007 01 15  2007.0384   379.36     0.18     flask
+2007 02 15  2007.1233   379.34     0.07     flask
+2007 03 15  2007.2000   379.44     0.15     flask
+2007 04 15  2007.2849   379.63     0.09     flask
+2007 05 15  2007.3671   380.01     0.16     flask
+2007 06 15  2007.4521   380.40     0.15     flask
+2007 07 15  2007.5342   380.90     0.18     flask
+2007 08 15  2007.6192   381.32     0.10     flask
+2007 09 15  2007.7041   381.53     0.39     flask
+2007 10 15  2007.7863   381.65     0.15     flask
+2007 11 15  2007.8712   381.63     0.13     flask
+2007 12 15  2007.9534   381.58     0.22     flask
+2008 01 15  2008.0383   381.64     0.07     flask
+2008 02 15  2008.1230   381.73     0.19     flask
+2008 03 15  2008.2022   381.73     0.08     flask
+2008 04 15  2008.2869   381.82     0.21     flask
+2008 05 15  2008.3689   382.10     0.15     flask
+2008 06 15  2008.4536   382.60     0.20     flask
+2008 07 15  2008.5355   382.94     0.10     flask
+2008 08 15  2008.6202   383.30     0.26     flask
+2008 09 15  2008.7049   383.71     0.15     flask
+2008 10 15  2008.7869   383.66     0.15     flask
+2008 11 15  2008.8716   383.52     0.26     flask
+2008 12 15  2008.9536   383.59     0.14     flask
+2009 01 15  2009.0384   383.83     0.16     flask
+2009 02 15  2009.1233   383.80     0.08     flask
+2009 03 15  2009.2000   383.47     0.22     flask
+2009 04 15  2009.2849   383.37     0.10     flask
+2009 05 15  2009.3671   383.60     0.15     flask
+2009 06 15  2009.4521   383.89     0.19     flask
+2009 07 15  2009.5342   384.28     0.18     flask
+2009 08 15  2009.6192   384.75     0.11     flask
+2009 09 15  2009.7041   384.98     0.16     flask
+2009 10 15  2009.7863   385.10     0.08     flask
+2009 11 15  2009.8712   385.08     0.16     flask
+2009 12 15  2009.9534   384.99     0.21     flask
+2010 01 15  2010.0384   384.96     0.17     flask
+2010 02 15  2010.1233   384.71     0.15     flask
+2010 03 15  2010.2000   384.61     0.07     flask
+2010 04 15  2010.2849   384.89     0.15     flask
+2010 05 15  2010.3671   385.29     0.15     flask
+2010 06 15  2010.4521   385.79     0.21     flask
+2010 07 15  2010.5342   386.44     0.34     flask
+2010 08 15  2010.6192   387.09     0.17     flask
+2010 09 15  2010.7041   387.44     0.15     flask
+2010 10 15  2010.7863   387.43     0.12     flask
+2010 11 15  2010.8712   387.29     0.18     flask
+2010 12 15  2010.9534   387.04     0.13     flask
+2011 01 15  2011.0384   386.89     0.13     flask
+2011 02 15  2011.1233   386.97     0.18     flask
+2011 03 15  2011.2000   387.01     0.17     flask
+2011 04 15  2011.2849   387.01     0.03     flask
+2011 05 15  2011.3671   387.28     0.13     flask
+2011 06 15  2011.4521   387.71     0.11     flask
+2011 07 15  2011.5342   388.06     0.11     flask
+2011 08 15  2011.6192   388.50     0.17     flask
+2011 09 15  2011.7041   389.00     0.18     flask
+2011 10 15  2011.7863   389.13     0.16     flask
+2011 11 15  2011.8712   388.94     0.10     flask
+2011 12 15  2011.9534   388.81     0.06     flask
+2012 01 15  2012.0383   388.68     0.07     flask
+2012 02 15  2012.1230   388.66     0.14     flask
+2012 03 15  2012.2022   388.69     0.12     flask
+2012 04 15  2012.2869   388.85     0.09     flask
+2012 05 15  2012.3689   389.15     0.12     flask
+2012 06 15  2012.4536   389.58     0.21     flask
+2012 07 15  2012.5355   390.23     0.22     flask
+2012 08 15  2012.6202   390.91     0.20     flask
+2012 09 15  2012.7049   391.33     0.11     flask
+2012 10 15  2012.7869   391.37     0.08     flask
+2012 11 15  2012.8716   391.17     0.18     flask
+2012 12 15  2012.9536   391.09     0.06     flask
+2013 01 15  2013.0384   391.13     0.07     flask
+2013 02 15  2013.1233   391.38     0.33     flask
+2013 03 15  2013.2000   391.77     0.18     flask
+2013 04 15  2013.2849   391.99     0.07     flask
+2013 05 15  2013.3671   392.28     0.17     flask
+2013 06 15  2013.4521   392.71     0.17     flask
+2013 07 15  2013.5342   393.20     0.15     flask
+2013 08 15  2013.6192   393.67     0.15     flask
+2013 09 15  2013.7041   393.93     0.11     flask
+2013 10 15  2013.7863   393.98     0.15     flask
+2013 11 15  2013.8712   393.85     0.08     flask
+2013 12 15  2013.9534   393.76     0.16     flask
+2014 01 15  2014.0384   393.78     0.05     flask
+2014 02 15  2014.1233   393.70     0.16     flask
+2014 03 15  2014.2000   393.65     0.14     flask
+2014 04 15  2014.2849   393.91     0.13     flask
+2014 05 15  2014.3671   394.23     0.11     flask
+2014 06 15  2014.4521   394.64     0.18     flask
+2014 07 15  2014.5342   395.18     0.15     flask
+2014 08 15  2014.6192   395.58     0.17     flask
+2014 09 15  2014.7041   395.88     0.15     flask
+2014 10 15  2014.7863   395.98     0.07     flask
+2014 11 15  2014.8712   395.78     0.10     flask
+2014 12 15  2014.9534   395.56     0.14     flask
+2015 01 15  2015.0384   395.59     0.05     flask
+2015 02 15  2015.1233   395.69     0.07     flask
+2015 03 15  2015.2000   395.81     0.10     flask
+2015 04 15  2015.2849   396.22     0.16     flask
+2015 05 15  2015.3671   396.71     0.15     flask
+ 
+Terms of Use
+
+1. Terminology 
+‘Content’ means the content of the site [http://www.csiro.au/greenhouse-gases] including 
+but not limited to, data, information, databases, images and material.
+
+‘you/user’ means you as a website user, or Content/data user.
+
+2. Using Content 
+CSIRO reserves the right to make corrections, revisions, updates and improvements to any 
+Content on this site but is under no obligation to do so.
+
+Without limiting the foregoing, the most recent year of data is provided in this site on
+a provisional basis only and may be subject to further revision.
+
+If you use or download Content from this site, you acknowledge that such Content:
+    - may contain statements based on scientific research and comprises data collected by 
+      CSIRO and third parties; 
+    - is not professional, scientific, medical, technical or expert advice and is subject 
+      to the usual uncertainties of advanced scientific and technical research; 
+    - should not be relied upon as the basis for doing or failing to do something. 
+
+References or links to third party data are provided for information and convenience only 
+and do not mean that CSIRO endorses or approves that data.
+
+Any use of the Content must acknowledge the source of the Information as "CSIRO Marine and 
+Atmospheric Research and the Australian Bureau of Meteorology (Cape Grim Baseline Air 
+Pollution Station)" and include a statement that CSIRO and the Australian Bureau of 
+Meteorology give no warranty regarding the accuracy, completeness, currency or suitability 
+for any particular purpose and accept no liability in respect of data.
+
+The Content on this site must not be distributed or disseminated to third parties without 
+the attachment of the Terms of Use.
+
+3. Grant of licence 
+CSIRO grants you a royalty-free, non-exclusive, non-transferable licence to use, reproduce, 
+adapt or communicate the Content on this site for any purpose other than a commercial 
+purpose. For the purposes of this licence, "commercial purpose" means to sell, hire, 
+exchange or otherwise exploit the Content (whether in its original or adapted form, or 
+incorporated in products or services) for profit or gain.
+
+The rights granted under this licence are personal to the user and are not sub-licensable 
+or capable of assignment.
+
+4. Disclaimer 
+If you use or download any Content from this site you accept all risks and responsibility 
+for losses, damages, costs and other consequences resulting directly or indirectly from 
+using the Content.
+
+To the maximum extent permitted by law, CSIRO excludes any and all liability to any person 
+for any consequences, including but not limited to all losses, damages, costs, expenses and
+any other compensation, arising directly or indirectly from using the Content.
+
+Every effort has been made to ensure the accuracy of the Content on this site, however 
+CSIRO does not warrant the accuracy and reliability of the Content and, to the extent 
+permitted by law, does not guarantee or make any express or implied representation regarding 
+the accuracy, reliability, correctness, fitness for use for any purpose whatsoever of the 
+Content. Any use and/or interpretation of the Content is done so entirely at the user’s own risk.
+
+5. Whole agreement 
+Use of this site is subject also to CSIRO’s Legal Notice and Disclaimer 
+(http://www.csiro.au/org/LegalNoticeAndDisclaimer.html). By using this site and the Content 
+available on and through it, you are agreeing to be bound by these Terms of Use and the 
+Legal Notice and Disclaimer. If there is any conflict then these Terns of Use will prevail, 
+but only to the extent that it applies to the particular Content and to the extent 
+necessary to resolve any conflict.
+
+CSIRO may change these Terms of Use at any time without giving you notice, so please check 
+them each time you visit the site (http://www.csiro.au/greenhouse-gases).
