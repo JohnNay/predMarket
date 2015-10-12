@@ -3,9 +3,9 @@ title: "Modeling Temperature"
 author: "Jonathan Gilligan"
 date: "September 17, 2015"
 output:
-  pdf_document: default
   html_document:
     keep_md: yes
+  pdf_document: default
 ---
 ```{r, include=FALSE}
 library(knitr)
@@ -34,35 +34,29 @@ scinot <- function(x, places, uthreshold = 3, lthreshold = 1-places) {
     signif(x,places)
 }
 
-t <- load_giss_data()$data %>% select(time, t = t.anom)
-t <- na.omit(t)
+t <- load_giss_data()$data %>% group_by(year) %>% summarize(t.anom = mean(t.anom)) %>% ungroup() %>% filter(!is.na(t.anom)) %>% mutate(year = year + 0.5)
+co2 <- readRDS('data/smoothed_co2.Rds')
 
-co2 <- get.co2()$keeling %>% select(time = year, co2 = annual) %>% mutate(time = (floor(time * 12) + 0.5)/12)
-
-co2.law <- load_law_dome_co2() %>% select(time = year, co2) %>% mutate(time = time + 0.5)
 
 sunspots <- read.csv('data/SN_ms_tot_V2.0.csv', sep=';', header=F)
 names(sunspots) <- c('year','month','frac.year','ss','sd','nobs','def')
-sunspots <- sunspots %>% mutate(ss = ifelse(ss >= 0, ss, NA)) %>% mutate(time = year + (month - 0.5)/12) %>% select(time,ss)
+sunspots <- sunspots %>% mutate(ss = ifelse(ss >= 0, ss, NA)) %>% group_by(year) %>% summarize(ss = mean(ss)) %>% ungroup() %>% filter(! is.na(ss)) %>% mutate(year = year + 0.5)
 
 tsi <- tsi <- read.table('data/TSI_TIM_Reconstruction.txt', comment.char = ';')
-names(tsi) <- c('time','tsi')
+names(tsi) <- c('year','tsi')
 tsi$xtsi <- tsi$tsi
 for(i in seq_along(tsi)[-1]) tsi$xtsi[i] <- 0.05 * tsi$tsi[i] + 0.95 * tsi$xtsi[i-1]
 
 data <- merge(t, co2, all.x = TRUE)
-
-data.solar <- t %>% mutate(time = floor(time) + 0.5) %>% group_by(time) %>% summarize(t = mean(t)) %>% ungroup()
-data.solar <- merge(data.solar, co2.law, all.x = TRUE)
-data.solar <- merge(data.solar, sunspots, all.x = TRUE)
+data.solar <- merge(data, sunspots, all.x = TRUE)
 data.solar <- merge(data.solar, tsi, all.x = TRUE)
 ```
 
 Now fit a linear model of $t$ vs. $\mathrm{CO}_2$.
 ```{r, lin_model, dependson=c("load_data"), cache.extra=c(data)}
-d <- na.omit(data %>% select(time, t, co2))
-co2.lin <- lm(t ~ co2, data = d)
-co2.res <- data.frame(time = d$time, r = residuals(co2.lin))
+d <- na.omit(data %>% select(year, t.anom, co2))
+co2.lin <- lm(t.anom ~ co2, data = d)
+co2.res <- data.frame(year = d$year, r = residuals(co2.lin))
 
 p <- predict(co2.lin)
 ```
@@ -71,8 +65,9 @@ Plot the data vs. model to check whether things look sensible:
 ```{r plot_lin_model, dependson=c("lin_model"), cache.extra=c(d,p)}
 library(ggplot2)
 
-ggplot(cbind(d,predict = p), aes(x = co2, y = t)) + geom_point(size = 2, color = "dark blue", alpha=0.5) + 
-  geom_line(aes(y=predict), size=1) +
+ggplot(cbind(d,predict = p), aes(x = co2, y = t.anom)) + 
+  geom_point(size = 2, color = "dark blue", alpha=0.5, na.rm=T) + 
+  geom_line(aes(y=predict), size=1, na.rm=T) +
   labs(x = expression(paste(CO[2]," (ppm)")), 
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size=20)
@@ -104,19 +99,21 @@ if (use_arma_co2) {
   cs <- corAR1(coef(co2.ar1), form = ~1)
 }
 model.cst <- Initialize(cs, data = d)
-model.gls <- gls(t ~ co2, data = d, correlation=model.cst)
+model.gls <- gls(t.anom ~ co2, data = d, correlation=model.cst)
 p <- predict(model.gls)
 d$predicted <- predict(model.gls)
 ```
 ```{r plot_gls, dependson=c('fit_gls'), cache.extra=c(model.gls, data)}
-ggplot(d, aes(x = co2, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
-  geom_line(aes(y = predicted), size=1) + 
+ggplot(d, aes(x = co2, y = t.anom)) + 
+  geom_point(color = "dark blue", size=2, alpha = 0.5, na.rm=T) +
+  geom_line(aes(y = predicted), size=1, na.rm=T) + 
   labs(x = expression(paste(CO[2]," (ppm)")), 
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
 
-ggplot(d, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
-  geom_line(aes(y = predicted), size=1) + 
+ggplot(d, aes(x = year, y = t.anom)) + 
+  geom_point(color = "dark blue", size=2, alpha = 0.5, na.rm=T) +
+  geom_line(aes(y = predicted), size=1, na.rm=T) + 
   labs(x = "Year",
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
@@ -124,9 +121,9 @@ ggplot(d, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha 
 
 Now fit a linear model of $t$ vs. TSI #.
 ```{r lin_model_tsi, dependson=c("load_data"), cache.extra=c(data)}
-d.tsi <- na.omit(data.solar %>% select(time, t, tsi = xtsi))
-tsi.lin <- lm(t ~ tsi, data = d.tsi)
-tsi.res <- data.frame(time = d.tsi$time, r = residuals(tsi.lin))
+d.tsi <- na.omit(data.solar %>% select(year, t.anom, tsi = xtsi))
+tsi.lin <- lm(t.anom ~ tsi, data = d.tsi)
+tsi.res <- data.frame(year = d.tsi$year, r = residuals(tsi.lin))
 
 p.tsi <- predict(tsi.lin)
 ```
@@ -135,8 +132,9 @@ Plot the data vs. model to check whether things look sensible:
 ```{r plot_lin_model_tsi, dependson=c("lin_model_tsi"), cache.extra=c(tsi.lin, d.tsi, p.tsi)}
 library(ggplot2)
 
-ggplot(cbind(d.tsi,predict = p.tsi), aes(x = tsi, y = t)) + geom_point(size = 2, color = "dark blue", alpha=0.5) + 
-  geom_line(aes(y=predict), size=1) +
+ggplot(cbind(d.tsi,predict = p.tsi), aes(x = tsi, y = t.anom)) + 
+  geom_point(size = 2, color = "dark blue", alpha=0.5, na.rm=T) + 
+  geom_line(aes(y=predict), size=1, na.rm=T) +
   labs(x = expression(paste("Total Solar Irradiance ", W / m^2)),
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size=20)
@@ -165,18 +163,20 @@ if (use_arma_tsi) {
   cs.tsi <- corAR1(coef(tsi.ar1), form=~1)
 }
 model.cst.tsi <- Initialize(cs.tsi, data = d.tsi)
-model.gls.tsi <- gls(t ~ tsi, data = d.tsi, correlation=model.cst.tsi)
+model.gls.tsi <- gls(t.anom ~ tsi, data = d.tsi, correlation=model.cst.tsi)
 d.tsi$predicted.tsi <- predict(model.gls.tsi)
 ```
 ```{r plot_gls_tsi, dependson=c("fit_gls_tsi")}
-ggplot(d.tsi, aes(x = tsi, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
-  geom_line(aes(y = predicted.tsi), size=1) + 
+ggplot(d.tsi, aes(x = tsi, y = t.anom)) + 
+  geom_point(color = "dark blue", size=2, alpha = 0.5, na.rm=T) +
+  geom_line(aes(y = predicted.tsi), size=1, na.rm=T) + 
   labs(x = expression(paste("Total Solar Irradiance ", W / m^2)),
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
 
-ggplot(d.tsi, aes(x = time, y = t)) + geom_point(color = "dark blue", size=2, alpha = 0.5) +
-  geom_line(aes(y = predicted.tsi), size=1) + 
+ggplot(d.tsi, aes(x = year, y = t.anom)) + 
+  geom_point(color = "dark blue", size=2, alpha = 0.5, na.rm=T) +
+  geom_line(aes(y = predicted.tsi), size=1, na.rm=T) + 
   labs(x = "Year",
        y = expression(paste("Temperature anomaly ", (degree * C)))) +
   theme_bw(base_size = 20)
