@@ -209,7 +209,7 @@ init_model <- function(mdl, n_burn_in, n_future, covars, future_covars, ...) {
   invisible(mdl)
 }
 
-update_model <- function(mdl, n_today, n_horizon, samples = 100000, arma_model = NULL) {
+update_model <- function(mdl, n_today, n_horizon, samples = 10000, arma_model = NULL) {
   n_today <- as.integer(n_today)
   n_horizon <- as.integer(n_horizon)
   prediction <- predict_future(mdl, n_today, n_horizon, samples, arma_model)$prediction
