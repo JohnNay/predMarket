@@ -167,7 +167,7 @@ predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, 
   if (trace) message("About to enter prediction loop: ", p_steps)
   prediction <- rep_len(data.frame(), samples)
   for (i in seq_len(samples)) {
-    noise <- arima.sim(model = model_coef, n = n_future, n.start = n_today,
+    noise <- arima.sim(model = model_coef, n = n_horizon, n.start = n_today,
                        start.innov = past_res, rand.gen = rgen)
     prediction[[i]] <- data.frame(sim = i, step = p_steps, year = mdl@future$year[p_steps], t.anom = future.temp + noise)
   }

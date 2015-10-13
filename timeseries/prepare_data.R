@@ -18,7 +18,8 @@ prepare_climate_data <- function() {
   data <- merge(t, co2, all.x = TRUE)
   data <- merge(data, sunspots, all.x = TRUE)
   data <- merge(data, tsi, all.x = TRUE)
-  data <- data %>% select(year, t.anom, co2, sunspots = ss, tsi = xtsi) %>% mutate(year = floor(year))
+  data <- data %>% select(year, t.anom, co2, sunspots = ss, tsi = xtsi) %>% 
+    mutate(year = floor(year), log.co2 = log(co2))
   data <- na.omit(data)
   invisible(data)
 }
