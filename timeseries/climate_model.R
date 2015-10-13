@@ -89,7 +89,7 @@ setMethod("fit_arma", c(res = "missing", covariates = "list", data = "data.frame
           }
 )
 
-auto_arma <- function(data, covariates, max_p = 2, max_q = 2) {
+auto_arma <- function(data, covariates, max_p = 1, max_q = 1) {
   f <- mdl_formula(covariates)
   lin.model <- lm(f, data = data)
   res <- residuals(lin.model)
@@ -163,32 +163,38 @@ predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, 
     ma = unlist(arma_coef %>% select(starts_with('ma')))
   )
   model_coef <- model_coef[! unlist(lapply(model_coef, is.null))]
-  p_steps <- n_today + seq_len(n_horizon)
-  if (trace) message("About to enter prediction loop: ", p_steps)
-  prediction <- rep_len(data.frame(), samples)
-  for (i in seq_len(samples)) {
-    noise <- arima.sim(model = model_coef, n = n_horizon, n.start = n_today,
-                       start.innov = past_res, rand.gen = rgen)
-    prediction[[i]] <- data.frame(sim = i, step = p_steps, year = mdl@future$year[p_steps], t.anom = future.temp + noise)
+  if (n_horizon > 0) {
+    p_steps <- n_today + seq_len(n_horizon)
+    if (trace) message("About to enter prediction loop: ", p_steps)
+    prediction <- rep_len(data.frame(), samples)
+    for (i in seq_len(samples)) {
+      noise <- arima.sim(model = model_coef, n = n_horizon, n.start = n_today,
+                         start.innov = past_res, rand.gen = rgen)
+      prediction[[i]] <- data.frame(sim = i, step = p_steps, year = mdl@future$year[p_steps], t.anom = future.temp + noise)
+    }
+    prediction <- as.data.frame(rbind_all(prediction))
+  } else {
+    prediction <- data.frame()
   }
-  prediction <- as.data.frame(rbind_all(prediction))
   invisible(list(arma = am, model = gls_model, prediction = prediction))
 }
 
-init_model <- function(mdl, n_burn_in, n_future, covars, future_covars, ...) {
+init_model <- function(mdl, n_history, n_future, covars, future_covars, ...) {
   covars <- unlist(covars)
-  n_burn_in <- as.integer(n_burn_in)
+  n_history <- as.integer(n_history)
   n_future <- as.integer(n_future)
-  mdl@burn_in <- as.integer(n_burn_in)
+  mdl@burn_in <- as.integer(n_history)
   mdl@future_len <- as.integer(n_future)
   mdl@covariates <- as.list(covars)
-  mdl@future <- as.data.frame(matrix(nrow = n_burn_in + n_future, ncol = 2 + length(covars)))
+  mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(covars)))
   colnames(mdl@future) <- c('year', 't.anom', covars)
-  mdl@future[1:n_burn_in] <- mdl@climate[1:n_burn_in, colnames(mdl@future)]
-  mdl@future$year[n_burn_in + seq_len(n_future)] <- mdl@future$year[n_burn_in] + seq_len(n_future)
-  mdl@future[n_burn_in + seq_len(n_future), covars] <- future_covars[,covars]
-
-  true_future  <- predict_future(mdl, n_burn_in, n_future, 1)
+  mdl@future[1:n_history] <- mdl@climate[1:n_history, colnames(mdl@future)]
+  if (n_future > 0) {
+    mdl@future$year[n_history + seq_len(n_future)] <- mdl@future$year[n_history] + seq_len(n_future)
+    mdl@future[n_history + seq_len(n_future), covars] <- future_covars[,covars]
+  }
+  
+  true_future  <- predict_future(mdl, n_history, n_future, 1)
   am <- true_future$arma
   arma_model <- am$model
   slot(mdl, "arma", check=FALSE) <- arma_model
@@ -201,11 +207,13 @@ init_model <- function(mdl, n_burn_in, n_future, covars, future_covars, ...) {
   }
   
   slot(mdl, "model", check=FALSE) <- true_future$model
-
-  mdl@future$t.anom[n_burn_in + seq_len(n_future)] <- true_future$prediction$t.anom
-  mdl@today <- n_burn_in
-  mdl@horizon <- n_burn_in
-  mdl@prediction = data.frame(sim = 1, step = n_burn_in, t.anom = mdl@future[n_burn_in])
+  
+  if (n_future > 0) {
+    mdl@future$t.anom[n_history + seq_len(n_future)] <- true_future$prediction$t.anom
+  }
+  mdl@today <- n_history
+  mdl@horizon <- n_history
+  mdl@prediction = data.frame(sim = 1, step = n_history, t.anom = mdl@future[n_history])
   invisible(mdl)
 }
 
