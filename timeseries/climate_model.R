@@ -89,23 +89,31 @@ setMethod("fit_arma", c(res = "missing", covariates = "list", data = "data.frame
           }
 )
 
-auto_arma <- function(data, covariates, max_p = 1, max_q = 1) {
+arma_model <- function(data, covariates, p, q, res = NULL) {
+  if (is.null(res)) {
+    f <- mdl_formula(covariates)
+    lin.model <- lm(f, data = data)
+    res <- residuals(lin.model)
+  }
+  model.arma <-  fit_arma(p, q, res)
+  s <- summary(model.arma)
+  invisible(list(p = s$p, q = s$q, aic = s$aic, model = model.arma))
+}
+
+auto_arma <- function(data, covariates, max_p = 2, max_q = 2) {
   f <- mdl_formula(covariates)
   lin.model <- lm(f, data = data)
   res <- residuals(lin.model)
   best.model <- NULL
   for(p in 1:max_p) {
     for (q in 0:max_q) {
-      model.arma <-  fit_arma(p, q, res)
-      if(is.null(best.model)) {
-        best.model <- model.arma
-      } else if (summary(model.arma)$aic < summary(best.model)$aic) {
+      model.arma <-  arma_model(data, covariates, p, q, res)
+      if(is.null(best.model) || model.arma$aic < best.model$aic) {
         best.model <- model.arma
       }
     }
   }
-  s <- summary(best.model)
-  invisible(list(p = s$p, q = s$q, aic = s$aic, model = best.model))
+  invisible(best.model)
 }
 
 cor <- function(arma) {
@@ -136,10 +144,15 @@ setMethod("initialize", "climate_model",
           }
 )
 
-predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, trace = FALSE) {
+predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, 
+                           auto_arma = FALSE, max_p = 2, max_q = 2, 
+                           trace = FALSE) {
   past_data <- mdl@future[1:n_today,]
   if (is.null(arma_model)) {
-    am <- auto_arma(past_data, mdl@covariates)
+    if (auto_arma)
+      am <- auto_arma(past_data, mdl@covariates, max_p = max_p, max_q = max_q)
+    else
+      am <- arma_model(past_data, mdl@covariates, mdl@p, mdl@q)
     arma_model <- am$model
   } else {
     s <- summary(arma_model)
@@ -179,14 +192,20 @@ predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, 
   invisible(list(arma = am, model = gls_model, prediction = prediction))
 }
 
-init_model <- function(mdl, n_history, n_future, covars, future_covars, ...) {
+init_model <- function(mdl, n_history, n_future, covars, future_covars, 
+                       max_p = 2, max_q = 2, p = NA, q = NA) {
   covars <- unlist(covars)
   n_history <- as.integer(n_history)
   n_future <- as.integer(n_future)
+  p <- as.integer(p)
+  q <- as.integer(q)
+  
   mdl@burn_in <- as.integer(n_history)
   mdl@future_len <- as.integer(n_future)
+
   mdl@covariates <- as.list(covars)
   mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(covars)))
+  
   colnames(mdl@future) <- c('year', 't.anom', covars)
   mdl@future[1:n_history] <- mdl@climate[1:n_history, colnames(mdl@future)]
   if (n_future > 0) {
@@ -194,7 +213,11 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars, ...) {
     mdl@future[n_history + seq_len(n_future), covars] <- future_covars[,covars]
   }
   
-  true_future  <- predict_future(mdl, n_history, n_future, 1)
+  mdl@p <- p
+  mdl@q <- q
+
+  true_future  <- predict_future(mdl, n_history, n_future, samples = 1,
+                                 auto_arma = all(is.na(c(p,q))))
   am <- true_future$arma
   arma_model <- am$model
   slot(mdl, "arma", check=FALSE) <- arma_model
@@ -217,10 +240,10 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars, ...) {
   invisible(mdl)
 }
 
-update_model <- function(mdl, n_today, n_horizon, samples = 10000, arma_model = NULL) {
+update_model <- function(mdl, n_today, n_horizon, samples = 10000, arma_model = NULL, auto_arma = FALSE) {
   n_today <- as.integer(n_today)
   n_horizon <- as.integer(n_horizon)
-  prediction <- predict_future(mdl, n_today, n_horizon, samples, arma_model)$prediction
+  prediction <- predict_future(mdl, n_today, n_horizon, samples, arma_model, auto_arma)$prediction
   mdl@today <- n_today
   mdl@horizon <- n_today + n_horizon
   mdl@prediction <- prediction

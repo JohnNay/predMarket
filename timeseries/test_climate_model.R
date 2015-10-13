@@ -59,8 +59,8 @@ ggplot(future@future, aes(x = year, y = t.anom)) +
 
 interval_prob(future, 10, c(0.3, 0.7))
 
-mdl.tsi <- init_model(mdl.tsi, 108, 0, list('tsi'), NULL)
-future_2 <- update_model(mdl.tsi, 50, 20)
+mdl.tsi <- init_model(mdl.tsi, 115, 0, list('tsi'), NULL, p = 1, q = 0)
+future_2 <- update_model(mdl.tsi, 50, 20, auto_arma = FALSE)
 
 ggplot(future_2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
