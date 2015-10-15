@@ -207,10 +207,16 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars,
   mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(covars)))
   
   colnames(mdl@future) <- c('year', 't.anom', covars)
-  mdl@future[1:n_history] <- mdl@climate[1:n_history, colnames(mdl@future)]
+  mdl@future[1:n_history,] <- mdl@climate[1:n_history, colnames(mdl@future)]
   if (n_future > 0) {
-    mdl@future$year[n_history + seq_len(n_future)] <- mdl@future$year[n_history] + seq_len(n_future)
-    mdl@future[n_history + seq_len(n_future), covars] <- future_covars[,covars]
+    future_indices <- n_history + seq_len(n_future)
+    future_years <- mdl@future$year[n_history] + seq_len(n_future)
+    missing_years <- setdiff(future_years, future_covars$year)
+    if (length(missing_years) > 0) {
+      future_covars <- rbind(mdl@climate[mdl@climate$year %in% missing_years, names(future_covars)], future_covars)
+    }
+    mdl@future$year[future_indices] <- future_years
+    mdl@future[future_indices, covars] <- future_covars[future_covars$year %in% future_years,covars]
   }
   
   mdl@p <- p
@@ -236,7 +242,7 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars,
   }
   mdl@today <- n_history
   mdl@horizon <- n_history
-  mdl@prediction = data.frame(sim = 1, step = n_history, t.anom = mdl@future[n_history])
+  mdl@prediction = data.frame(sim = 1, step = n_history, t.anom = mdl@future$t.anom[n_history])
   invisible(mdl)
 }
 
