@@ -3,7 +3,7 @@ source('load_giss.R')
 
 data.dir <- 'data'
 
-prepare_climate_data <- function(scenario) {
+prepare_climate_data <- function(scenario, modeled_tsi = TRUE) {
   t <- load_giss_data()$data %>% group_by(year) %>% summarize(t.anom = mean(t.anom)) %>% ungroup() %>% filter(!is.na(t.anom))
   scenario <- tolower(scenario)
   co2_basename = '_MIDYR_CONC.DAT'
@@ -25,18 +25,23 @@ prepare_climate_data <- function(scenario) {
   sunspots <- sunspots %>% mutate(ss = ifelse(ss >= 0, ss, NA)) %>% 
     group_by(year) %>% summarize(ss = mean(ss)) %>% ungroup() %>% 
     filter(! is.na(ss))
+
+  if (modeled_tsi) {
+    tsi <- read.csv('data/tsi_prediction.csv', header=F, stringsAsFactors = F,
+                    col.names = c('year', 'tsi'))
+  } else {
+    tsi <- read.table('data/TSI_TIM_Reconstruction.txt', comment.char = ';')
+    names(tsi) <- c('year','tsi')
+    tsi <- tsi %>% mutate(year = floor(year))
+    tsi <- rbind(tsi, with(tsi, data.frame(year = 1:100 + max(year), 
+                                           tsi = rev(tsi)[1:100])))
+  }
   
-  tsi <- read.table('data/TSI_TIM_Reconstruction.txt', comment.char = ';')
-  names(tsi) <- c('year','tsi')
-  tsi <- tsi %>% mutate(year = floor(year))
   welch <- function(N) {
     w = 1 - (N:0 * 2 / (2 * N - 1) - 1)^2
     w/sum(w)
   }
-  
-  tsi <- rbind(tsi, with(tsi, data.frame(year = 1:100 + max(year), 
-                                         tsi = rev(tsi)[1:100])))
-  
+
   tsi <- tsi %>% mutate(slow.tsi = stats::filter(tsi, welch(44), 'convolution', 
                                           sides=1, circular = FALSE))
 
