@@ -41,8 +41,12 @@ prepare_climate_data <- function(scenario, modeled_tsi = TRUE) {
     w = 1 - (N:0 * 2 / (2 * N - 1) - 1)^2
     w/sum(w)
   }
+  
+  mean_filter <- function(N) {
+    rep_len(1,N)/N
+  }
 
-  tsi <- tsi %>% mutate(slow.tsi = stats::filter(tsi, welch(44), 'convolution', 
+  tsi <- tsi %>% mutate(slow.tsi = stats::filter(tsi, welch(33), 'convolution', 
                                           sides=1, circular = FALSE))
 
   data <- merge(t, co2, all.x = TRUE)
