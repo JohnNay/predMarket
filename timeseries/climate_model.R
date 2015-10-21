@@ -77,7 +77,7 @@ setMethod("fit_arma", signature(res = "numeric", covariates = "missing", data = 
 )
 
 
-setMethod("fit_arma", c(res = "missing", covariates = "list", data = "data.frame"),
+setMethod("fit_arma", signature(res = "missing", covariates = "list", data = "data.frame"),
           function(p, q, res, covariates, data) {
             if (is.null(res)) {
               f <- mdl_formula(covariates)
@@ -85,7 +85,7 @@ setMethod("fit_arma", c(res = "missing", covariates = "list", data = "data.frame
               lin.model <- lm(f, data = data)
               res <- residuals(lin.model)
             }
-            fit_arma(mdl, p, q, res)
+            fit_arma(p, q, res)
           }
 )
 
@@ -144,15 +144,16 @@ setMethod("initialize", "climate_model",
           }
 )
 
-predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL, 
+predict_future <- function(mdl, n_today, n_horizon, covars, samples, arma_model = NULL, 
                            auto_arma = FALSE, max_p = 2, max_q = 2, 
                            trace = FALSE) {
+  covars <- as.list(covars)
   past_data <- mdl@future[1:n_today,]
   if (is.null(arma_model)) {
     if (auto_arma)
-      am <- auto_arma(past_data, mdl@covariates, max_p = max_p, max_q = max_q)
+      am <- auto_arma(past_data, covars, max_p = max_p, max_q = max_q)
     else
-      am <- arma_model(past_data, mdl@covariates, mdl@p, mdl@q)
+      am <- arma_model(past_data, covars, mdl@p, mdl@q)
     arma_model <- am$model
   } else {
     s <- summary(arma_model)
@@ -160,11 +161,11 @@ predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL,
   }
   
   if (trace) message("About to fit gls_model: Best arma = (", am$p, ",", am$q, "), aic = ", am$aic)
-  gls_model <- fit_model(past_data, arma_model, mdl@covariates)
+  gls_model <- fit_model(past_data, arma_model, covars)
   
   if (trace) message("About to predict future temperature")
   future.temp <- predict(gls_model, newdata = mdl@future[n_today + seq_len(n_horizon), 
-                                                         unlist(mdl@covariates), drop=FALSE])
+                                                         unlist(covars), drop=FALSE])
   past_res <- residuals(gls_model, "response")[seq_len(n_today)]
   res_sd <- sd(past_res)
   rgen <- function(n) rnorm(n, mean = 0.0, sd = res_sd)
@@ -192,9 +193,16 @@ predict_future <- function(mdl, n_today, n_horizon, samples, arma_model = NULL,
   invisible(list(arma = am, model = gls_model, prediction = prediction))
 }
 
-init_model <- function(mdl, n_history, n_future, covars, future_covars, 
+init_model <- function(mdl, n_history, n_future, true_covars, future_covars, 
                        max_p = 2, max_q = 2, p = NA, q = NA) {
-  covars <- unlist(covars)
+  covars <- unlist(true_covars)
+  # all_covars = column names for all future covariates, not just the ones we're using for the true model.
+  if (is.null(future_covars)) {
+    all_covars <- names(mdl@climate)
+  } else {
+  all_covars <- names(future_covars)
+  }
+  all_covars <- all_covars[! all_covars %in% c('year', 't.anom')]
   n_history <- as.integer(n_history)
   n_future <- as.integer(n_future)
   p <- as.integer(p)
@@ -204,9 +212,9 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars,
   mdl@future_len <- as.integer(n_future)
 
   mdl@covariates <- as.list(covars)
-  mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(covars)))
-  
-  colnames(mdl@future) <- c('year', 't.anom', covars)
+  mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(all_covars)))
+
+  colnames(mdl@future) <- c('year', 't.anom', all_covars)
   mdl@future[1:n_history,] <- mdl@climate[1:n_history, colnames(mdl@future)]
   if (n_future > 0) {
     future_indices <- n_history + seq_len(n_future)
@@ -216,13 +224,13 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars,
       future_covars <- rbind(mdl@climate[mdl@climate$year %in% missing_years, names(future_covars)], future_covars)
     }
     mdl@future$year[future_indices] <- future_years
-    mdl@future[future_indices, covars] <- future_covars[future_covars$year %in% future_years,covars]
+    mdl@future[future_indices, all_covars] <- future_covars[future_covars$year %in% future_years,all_covars]
   }
   
   mdl@p <- p
   mdl@q <- q
 
-  true_future  <- predict_future(mdl, n_history, n_future, samples = 1,
+  true_future  <- predict_future(mdl, n_history, n_future, mdl@covariates, samples = 1,
                                  auto_arma = all(is.na(c(p,q))))
   am <- true_future$arma
   arma_model <- am$model
@@ -246,10 +254,11 @@ init_model <- function(mdl, n_history, n_future, covars, future_covars,
   invisible(mdl)
 }
 
-update_model <- function(mdl, n_today, n_horizon, samples = 10000, arma_model = NULL, auto_arma = FALSE) {
+update_model <- function(mdl, n_today, n_horizon, trader_covars = NULL, samples = 10000, arma_model = NULL, auto_arma = FALSE) {
+  if (is.null(trader_covars)) trader_covars <- mdl@covariates
   n_today <- as.integer(n_today)
   n_horizon <- as.integer(n_horizon)
-  prediction <- predict_future(mdl, n_today, n_horizon, samples, arma_model, auto_arma)$prediction
+  prediction <- predict_future(mdl, n_today, n_horizon, trader_covars, samples, arma_model, auto_arma)$prediction
   mdl@today <- n_today
   mdl@horizon <- n_today + n_horizon
   mdl@prediction <- prediction

@@ -1,0 +1,25 @@
+---
+title: "Timeseries Example"
+author: "Jonathan Gilligan"
+date: "October 21, 2015"
+output: html_document
+html_document:
+  mathjax: default
+---
+# Example of running the timeseries functions
+\(\require{mhchem}\def\COO{\ce{CO2}}\)
+
+## Initializing the model
+
+The first thing we need to do is get the data and initialize models for which the true model (the physically correct one) is TSI and $\log\COO$:
+```{r initialize, echo=T, eval=T}
+source('prepare_data.R')
+source('climate_model.R')
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+theme_set(theme_bw(base_size=20))
+
+data <- prepare_climate_data('rcp 4.5')
