@@ -1,0 +1,78 @@
+---
+html_document:
+  mathjax: default
+author: "Jonathan Gilligan"
+date: "October 21, 2015"
+output: html_document
+title: "Timeseries Example"
+---
+# Example of running the timeseries functions
+\(\require{mhchem}\def\COO{\ce{CO2}}\)
+
+## Initializing the model
+
+The first thing we need to do is get the data and initialize models for which the true model (the physically correct one) is Slow TSI and $\log\COO$:
+```{r setup, echo=T, eval=T, message = F}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+theme_set(theme_bw(base_size=20))
+
+source('prepare_data.R')
+source('climate_model.R')
+```
+```{r load_data, echo=T, eval=T, cache=T, dependson=c('setup')}
+data <- prepare_climate_data('rcp 4.5')
+
+climate_data = data$data
+future_data = data$future
+
+mdl <- new('climate_model', climate = climate_data)
+
+max_future <- 50
+history_start <- 100
+```
+
+Next, we initialize two models, one for which the true model is $\log\COO$ and the other for which the true model is Slow TSI.
+We initialize each model with the first `r history_start` years of data, and in each model, we predict a true future for the next `max_future` years. This true future is based on the best linear fit to the relevant covariate for each model (Slow TSI or $\log\COO$).
+
+```{r init_models, echo=T, eval=T, cache=T, dependson=c('load_data')}
+mdl.co2.true <- init_model(mdl, n_history = history_start, n_future = max_future, true_covars = list('log.co2'), future_covars = future_data)
+mdl.tsi.true <- init_model(mdl, n_history = history_start, n_future = max_future, true_covars = list('slow.tsi'), future_covars = future_data)
+```
+
+Next, we run predictions for two types of traders with each model:
+```{r trader_predict, echo=T, eval=T, cache=T, dependson=c('init_models'), cache_extra = c(mdl.co2.true, mdl.tsi.true)}
+today <- history_start
+trader_horizon <- 10
+
+trader.co2.true.co2 <- update_model(mdl.co2.true, n_today = today, n_horizon = trader_horizon, trader_covars = list('log.co2'))
+trader.tsi.true.co2 <- update_model(mdl.co2.true, n_today = today, n_horizon = trader_horizon, trader_covars = list('slow.tsi'))
+
+trader.co2.true.tsi <- update_model(mdl.tsi.true, n_today = today, n_horizon = trader_horizon, trader_covars = list('log.co2'))
+trader.tsi.true.tsi <- update_model(mdl.tsi.true, n_today = today, n_horizon = trader_horizon, trader_covars = list('slow.tsi'))
+```
+
+Now w report the predictions:
+```{r predictions, eval=T, echo=T, cache=T, dependson=c('trader_predict')}
+low = 0.5
+high = 0.6
+
+predictions <- data.frame(true.model = c('log CO2', 'log CO2', 'Slow TSI', 'Slow TSI'),
+                          trader.model = rep_len(c('log CO2', 'Slow TSI'), 4),
+                          prob = c(
+                            interval_prob(trader.co2.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
+                            interval_prob(trader.tsi.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
+                            interval_prob(trader.co2.true.tsi, n_horizon = trader_horizon, t.range = c(low, high)),
+                            interval_prob(trader.tsi.true.tsi, n_horizon = trader_horizon, t.range = c(low, high))
+                          )
+)
+                          
+```
+
+| Trader's Model | True model = $\log\COO$ | True model = Slow TSI |
+|:---------------|------------------------:|------------------:|
+| $\log\COO$     | `r round(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'log CO2'],3)` | `r round(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'log CO2'],3)` |
+| Slow TSI     | `r round(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'Slow TSI'],3)` | `r round(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'Slow TSI'],3)` |
+
