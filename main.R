@@ -36,7 +36,7 @@ main <- function(parameters,
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
   market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
-  true.model <- parameters[5] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
+  true.model <- parameters[5] + 1 # the true model, 1 for tsi, and 2 for log.CO2
   
   cat(paste("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
             "true.model", true.model, "\n"))
