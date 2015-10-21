@@ -202,7 +202,7 @@ acftest(tsi.res, tsi.arma11, tsi.ar1, type='partial', ci.type='ma')
 
 ![Compare autocorrelation of fit residuals to AR(1) and ARMA(1,1) models.](model_temp_files/figure-html/test_acf_tsi-2.png) 
 
-According to the Akaike Information Criterion, the AR(1) model is \(1.3\) times more likely than the the ARMA(1,1) model. 
+According to the Akaike Information Criterion, the AR(1) model is \(1.2\) times more likely than the the ARMA(1,1) model. 
 Now that this is settled, let's do a generalized least-squares fit using an AR(1) noise model:
 
 ```r

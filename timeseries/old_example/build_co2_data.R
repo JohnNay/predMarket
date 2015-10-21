@@ -7,7 +7,7 @@ library(dplyr)
 law_co2_url <- 'ftp://ftp.ncdc.noaa.gov/pub/data/paleo/icecore/antarctica/law/law2006.txt'
 law_co2_file <- basename(law_co2_url)
 
-grim_url <- 'http://www.csiro.au/greenhouse-gases/GreenhouseGas/data/CapeGrim_CO2_data_download.txt'
+grim_url <- 'http://www.csiro.au/greenhouse-gases/GreenhouseGas/data/CapeGrim_CO2_data_download.csv'
 grim_file <- basename(grim_url)
 
 get_law_dome_data <- function(data.file = law_co2_file, data.dir = 'data', 
