@@ -9,6 +9,8 @@ DataPrediction <- function(
   n_future   = 0
 ){
   
+  theme_set(theme_bw(base_size=20))
+  
   source("timeseries/prepare_data.R",chdir=T)
   source("timeseries/climate_model.R",chdir=T)
   
@@ -17,22 +19,28 @@ DataPrediction <- function(
   climate_data <- data$data
   future_covars <- data$future
   
-  if (true.model == 1){
-     covariates <- list('log.co2')
-  }
-  else {
-     covariates <- list('tsi')
-  }
+  # Load data and create model
   
-  mdl <- new("climate_model", climate = climate_data, covariates = covariates)
-
-  mdl.co2 <- init_model(mdl, n_history = n_history, n_future = n_future,
-                    covars = list('log.co2'), future_covars = future_covars)
-
-  mdl.tsi <- init_model(mdl, n_history = n_history, n_future = n_future,
-                      covars = list('tsi'), future_covars = future_covars)
-
+  mdl <- new("climate_model", climate = climate_data)
   
+  # Set timing parameters
+  
+  history_start = n_history
+  future_length = n_future
+  
+  # Initialize the true models
+
+  mdl.co2 <- init_model(mdl, n_history = history_start,
+                        n_future = future_length, true_covars = list('log.co2'),
+                        future_covars = future_covars)
+  
+  mdl.tsi <- init_model(mdl, n_history = history_start,
+                        n_future = future_length, true_covars = list('slow.tsi'),
+                        future_covars = future_covars)
+
+  mdl.co2
+  
+  mdl.tsi
   
   
 }
