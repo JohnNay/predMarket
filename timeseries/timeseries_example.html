@@ -81,7 +81,11 @@ library(tidyr)
 theme_set(theme_bw(base_size=20))
 
 source('prepare_data.R')
-source('climate_model.R')</code></pre>
+source('climate_model.R')
+
+prt &lt;- function(x,digits,flag='',mark='') {
+  formatC(x, digits=digits, format='f', flag=flag, big.mark=mark)
+}</code></pre>
 <pre class="r"><code>data &lt;- prepare_climate_data('rcp 4.5')
 
 climate_data = data$data
@@ -110,10 +114,10 @@ high = 0.6
 predictions &lt;- data.frame(true.model = c('log CO2', 'log CO2', 'Slow TSI', 'Slow TSI'),
                           trader.model = rep_len(c('log CO2', 'Slow TSI'), 4),
                           prob = c(
-                            interval_prob(trader.co2.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.tsi.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.co2.true.tsi, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.tsi.true.tsi, n_horizon = trader_horizon, t.range = c(low, high))
+                            interval_prob(trader.co2.true.co2, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.tsi.true.co2, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.co2.true.tsi, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.tsi.true.tsi, n_horizon = trader_horizon, t.range = c(low, high), TRUE)
                           )
 )</code></pre>
 <table>
@@ -127,13 +131,13 @@ predictions &lt;- data.frame(true.model = c('log CO2', 'log CO2', 'Slow TSI', 'S
 <tbody>
 <tr class="odd">
 <td align="left"><span class="math">\(\log\COO\)</span></td>
-<td align="right">0.046</td>
-<td align="right">0.051</td>
+<td align="right">0.050</td>
+<td align="right">0.050</td>
 </tr>
 <tr class="even">
 <td align="left">Slow TSI</td>
 <td align="right">0.001</td>
-<td align="right">0.002</td>
+<td align="right">0.001</td>
 </tr>
 </tbody>
 </table>

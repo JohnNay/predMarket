@@ -21,8 +21,12 @@ theme_set(theme_bw(base_size=20))
 
 source('prepare_data.R')
 source('climate_model.R')
+
+prt <- function(x,digits,flag='',mark='') {
+  formatC(x, digits=digits, format='f', flag=flag, big.mark=mark)
+}
 ```
-```{r load_data, echo=T, eval=T, cache=T, dependson=c('setup')}
+```{r load_data, echo=T, eval=T, cache=T}
 data <- prepare_climate_data('rcp 4.5')
 
 climate_data = data$data
@@ -62,10 +66,10 @@ high = 0.6
 predictions <- data.frame(true.model = c('log CO2', 'log CO2', 'Slow TSI', 'Slow TSI'),
                           trader.model = rep_len(c('log CO2', 'Slow TSI'), 4),
                           prob = c(
-                            interval_prob(trader.co2.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.tsi.true.co2, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.co2.true.tsi, n_horizon = trader_horizon, t.range = c(low, high)),
-                            interval_prob(trader.tsi.true.tsi, n_horizon = trader_horizon, t.range = c(low, high))
+                            interval_prob(trader.co2.true.co2, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.tsi.true.co2, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.co2.true.tsi, n_horizon = trader_horizon, t.range = c(low, high), TRUE),
+                            interval_prob(trader.tsi.true.tsi, n_horizon = trader_horizon, t.range = c(low, high), TRUE)
                           )
 )
                           
@@ -73,6 +77,6 @@ predictions <- data.frame(true.model = c('log CO2', 'log CO2', 'Slow TSI', 'Slow
 
 | Trader's Model | True model = $\log\COO$ | True model = Slow TSI |
 |:---------------|------------------------:|------------------:|
-| $\log\COO$     | `r round(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'log CO2'],3)` | `r round(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'log CO2'],3)` |
-| Slow TSI     | `r round(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'Slow TSI'],3)` | `r round(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'Slow TSI'],3)` |
+| $\log\COO$     | `r prt(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'log CO2'],3)` | `r prt(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'log CO2'],3)` |
+| Slow TSI     | `r prt(predictions$prob[predictions$true.model == 'log CO2' & predictions$trader.model == 'Slow TSI'],3)` | `r prt(predictions$prob[predictions$true.model == 'Slow TSI' & predictions$trader.model == 'Slow TSI'],3)` |
 

@@ -265,9 +265,36 @@ update_model <- function(mdl, n_today, n_horizon, trader_covars = NULL, samples 
   invisible(mdl)
 }
 
-interval_prob <- function(mdl, n_horizon, t.range) {
+range_check <- function(x, t.range, closed) {
+  if (closed) {
+    if (is.na(t.range[1])) {
+      within_lower <- TRUE
+    } else {
+      within_lower <- x >= t.range[1]
+    }
+    if (is.na(t.range[2])) {
+      within_upper <- TRUE
+    } else {
+      within_upper <- x <= t.range[2]
+    }
+  } else {
+    if (is.na(t.range[1])) {
+      within_lower <- TRUE
+    } else {
+      within_lower <- x > t.range[1]
+    }
+    if (is.na(t.range[2])) {
+      within_upper <- TRUE
+    } else {
+      within_upper <- x < t.range[2]
+    }
+  }
+  prob <- sum(within_lower & within_upper) / length(x)
+  prob
+}
+
+interval_prob <- function(mdl, n_horizon, t.range, closed) {
   if (n_horizon > mdl@horizon) stop("n_horizon(", n_horizon, ") > mdl@horizon(", mdl@horizon, ")")
   prediction <- mdl@prediction %>% filter(step == mdl@today + n_horizon)
-  prob <- sum(findInterval(prediction$t.anom, t.range, rightmost.closed=TRUE) == 1) / nrow(prediction)
-  prob
+  range_check(prediction$t.anom, t.range, closed)
 }
