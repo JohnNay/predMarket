@@ -8,8 +8,6 @@ generate_model <- function (
   #            - (1-seg)/(number of possible nodes), if the two traders have different approximate models
   #            - 1/(number of possible nodes)      , if the two traders have the same approximate model
   
-  # Market structure parameters
-  market.struct   = c("CDA", "LMSR"), # chose between CDA and LMSR
   market.complet  = 10,   # number of securities which
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
@@ -29,13 +27,6 @@ generate_model <- function (
   horizon,
   n.seq
 ){
-  
-  # BC of the empirical data: (There are 116 data points in the data set.)
-  stopifnot((burn.in + n.seq * horizon) == 116)
-  # Otherwise, agents will start to try to access inexistent data
-  
-  market.struct <- match.arg(market.struct)
-  
   #####
   ## Set model's parameters and create corresponding network
   #####
@@ -55,23 +46,23 @@ generate_model <- function (
                   seg = seg,
                   n.edg = n.edg)
   
-#   #####
-#   ## Record initial of outcomes 
-#   #####
-
-## Record convergence of the initial network
-
-net$init.converg.util <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
-
-### Assortativity ###
-
-#   # calculate the mixing matrix
-#   m <- mixmat(net, 'approx')
-#   
-#   # now calculate the assortativity coefficient
-#   ac <- assortcoeff(m)
-#   
-#   net <- set.graph.attribute(net,"ac.init",ac)
+  #   #####
+  #   ## Record initial of outcomes 
+  #   #####
+  
+  ## Record convergence of the initial network
+  
+  net$init.converg.util <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
+  
+  ### Assortativity ###
+  
+  #   # calculate the mixing matrix
+  #   m <- mixmat(net, 'approx')
+  #   
+  #   # now calculate the assortativity coefficient
+  #   ac <- assortcoeff(m)
+  #   
+  #   net <- set.graph.attribute(net,"ac.init",ac)
   
   #####
   ## Set additional models parameter
@@ -79,8 +70,6 @@ net$init.converg.util <- length(V(net)$approx[V(net)$approx == 1])/length(V(net)
   net <- set.graph.attribute(net,"burn.in",burn.in)
   
   net <- set.graph.attribute(net,"horizon",horizon)
-  
-  net <- set.graph.attribute(net,"market.struct",market.struct)
   
   net <- set.graph.attribute(net,"n.seq",n.seq)
   

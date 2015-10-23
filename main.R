@@ -25,34 +25,35 @@ main2 <- function(parameters,
                   burn.in = 4,
                   n.seq = 28,
                   horizon = 4,
-                 market.struct = c("CDA", "LMSR"), 
                  out = c("segreg", "converg"),
                  visu = FALSE,
                  record = FALSE) {
   
-  stopifnot((burn.in + n.seq * horizon) == 116)
+  nyears <- 135
+  # TODO: set nyears to adapt to whether there is future or not.
+  # TODO: burn.in + n.seq * horizon all need to adapt
+  
+  stopifnot((burn.in + n.seq * horizon) == nyears)
   
   ### Market structure parameters:
-  # market.struct, choses between CDA and LMSR
   # market.complet is number of securities which
   # are traded. With higher securities, traders can trade on
   # more precise temperature intervals
-  
+  # TODO: market.complet needs an upper bound if its varied
+  # or we can keep it fixed, for now we keep it at 10
+  market.complet <- 10 #ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
   
   # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
-  market.complet <- ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
-  true.model <- parameters[5] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
-  n.edg <- round(parameters[6]*100) + 100 # integer in (100, 200)
-  n.traders <- round(parameters[7]*100) + 50 # integer in (50, 250)
-  
+  true.model <- parameters[4] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
+  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
+  n.traders <- round(parameters[6]*100) + 50 # integer in (50, 250)
   
   cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
             "true.model", true.model, "\n")
   
-  market.struct <- match.arg(market.struct)
   out <- match.arg(out)
   
   if (visu){
@@ -66,6 +67,16 @@ main2 <- function(parameters,
     #####
     ## Set model's parameters and create corresponding network
     #####
+    # TODO: run jonathans code and create climate and covariates data
+    #conditional on which is TRUE model, only generate that data to save time
+    # doing this here inside the loop of iterations allows us to average over the randomness in this
+    # TODO: using that data, then create predictions for all agents, they can switch between the two model
+    # we create both the predictions and the actual reservation prices all before
+    # number of predictions depends on the number of securities, we want this flexibility
+    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for TSI
+    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for log.co2
+    # they need to be attached to the network after generate model and then left alone until this place in next iteration.
+    
     net <- generate_model( ### Network parameters
       n.traders  = n.traders,
       n.edg      = n.edg,
@@ -87,6 +98,7 @@ main2 <- function(parameters,
       # is measured by cumulative monetary gains on the market (over
       # all past trading sequences and periods)
       
+      market.complet = market.complet,
       ### Timing parameters:
       
       # Number of periods burned for initial calibration
@@ -101,11 +113,11 @@ main2 <- function(parameters,
       ###############
     )
     
-    #####
-    ## Construct "true" time series (random at this point, to be later calibrated with actual data)
-    #####
-    D <- generate_data(t.mod = true.model,
-                       t.fin = (net$burn.in + (net$horizon * net$n.seq )))
+#     #####
+#     ## Construct "true" time series (random at this point, to be later calibrated with actual data)
+#     #####
+#     D <- generate_data(t.mod = true.model,
+#                        t.fin = (net$burn.in + (net$horizon * net$n.seq )))
     
     
     # Visualize network (optional)
@@ -150,25 +162,10 @@ main2 <- function(parameters,
     #####
     net <- Adapt(g = net)
     
-    if (visu){
-      plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)}
+    if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     
     if(record){
-      if (out == "segreg"){
-        
-        # calculate the mixing matrix
-        m <- mixmat(net,'approx')
-        
-        # now calculate the assortativity coefficient
-        result <- assortcoeff(m)
-        
-      }
-      
-      if(out == "converg"){
-        
-        result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
-        
-      }
+      result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
     }
     
     ########                            ############
@@ -178,6 +175,8 @@ main2 <- function(parameters,
     if (net$n.seq>1){
       toto <- net$n.seq  # the number of trading sequences
       for (ts in 2:toto){
+        #TODO: insert initialization of the securities so at beg of each round they dont have leftovers
+        
         from <- net$burn.in + (net$horizon * ts) + 1 # the period at which the sequence starts
         to <- net$burn.in + (net$horizon * ts) - 1 # the period at which trading stops and securities
         # are realized. The -1 accounts for the fact that no trade occurs in the last
@@ -206,51 +205,17 @@ main2 <- function(parameters,
         #####
         net <- Adapt( g = net)
         
-        
-        if (visu){
-          plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)}
+        if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
         
         if(record){
-          if (out == "segreg"){
-            
-            # calculate the mixing matrix
-            m <- mixmat(net,'approx')
-            
-            # now calculate the assortativity coefficient
-            result <- append(result, assortcoeff(m))
-          }
-          
-          if(out == "converg"){
-            result <- append(result, (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util)
-          }
+          result <- append(result, (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util)
         }
-        
       }
     }
     
-    if (out == "segreg" && record == FALSE){
-      
-      # calculate the mixing matrix
-      m <- mixmat(net,'approx')
-      
-      # now calculate the assortativity coefficient
-      ac.final <- assortcoeff(m)
-      
-      # report difference in assotativity with respect to initial network. 
-      # less assortative network are "better", so ac.final<net$ac.init is "good"
-      # and the more positive the reported difference, the more powerful the market
-      # is at breaking assortativity
-      result <- net$ac.init - ac.final  
-      
-      #See more at: http://www.babelgraph.org/wp/?p=351#sthash.yWfBpOhv.dpuf
-    }
-    
-    if (out == "converg" && record == FALSE){
-      
+    if (record == FALSE){
       # return difference in utility of network convergence
-      
       result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
-      
     }
     
     result_final[[iteration]] <- result
