@@ -78,7 +78,7 @@ Behav <- function (
         V(g)$sell.price[i] <-g$reserv.tsi[ct,V(g)$sell.which[i]]*(1+V(g)$risk.tak[i])
       }
       if (V(g)$approx[i] == 2){
-        V(g)$buy.price[i] <-g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i])
+        V(g)$sell.price[i] <-g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i])
       }
     }
  

@@ -27,16 +27,12 @@ PopulateNet <- function(
 
   V(g)$money  <- mon.dis
   V(g)$approx <- approx.dis 
-            # approx = 1  ->  ACC is a myth (aka myth)
-            # approx = 3  ->  ACC is true and temp are fction of GHG
+            # approx = 1  ->  tsi
+            # approx = 2  ->  log.co2
            
   g <- set.graph.attribute(g,"n.approx",length(unique(approx.dis)))
-  
-  g <- set.graph.attribute(g, "burn.in", burn.in)  # this should eventually be transfered to generate_model.r
 
   # Assign behavioral parameters to traders
-  
-  V(g)$behav  <- behav.dis  # Market behavior of the traders, only ZI in preliminary model
   
   V(g)$risk.tak <- runif(n.traders,0,risk.tak) # Tendency of a player to take risk on the market by 
                                     # - placing buy orders way below reservation price

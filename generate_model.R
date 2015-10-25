@@ -53,7 +53,7 @@ generate_model <- function (
   
   ## Record convergence of the initial network
   
-  net$init.converg.util <- length(V(net)$approx[V(net)$approx == 1])/length(V(net))
+  net$init.converg.util <- length(V(net)$approx[V(net)$approx == true.model])/length(V(net))
   
   ### Assortativity ###
   
