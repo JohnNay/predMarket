@@ -105,8 +105,9 @@ auto_arma <- function(data, covariates, max_p = 2, max_q = 2) {
   lin.model <- lm(f, data = data)
   res <- residuals(lin.model)
   best.model <- NULL
-  for(p in 1:max_p) {
-    for (q in 0:max_q) {
+  for(p in 0:max_p) {
+    q_start = ifelse(p == 0, 1, 0)
+    for (q in q_start:max_q) {
       model.arma <-  arma_model(data, covariates, p, q, res)
       if(is.null(best.model) || model.arma$aic < best.model$aic) {
         best.model <- model.arma
