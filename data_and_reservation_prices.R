@@ -23,8 +23,6 @@ DataPrediction <- function(
   ## Generate data
   #####
   
-  theme_set(theme_bw(base_size=20))
-  
   source("timeseries/prepare_data.R",chdir=T)
   source("timeseries/climate_model.R",chdir=T)
   
