@@ -38,12 +38,12 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # save(pc, file = "output/pc.Rda")
 # plot(pc, outcome_var = "Convergence of Beliefs")
 
-source("main2.R")
+source("main.R")
 
-#test once
+#manual tests
 # for (i in rep(1,20)){
-# s <- c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999))
-# outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
+# s <- c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999))
+# outcome.evolution <- main(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 # }
 
 
@@ -63,7 +63,7 @@ input_values$n.traders <- list(random_function = "qunif",
 source("utilities/create_set.R")
 source("utilities/compute_iters.R")
 ## SD
-iters_res <- compute_iters(main2, input_values, "converg", 
+iters_res <- compute_iters(main, input_values, "converg", 
                            initial_iters = 1,
                            max_iters = 20, 
                            sample_count = 60, parallel = TRUE, cores = 30,
@@ -154,7 +154,7 @@ for(j in set){
                                constraints = "none")
   doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
-    main2(parameters = as.numeric(input_set[i, ]), 
+    main(parameters = as.numeric(input_set[i, ]), 
           burn.in = j$burn.in, n.seq = j$n.seq, horizon = j$horizon,
           out = "converg", visu = FALSE, record = TRUE)
   })
@@ -170,7 +170,7 @@ for(j in set){
                           constraints = "none")
   doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
-    main2(parameters = as.numeric(input_set[i, ]), 
+    main(parameters = as.numeric(input_set[i, ]), 
           burn.in = j$burn.in, n.seq = j$n.seq, horizon = j$horizon,
           out = "converg", visu = FALSE, record = TRUE)
   })
@@ -209,7 +209,7 @@ input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
 
 source("utilities/pc_sa.R") # Need to have package "sensitivity" installed.
-pc2 <- pc_sa(abm = main2, 
+pc2 <- pc_sa(abm = main, 
              input_values = input_values,
              out = "converg", 
              sample_count = 10000, 
@@ -221,7 +221,7 @@ save(pc2, file = "output/pc2.Rda")
 plot(pc2, outcome_var = "Convergence of Beliefs")
 
 # Standardized Regression Coefficient
-src2 <- pc_sa(abm = main2, 
+src2 <- pc_sa(abm = main, 
               input_values = input_values,
               out = "converg", 
               sample_count = 10000, 
