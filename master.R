@@ -41,6 +41,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 source("main.R")
 
 #manual tests
+# main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)))
 # for (i in rep(1,20)){
 # s <- c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999))
 # outcome.evolution <- main(parameters = s, out = "converg", visu = TRUE, record = TRUE)

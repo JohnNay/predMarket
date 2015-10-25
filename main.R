@@ -159,7 +159,7 @@ main <- function(parameters,
     if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     
     if(record){
-      result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
+      result <- (length(V(net)$approx[V(net)$approx == true.model])/length(V(net))) - net$init.converg.util
       }
     
     ########                            ############
@@ -171,6 +171,9 @@ main <- function(parameters,
       for (ts in 2:toto){
         #TODO: insert initialization of the securities so at beg of each round they dont have leftovers
         
+        ### INITIALIZE SECURITIES###
+        V(net)$secu <- list(rep(1,market.complet + 2))
+        ### Start trading periods in the sequence ###  
         from <- net$burn.in + (net$horizon * ts) + 1 # the period at which the sequence starts
         to <- net$burn.in + (net$horizon * ts) - 1 # the period at which trading stops and securities
         # are realized. The -1 accounts for the fact that no trade occurs in the last
