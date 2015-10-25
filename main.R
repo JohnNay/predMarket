@@ -20,8 +20,8 @@ source("assortativity_coefficient.R")
 
 main <- function(parameters,
                   iterations = 10,
-                  burn.in = 15,
-                  n.seq = 20,
+                  burn.in = 51,
+                  n.seq = 14,
                   horizon = 6,
                  out = c("segreg", "converg"),
                  visu = FALSE,

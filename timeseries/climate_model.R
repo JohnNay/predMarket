@@ -5,6 +5,7 @@ library(nlme)
 library(tseries)
 library(dplyr)
 
+cm_debug <- FALSE
 
 setClass("climate_model", 
          slots = list(
@@ -121,6 +122,8 @@ cor <- function(arma) {
   s <- summary(arma)
   p <- s$p
   q <- s$q
+  if (cm_debug) 
+    message("COR (", paste(names(coef(arma)), coef(arma), collapse = ", ", sep = " = "), ")")
   if (p == 1 && q == 0) {
     cor <- corAR1(coef(arma), form = ~1)
   } else {
@@ -135,7 +138,39 @@ fit_model <- function(data, arma, covariates) {
   select_cols <- function(...) { select(data, ...)}
   data <- do.call(select_cols, cols)
   cs <- Initialize(cor(arma), data)
-  invisible(force(eval(substitute(gls(f, data = data, correlation = cs), list(f = eval(f))))))
+  fc_message <- fixed("false convergence (8)")
+  if (cm_debug)
+    message("Fitting model with arma(", 
+          paste(names(coef(arma)), coef(arma), collapse = ", ", sep="="),  
+          ")")
+  fit_model_ <- function(f, data, correlation) {
+    tryCatch(force(eval(substitute(gls(f, data = data, correlation = correlation),
+                                   list(f = eval(f))))),
+             error = function(e) {
+               if (str_detect(e, fc_message)) {
+                 warning("False convergence: retrying with optim")
+                 tryCatch(force(eval(substitute(gls(f, data = data, 
+                                                    correlation = correlation, 
+                                                    control = glsControl(opt = "optim")),
+                                                list(f = eval(f))))),
+                          error = function(e) {
+                            if (str_detect(e, fc_message)) {
+                              warning("False convergence with optim: retrying with LS")
+                              force(eval(substitute(gls(f, data = data, 
+                                                        correlation = correlation, 
+                                                        method="LS"),
+                                                    list(f = eval(f)))))
+                            } else {
+                              stop("Unexpected error 2: ", e)
+                            }
+                          })
+               } else {
+                 stop("Unexpected error 1: ", e)
+               }
+             })
+  }
+  model <- fit_model_(f, data, cs)
+  invisible(model)
 }
 
 setMethod("initialize", "climate_model",
@@ -201,20 +236,28 @@ init_model <- function(mdl, n_history, n_future, true_covars, future_covars,
   if (is.null(future_covars)) {
     all_covars <- names(mdl@climate)
   } else {
-  all_covars <- names(future_covars)
+    all_covars <- names(future_covars)
   }
   all_covars <- all_covars[! all_covars %in% c('year', 't.anom')]
   n_history <- as.integer(n_history)
   n_future <- as.integer(n_future)
+  max_p <- as.integer(max_p)
+  max_q <- as.integer(max_q)
+  if (is.na(p)) {
+    if (! is.na(q)) 
+      p <- 0
+  } else if (is.na(q)) {
+    q <- 0
+  }
   p <- as.integer(p)
   q <- as.integer(q)
   
   mdl@burn_in <- as.integer(n_history)
   mdl@future_len <- as.integer(n_future)
-
+  
   mdl@covariates <- as.list(covars)
   mdl@future <- as.data.frame(matrix(nrow = n_history + n_future, ncol = 2 + length(all_covars)))
-
+  
   colnames(mdl@future) <- c('year', 't.anom', all_covars)
   mdl@future[1:n_history,] <- mdl@climate[1:n_history, colnames(mdl@future)]
   if (n_future > 0) {
@@ -232,7 +275,8 @@ init_model <- function(mdl, n_history, n_future, true_covars, future_covars,
   mdl@q <- q
 
   true_future  <- predict_future(mdl, n_history, n_future, mdl@covariates, samples = 1,
-                                 auto_arma = all(is.na(c(p,q))))
+                                 auto_arma = all(is.na(c(p,q))), 
+                                 max_p = max_p, max_q = max_q)
   am <- true_future$arma
   arma_model <- am$model
   slot(mdl, "arma", check=FALSE) <- arma_model
@@ -255,11 +299,18 @@ init_model <- function(mdl, n_history, n_future, true_covars, future_covars,
   invisible(mdl)
 }
 
-update_model <- function(mdl, n_today, n_horizon, trader_covars = NULL, samples = 10000, arma_model = NULL, auto_arma = FALSE) {
+update_model <- function(mdl, n_today, n_horizon, trader_covars = NULL, 
+                         samples = 10000, arma_model = NULL, auto_arma = FALSE,
+                         max_p = 2, max_q = 2) {
   if (is.null(trader_covars)) trader_covars <- mdl@covariates
   n_today <- as.integer(n_today)
   n_horizon <- as.integer(n_horizon)
-  prediction <- predict_future(mdl, n_today, n_horizon, trader_covars, samples, arma_model, auto_arma)$prediction
+  message("update_model: ", n_today, ", ", n_horizon, ", ", trader_covars,
+          ", ", samples, ", arma is ", ifelse(is.null(arma), "NULL", mdl@label), ", ",  
+          auto_arma, ", ", max_p, ", ", max_q)
+  prediction <- predict_future(mdl, n_today, n_horizon, trader_covars, 
+                               samples, arma_model, auto_arma,
+                               max_p, max_q)$prediction
   mdl@today <- n_today
   mdl@horizon <- n_today + n_horizon
   mdl@prediction <- prediction

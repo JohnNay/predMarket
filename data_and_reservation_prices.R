@@ -1,3 +1,6 @@
+source("timeseries/prepare_data.R",chdir=T)
+source("timeseries/climate_model.R",chdir=T)
+
 DataPrediction <- function(
   g,
   scenario = c('rcp 2.6', 'rcp2.6', 'rcp26',
@@ -6,6 +9,8 @@ DataPrediction <- function(
                'rcp 8.5', 'rcp8.5', 'rcp85'),
   true.model
 ){
+  
+  scenario <- match.arg(scenario)
   
   #####
   ## Useful variables
@@ -22,11 +27,6 @@ DataPrediction <- function(
   #####
   ## Generate data
   #####
-  
-  theme_set(theme_bw(base_size=20))
-  
-  source("timeseries/prepare_data.R",chdir=T)
-  source("timeseries/climate_model.R",chdir=T)
   
   data <- prepare_climate_data(scenario)
   
@@ -46,18 +46,19 @@ DataPrediction <- function(
   ### Initialize the true models
 
   if (true.model == 1){  
-    mdl <- init_model(mdl, n_history = history_start,
-                      n_future = future_length, true_covars = list('slow.tsi'),
-                      future_covars = future_data)
+    true_covars = list('slow.tsi')
   }
   else if (true.model == 2){
-    mdl <- init_model(mdl, n_history = history_start,
-                          n_future = future_length, true_covars = list('log.co2'),
-                          future_covars = future_data)
+    true_covars = list('log.co2')
   }
   else {
     stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
   }
+  message("Initializing Model: n_history = ", history_start, ", n_future = ", future_length,
+          ", true covars = ", true_covars[[1]])
+  mdl <- init_model(mdl, n_history = history_start,
+                    n_future = future_length, true_covars = true_covars,
+                    future_covars = future_data, max_p = 1, max_q = 1)
   
   #####
   ## Construct reservation prices from predictions
@@ -90,18 +91,28 @@ DataPrediction <- function(
   # for each security at the end of the trading sequence
   
   for (seq in 1:n.seq){
-    for(per in 1:horizon){
+    for(per in 0:(horizon-1)){
+      # So at the beginning of the first sequence, 
+      # "today" represents the last year of the burn-in record and
+      # the trader_horizon represents horizon years after the burn-in period.
+      #
+      # Thus, if burn-in represents the historical record and the market
+      # is looking into the future, then the sequence begins with today 
+      # being the last year of the historical record and trader_horizon
+      # being horizon years in the future.
       today = burn.in + (seq-1)*horizon + per
       trader_horizon = horizon - per
       ### Update models
       # trader model = log.co2
       trader.co2 <- update_model(mdl, n_today = today,
                                       n_horizon = trader_horizon,
-                                      trader_covars = list('log.co2'))
+                                      trader_covars = list('log.co2'),
+                                 max_p = 1, max_q = 1)
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
                                       n_horizon = trader_horizon,
-                                      trader_covars = list('slow.tsi'))
+                                      trader_covars = list('slow.tsi'),
+                                 max_p = 1, max_q = 1)
     
       ### Record reservation prices
       ## trader model = Slow TSI
