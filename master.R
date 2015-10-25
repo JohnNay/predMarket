@@ -40,9 +40,11 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 
 source("main2.R")
 
-# test once
-# s <- c(runif(4, min = 0.0001, max = 0.9999), sample(0:1, 1), runif(2, min = 0.0001, max = 0.9999))
+#test once
+# for (i in rep(1,20)){
+# s <- c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999))
 # outcome.evolution <- main2(parameters = s, out = "converg", visu = TRUE, record = TRUE)
+# }
 
 
 ##############################################################################
