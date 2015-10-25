@@ -90,7 +90,7 @@ DataPrediction <- function(
   # and for both models,record reservation price
   # for each security at the end of the trading sequence
   
-  for (seq in 1:n.seq){
+  for (j in 1:n.seq){
     for(per in 0:(horizon-1)){
       # So at the beginning of the first sequence, 
       # "today" represents the last year of the burn-in record and
@@ -100,7 +100,7 @@ DataPrediction <- function(
       # is looking into the future, then the sequence begins with today 
       # being the last year of the historical record and trader_horizon
       # being horizon years in the future.
-      today = burn.in + (seq-1)*horizon + per
+      today = burn.in + (j-1)*horizon + per
       trader_horizon = horizon - per
       ### Update models
       # trader model = log.co2
