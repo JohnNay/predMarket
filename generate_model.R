@@ -1,5 +1,6 @@
 generate_model <- function ( 
   # Network parameters
+  true.model,
   n.traders  = 100,
   n.edg      = 100,
   seg        = 0.9, # determine initial segregation of the 
@@ -67,6 +68,9 @@ generate_model <- function (
   #####
   ## Set additional models parameter
   #####
+  
+  net <- set.graph.attribute(net,"true.model",true.model)
+  
   net <- set.graph.attribute(net,"burn.in",burn.in)
   
   net <- set.graph.attribute(net,"horizon",horizon)

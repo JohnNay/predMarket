@@ -1,11 +1,9 @@
 
 Behav <- function (
-  g ,
-  D
+  g,
+  ct #current time period
 )
 {
-  # NOTE : In the preliminary model, there are only ZI agents, so that everyone
-  # decides of buy and sell orders according to the same procedure.
   
   # package requirement
   require(igraph)
@@ -17,86 +15,40 @@ Behav <- function (
   n.secu    <- length((V(g)$secu)[[1]])
   n.traders <- length(V(g))
   n.approx  <- g$n.approx
-  
-  ######
-  ### Determine bounds for securities
-  ######
-  
-  min.trad <- 1.0001 * min(D[,"temp"])  # every temperature below 1.0001 * min.temp gets  
-  # included in a single security
-  max.trad <- 0.9999 * max(D[,"temp"])  # every temperature above 0.9999 * max.temp gets  
-  # included in a single security
-  
-  #########
-  ### Evaluate reservation price for securities as a function of approximate model
-  #########
-  
-  reserv <- matrix(1,nrow = n.secu, ncol = n.approx) # an empty matrix to store
-  # reservation prices for every security and every approximate model
-  n.rand <- dim(g$pred)[1]  # The number of values in the empirical distributions
-  
-  ### Store expected values for "Boundary" securities 
-  
-  # Lower security
-  
-  for (k in 1:n.approx){
-    reserv[1,k] <- length(g$pred[,k][g$pred[,k] < min.trad])/n.rand
-  }
-  # For a given approximate model k , the expected value of the lowest
-  # security is simply the number of observations in the empirical approximate distribution
-  # which are lower than min.trad, divided by the number of observation in the
-  # empirical approximate distribution n.rand
-  
-  # Upper security
-  
-  for (k in 1:n.approx){
-    reserv[n.secu,k] <- length(g$pred[,k][g$pred[,k] >= max.trad])/n.rand
-  }
-  
-  #### Store expected values for "non-Boundary" securities 
-  
-  from <- 2
-  to <- (n.secu - 1)
-  
-  # Determine size of intervals corresponding to the intermediate securities
-  
-  inter <- (max.trad - min.trad)/(to - 1)
-  
-  # Store expected value for each interval
-  
-  for (j in from:to){
-    for (k in 1:n.approx){
-      reserv[j,k] <- length( g$pred[,k] [min.trad + (j-2)*inter < g$pred[,k] 
-                                         & g$pred[,k] < min.trad + (j-1)*inter] )/n.rand
-    }
-  } 
-  
-  # Add row "n.secu+1" containing NA's for agent who sell nothing
-  
-  reserv <- rbind(reserv,rep(NA,n.approx))
-  
+    
   #######
-  ## Traders pick a security at random that will try to buy once on the market
+  ## Traders pick at random a security that they will try to BUY once on the market
   #######
   
   V(g)$buy.which <- sample(n.secu, n.traders, replace = TRUE)
   
   #######
-  ## Traders set a price to place a buy order (must be lower than traders's money stock)
+  ## Traders set a PRICE to place a BUY order (must be lower than traders's money stock)
   #######
   
-  V(g)$buy.price <- pmin(
-    reserv[cbind(V(g)$buy.which,V(g)$approx)]*(rep(1,n.traders) + V(g)$risk.tak),
-    V(g)$money)
+  for (i in 1:n.traders){
+    if (V(g)$approx[i] == 1){
+        V(g)$buy.price[i] <-min(
+                            g$reserv.tsi[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i]),
+                            V(g)$money[i]      
+        )
+    }
+    if (V(g)$approx[i] == 2){
+        V(g)$buy.price[i] <-min(
+                            g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i]),
+                            V(g)$money[i]      
+      )
+    }
+  }
   
   
   #######
-  ## Traders pick a security they have positive amount of at random to place sell offer 
+  ## Traders pick at random a security they have positive amount of to place a SELL offer 
   #######
   
   secu.mat <- do.call(rbind, V(g)$secu)
   
-  # draw at random for each trader among the securities she has positive amount of
+  # for each trader, draw at random among the securities she has positive amount of
   
   sell <- rep (n.secu + 1,n.traders)  # the value n.secu +1 is chosen so that traders
   # who do not sell will be assigned a selling price of "NA" based on the reserv matrix,
@@ -118,11 +70,22 @@ Behav <- function (
   V(g)$sell.which <- sell
   
   #######
-  ## Traders set a price to place a buy order
+  ## Traders set a PRICE to place a SELL order
   #######
   
-  V(g)$sell.price <- reserv[cbind(V(g)$sell.which,V(g)$approx)]*(rep(1,n.traders) - V(g)$risk.tak)
-  
+    for (i in 1:n.traders){
+      if (V(g)$approx[i] == 1){
+        V(g)$sell.price[i] <-g$reserv.tsi[ct,V(g)$sell.which[i]]*(1+V(g)$risk.tak[i])
+      }
+      if (V(g)$approx[i] == 2){
+        V(g)$buy.price[i] <-g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i])
+      }
+    }
+ 
+#######
+## Return the network
+#######
+
   g
   
 }

@@ -4,7 +4,7 @@ DataPrediction <- function(
                'rcp 4.5', 'rcp4.5', 'rcp45',
                'rcp 6.0', 'rcp6.0', 'rcp60', 'rcp 6', 'rcp6', 
                'rcp 8.5', 'rcp8.5', 'rcp85'),
-  true.model = c(1,2)
+  true.model
 ){
   
   #####
@@ -65,8 +65,11 @@ DataPrediction <- function(
   
   ### Initialize reservation prices data frames
   
-  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
-  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
+  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
+  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
+  # the additional security (+1) is a void security. When a trader tries to
+  # sell a unit of the void security, it is interpreted as the seller not
+  # selling anything in this period
   
   ### generate temperature intervals
   
@@ -94,46 +97,60 @@ DataPrediction <- function(
       # trader model = log.co2
       trader.co2 <- update_model(mdl, n_today = today,
                                       n_horizon = trader_horizon,
-                                      trader_covers = list('log.co2'))
+                                      trader_covars = list('log.co2'))
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
                                       n_horizon = trader_horizon,
-                                      trader_covers = list('slow.tsi'))
+                                      trader_covars = list('slow.tsi'))
     
       ### Record reservation prices
       ## trader model = Slow TSI
       # open interval for lower security
       reserv.tsi[today,1] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                                t.range = secu.intervals[,1] )
+                                                t.range = c(secu.intervals[1,1],secu.intervals[2,1]),
+                                                closed = FALSE)
       # open interval for upper security
       reserv.tsi[today,n.secu] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                           t.range = secu.intervals[,n.secu] )
+                                           t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
+                                           closed = FALSE )
       # intermediate intervals
       for (i in 2:(n.secu-1)){
         reserv.tsi[today,i] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                             t.range = secu.intervals[,i] )
+                                             t.range = c(secu.intervals[1,i],secu.intervals[2,i]),
+                                             closed = TRUE )
       }
       ## trader model = log.co2
       # open interval for lower security
       reserv.co2[today,1] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                           t.range = secu.intervals[,1] )
+                                           t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
+                                           closed = FALSE )
       # open interval for upper security
       reserv.co2[today,n.secu] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                                t.range = secu.intervals[,n.secu] )
+                                                t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
+                                                closed = FALSE )
       # intermediate intervals
       for (i in 2:(n.secu-1)){
         reserv.co2[today,i] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                             t.range = secu.intervals[,i] )
+                                             t.range = c(secu.intervals[1,i],secu.intervals[2,i]),
+                                             closed = TRUE )
       }
     
     }
   }
   
-  
-  
   #####
   ## Store reservation prices and data in network
   #####
   
+  g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
+  g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
+  g <- set.graph.attribute(g,"t.anom",mdl@climate['t.anom'])
+  g <- set.graph.attribute(g,"secu.inter",secu.intervals)
+  
+  #####
+  ## Return the network
+  #####
+  
+  g
   
 }

@@ -21,12 +21,6 @@ Interact <- function (
   V(g)$buy.order <- rep(0,n.traders)
   V(g)$sell.order <- rep(0,n.traders)
   
-  
-  ###########
-  ### CDA ###
-  ###########
-  
-  if (g$market.struct == "CDA"){
     
     # Draw a random order in which traders will come to the market
     
@@ -155,6 +149,7 @@ Interact <- function (
         
       }
     }
+  
     # Reset buying and selling choices
     
     V(g)$buy.which <- rep(0,n.traders)
@@ -162,9 +157,6 @@ Interact <- function (
     V(g)$buy.price <- rep(0,n.traders)
     V(g)$sell.price <- rep(0,n.traders)
     
-    
-    
-  }
   
   g
   

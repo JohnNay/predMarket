@@ -7,10 +7,8 @@ source("generate_model.R")
 source("populate_net.R")
 source("shape_net.R")
 source("mixing_matrix.R")
-source("assortativity_coefficient.R")
-# Construct data for model:
-library(pracma)
-source("generate_data.R")
+# Data and predictions
+source("data_and_reservation_prices.R")
 # Operate on model:
 source("form_expect.R")
 source("behav.R")
@@ -22,9 +20,9 @@ source("assortativity_coefficient.R")
 
 main2 <- function(parameters,
                   iterations = 10,
-                  burn.in = 4,
-                  n.seq = 28,
-                  horizon = 4,
+                  burn.in = 15,
+                  n.seq = 20,
+                  horizon = 6,
                  out = c("segreg", "converg"),
                  visu = FALSE,
                  record = FALSE) {
@@ -66,18 +64,22 @@ main2 <- function(parameters,
   for(iteration in seq(iterations)){
     #####
     ## Set model's parameters and create corresponding network
+    ## with attached value of parameters
     #####
-    # TODO: run jonathans code and create climate and covariates data
-    #conditional on which is TRUE model, only generate that data to save time
-    # doing this here inside the loop of iterations allows us to average over the randomness in this
-    # TODO: using that data, then create predictions for all agents, they can switch between the two model
-    # we create both the predictions and the actual reservation prices all before
-    # number of predictions depends on the number of securities, we want this flexibility
-    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for TSI
-    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for log.co2
-    # they need to be attached to the network after generate model and then left alone until this place in next iteration.
-    
-    net <- generate_model( ### Network parameters
+    net <- generate_model( 
+      ### Data parameters
+      true.model = true.model,
+      ### Timing parameters:
+      # Number of periods burned for initial calibration
+      burn.in    = burn.in, # 16
+      # Number of trading sequences
+      n.seq       = n.seq, # 20
+      # The number of periods in each sequence (= number of trading periods + 1)
+      horizon    = horizon, # 5
+      ###############
+      ### WARNING ### timing parameters must match empirical data used in generate_data
+      ###############
+      ### Network parameters
       n.traders  = n.traders,
       n.edg      = n.edg,
       seg        = seg, # determine initial segregation of the
@@ -97,28 +99,25 @@ main2 <- function(parameters,
       # most succesfull neighbour in the social network, where success
       # is measured by cumulative monetary gains on the market (over
       # all past trading sequences and periods)
-      
-      market.complet = market.complet,
-      ### Timing parameters:
-      
-      # Number of periods burned for initial calibration
-      burn.in    = burn.in, # 16
-      # Number of trading sequences
-      n.seq       = n.seq, # 20
-      # The number of periods in each sequence (= number of trading periods + 1)
-      horizon    = horizon # 5
-      
-      ###############
-      ### WARNING ### timing parameters must match empirical data used in generate_data
-      ###############
+      ### Market parameters
+      market.complet = market.complet
     )
     
-#     #####
-#     ## Construct "true" time series (random at this point, to be later calibrated with actual data)
-#     #####
-#     D <- generate_data(t.mod = true.model,
-#                        t.fin = (net$burn.in + (net$horizon * net$n.seq )))
+    # TODO: run jonathans code and create climate and covariates data
+    #conditional on which is TRUE model, only generate that data to save time
+    # doing this here inside the loop of iterations allows us to average over the randomness in this
+    # TODO: using that data, then create predictions for all agents, they can switch between the two model
+    # we create both the predictions and the actual reservation prices all before
+    # number of predictions depends on the number of securities, we want this flexibility
+    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for TSI
+    # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for log.co2
+    # they need to be attached to the network after generate model and then left alone until this place in next iteration.
     
+    #####
+    ## Generate data and reservation prices, and attach to network
+    #####
+    
+    net <- DataPrediction(net, scenario = 'rcp26', true.model = true.model)
     
     # Visualize network (optional)
     if (visu){
@@ -140,14 +139,9 @@ main2 <- function(parameters,
     # periods. Securities are just realized and payoffs distributed.
     for (t in from:to){
       #####
-      ## Traders calibrate their approximate model and determine their
-      ## expected distribution for the future out
-      #####
-      net <- FormExpect(net, ct = t, D)
-      #####
       ## Traders chose their buy and sell orders
       #####
-      net <- Behav( net, D)
+      net <- Behav(net, ct = t)
       #####
       ## Traders exchange on the market
       #####
@@ -156,7 +150,7 @@ main2 <- function(parameters,
     #####
     ## Pay the winning securities
     #####
-    net <- Payoffs(g=net, D)
+    net <- Payoffs(g=net, ct = t)
     #####
     ## Adapt approximate model
     #####
@@ -166,7 +160,7 @@ main2 <- function(parameters,
     
     if(record){
       result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
-    }
+      }
     
     ########                            ############
     ######   Subsequent trading sequences   ########
@@ -183,14 +177,9 @@ main2 <- function(parameters,
         # periods. Securities are just realized and payoffs distributed.
         for (t in from:to){
           #####
-          ## Traders calibrate their approximate model and determine their
-          ## expected distribution for the future outcome
+          ## Traders chose their buy and sell orders
           #####
-          net <- FormExpect( net, ct = t, D)
-          #####
-          ## Traders form their buy and sell orders
-          #####
-          net <- Behav(net, D)
+          net <- Behav(net, ct = t)
           #####
           ## Traders exchange on the market
           #####
@@ -199,11 +188,11 @@ main2 <- function(parameters,
         #####
         ## Pay the winning securities
         #####
-        net <- Payoffs(g=net, D)
+        net <- Payoffs(g=net, ct = t)
         #####
         ## Adapt approximate model
         #####
-        net <- Adapt( g = net)
+        net <- Adapt(g = net)
         
         if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
         
