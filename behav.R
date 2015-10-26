@@ -43,31 +43,16 @@ Behav <- function (
   
   
   #######
-  ## Traders pick at random a security they have positive amount of to place a SELL offer 
+  ## Traders pick at random a security they have a positive amount of to place a SELL offer 
   #######
   
-  secu.mat <- do.call(rbind, V(g)$secu)
-  
-  # for each trader, draw at random among the securities she has positive amount of
-  
-  sell <- rep (n.secu + 1,n.traders)  # the value n.secu +1 is chosen so that traders
-  # who do not sell will be assigned a selling price of "NA" based on the reserv matrix,
-  # see below
-  
-  
-  for (i in 1:n.traders)
-  { 
-    if (length(secu.mat[i,][secu.mat[i,] >= 1]) ==1) { 
-      # if the traders own a positive amount of a single security
-      sell[i] <- which(secu.mat[i,] >= 1) 
-    }
-    if (length(secu.mat[i,][secu.mat[i,] >= 1]) >1) { 
-      # if the traders own a positive amount of some security
-      sell[i] <- sample(which(secu.mat[i,] >= 1),1) 
-    }
+  for (i in 1:n.traders){
+    # if trader own no securities
+    if (length(which(V(g)$secu[[1]]>0) == 0))   V(g)$sell.which[i] <- 0
+    # if trader own at least one security
+    if (length(which(V(g)$secu[[1]]>0)) > 0){
+      V(g)$sell.which[i] <- sample(which(V(g)$secu[[1]] >=1),1)}
   }
-  
-  V(g)$sell.which <- sell
   
   #######
   ## Traders set a PRICE to place a SELL order

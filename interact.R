@@ -12,7 +12,7 @@ Interact <- function (
   
   ############
   ######
-  ## Market interaction for CDA
+  ## Market interactions
   ######
   ############
   
@@ -29,8 +29,8 @@ Interact <- function (
       # Player i places a sell order on the order book, if she owns 
       # a positive amount of some security
       
-      if (V(g)$sell.which[i] != n.secu + 1){  # n.secu+1 is the code for sell.which
-        V(g)$sell.order[i] <- 1                 # corresponding to a trader not selling
+      if (V(g)$sell.which[i] > 0){  # 0 is the code for sell.which
+        V(g)$sell.order[i] <- 1     # corresponding to a trader not selling
       }
       
       ########
@@ -49,9 +49,6 @@ Interact <- function (
                                    # at a price lower than max i is willing to pay
       )
       
-      potential.sellers <- potential.sellers[potential.sellers != i]
-      # i cannot sell to herself
-      
       # Realize trade if possible
       
       if(length(potential.sellers) > 0){
@@ -66,13 +63,17 @@ Interact <- function (
         #  the sample function will pick at random in the
         # interval 1:x instead of picking x itself
         
-        if (length(potential.sellers[V(g)$sell.price[potential.sellers] == min.price]) == 1){
-          seller <- potential.sellers[V(g)$sell.price[potential.sellers] == min.price]
-        }
-        else {
-          seller <- sample(
-            potential.sellers[V(g)$sell.price[potential.sellers] == min.price],1)
-        }
+        almost.seller <- which(V(g)$sell.price == min.price)
+        
+        seller <- sample(almost.seller,1)
+        
+#         if (length(potential.sellers[V(g)$sell.price[potential.sellers] == min.price]) == 1){
+#           seller <- potential.sellers[V(g)$sell.price[potential.sellers] == min.price]
+#         }
+#         else {
+#           seller <- sample(
+#             potential.sellers[V(g)$sell.price[potential.sellers] == min.price],1)
+#         }
         
         # pay for the security
         
