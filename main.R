@@ -157,8 +157,8 @@ main <- function(parameters,
 #      message("secu after interact")
 #      message(unlist(V(net)$secu))
 #       Safeguards
-      message(paste0("sum of money equals ", sum(V(net)$money))
-      message(paste0("n.traders equals", sum(V(net)$money))
+      message(paste0("sum of money equals ", sum(V(net)$money)))
+      message(paste0("n.traders equals", sum(V(net)$money)))
 #       if(sum(V(net)$money)!=n.traders){
 #         stop(paste0("In the first sequence, some money is create at t =", t))
 #       } 
