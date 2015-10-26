@@ -9,9 +9,9 @@ Behav <- function (
   require(igraph)
   
   ######
-  ## Useful variables
+  ## Useful variables and traders' variable initializations
   ######
-  
+
   n.secu    <- length((V(g)$secu)[[1]])
   n.traders <- length(V(g))
   n.approx  <- g$n.approx
@@ -81,7 +81,7 @@ Behav <- function (
         V(g)$sell.price[i] <-g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i])
       }
     }
- 
+
 #######
 ## Return the network
 #######

@@ -52,8 +52,10 @@ Payoffs <- function ( g,
       }
   } 
   
-  #### Return network
-
+  #######
+  ## Return the network
+  #######
+  
   g
   
 }

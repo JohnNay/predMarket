@@ -55,27 +55,14 @@ generate_model <- function (
   
   net$init.converg.util <- length(V(net)$approx[V(net)$approx == true.model])/length(V(net))
   
-  ### Assortativity ###
-  
-  #   # calculate the mixing matrix
-  #   m <- mixmat(net, 'approx')
-  #   
-  #   # now calculate the assortativity coefficient
-  #   ac <- assortcoeff(m)
-  #   
-  #   net <- set.graph.attribute(net,"ac.init",ac)
-  
   #####
   ## Set additional models parameter
   #####
   
-  net <- set.graph.attribute(net,"true.model",true.model)
-  
-  net <- set.graph.attribute(net,"burn.in",burn.in)
-  
-  net <- set.graph.attribute(net,"horizon",horizon)
-  
-  net <- set.graph.attribute(net,"n.seq",n.seq)
+  net$true.model <- true.model
+  net$burn.in <- burn.in
+  net$horizon <- horizon
+  net$n.seq <- n.seq
   
   net
 }

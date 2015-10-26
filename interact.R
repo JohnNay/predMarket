@@ -3,7 +3,7 @@ Interact <- function (
 ){
   
   ######
-  ## Useful variables
+  ## Useful variables, reset, initialize
   ######
   
   n.secu    <- length((V(g)$secu)[[1]])
@@ -15,11 +15,6 @@ Interact <- function (
   ## Market interaction for CDA
   ######
   ############
-  
-  # Reset market interactions
-  
-  V(g)$buy.order <- rep(0,n.traders)
-  V(g)$sell.order <- rep(0,n.traders)
   
     
     # Draw a random order in which traders will come to the market
@@ -157,6 +152,10 @@ Interact <- function (
     V(g)$buy.price <- rep(0,n.traders)
     V(g)$sell.price <- rep(0,n.traders)
     
+  
+  #######
+  ## Return the network
+  #######
   
   g
   

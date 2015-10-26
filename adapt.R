@@ -66,5 +66,9 @@ Adapt <- function( g
     }
   }
   
+  #######
+  ## Return the network
+  #######
+  
   g
 }
