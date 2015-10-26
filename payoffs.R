@@ -16,7 +16,7 @@ Payoffs <- function ( g,
   ######
   
   time      <- g$burn.in + g$horizon
-  temp.star <- g$t.anom[ct,]
+  anom.star <- g$t.anom[ct,]
   min.trad  <- g$secu.inter[2,1]
   max.trad  <- g$secu.inter[1,n.secu]
 
@@ -24,8 +24,7 @@ Payoffs <- function ( g,
   
   ### Pay lower security if actual temperature is in lower security range
   
-  if (temp.star < min.trad){
-    g <- set.graph.attribute(g,"winner","min")   # keep track of the winning security
+  if (anom.star < min.trad){
     for (i in 1:n.traders){
       V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][1]
     }
@@ -33,8 +32,7 @@ Payoffs <- function ( g,
   
   ### Pay upper security if actual temperature is in upper security range
   
-  if (temp.star >= max.trad){
-    g <- set.graph.attribute(g,"winner","max")   # keep track of the winning security
+  if (anom.star >= max.trad){
     for (i in 1:n.traders){
       V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][n.secu]
     }
@@ -46,7 +44,7 @@ Payoffs <- function ( g,
   to <- (n.secu - 1)
   
   for (j in from:to){
-    if( g$secu.inter[1,j] <= temp.star & temp.star < g$secu.inter[2,j])
+    if( g$secu.inter[1,j] <= anom.star & anom.star < g$secu.inter[2,j])
       for (i in 1:n.traders){
         V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][j]
       }

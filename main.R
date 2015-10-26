@@ -137,20 +137,46 @@ main <- function(parameters,
     to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
     # are realized. The -1 accounts for the fact that no trade occurs in the last
     # periods. Securities are just realized and payoffs distributed.
+    message("sequence 1")
     for (t in from:to){
+      message(paste0("period ",t))
       #####
       ## Traders chose their buy and sell orders
       #####
+#      message("secu before behav")
+#      message(unlist(V(net)$secu))
       net <- Behav(net, ct = t)
+#      message("secu after behav")
+#      message(unlist(V(net)$secu))
       #####
       ## Traders exchange on the market
       #####
+#      message("secu before interact")
+#      message(unlist(V(net)$secu)) 
       net <- Interact(g = net)
+#      message("secu after interact")
+#      message(unlist(V(net)$secu))
+#       Safeguards
+      message(paste0("sum of money equals ", sum(V(net)$money))
+      message(paste0("n.traders equals", sum(V(net)$money))
+#       if(sum(V(net)$money)!=n.traders){
+#         stop(paste0("In the first sequence, some money is create at t =", t))
+#       } 
+      if(any(unlist(V(net)$secu)<0)){
+        stop(paste0("Some securities fell below zero in period ",t))
+      } 
+      if(any(V(net)$money<0)){
+        stop(paste0("Some securities fell below zero in period ",t))
+      } 
     }
     #####
     ## Pay the winning securities
     #####
     net <- Payoffs(g=net, ct = t)
+    # Safeguards
+    if(sum(V(net)$money)!= 2*n.traders){
+      stop(paste0("After payoffs of the first sequence, some money is create at t =", t))
+    } 
     #####
     ## Adapt approximate model
     #####
@@ -169,16 +195,18 @@ main <- function(parameters,
     if (net$n.seq>1){
       toto <- net$n.seq  # the number of trading sequences
       for (ts in 2:toto){
+        message(paste0("sequence ",ts))
         #TODO: insert initialization of the securities so at beg of each round they dont have leftovers
         
         ### INITIALIZE SECURITIES###
         V(net)$secu <- list(rep(1,market.complet + 2))
         ### Start trading periods in the sequence ###  
-        from <- net$burn.in + (net$horizon * ts) + 1 # the period at which the sequence starts
+        from <- net$burn.in + (net$horizon * (ts-1)) + 1 # the period at which the sequence starts
         to <- net$burn.in + (net$horizon * ts) - 1 # the period at which trading stops and securities
         # are realized. The -1 accounts for the fact that no trade occurs in the last
         # periods. Securities are just realized and payoffs distributed.
         for (t in from:to){
+          message(paste0("period",t))
           #####
           ## Traders chose their buy and sell orders
           #####
@@ -187,11 +215,31 @@ main <- function(parameters,
           ## Traders exchange on the market
           #####
           net <- Interact(g = net)
+          #       Safeguards
+#           message(sum(V(net)$money))
+#           message((ts)*n.traders)
+          if(sum(V(net)$money)!=(ts)*n.traders){
+            stop(paste0("In a sequence after the first sequence,
+                        some money is create at t =", t))
+          } 
+          if(any(unlist(V(net)$secu)<0)){
+            stop(paste0("Some securities fell below zero in period ",t))
+          } 
+          if(any(V(net)$money<0)){
+            stop(paste0("Some securities fell below zero in period ",t))
+          } 
         }
         #####
         ## Pay the winning securities
         #####
         net <- Payoffs(g=net, ct = t)
+        # Safeguards
+            message(sum(V(net)$money))
+            message((ts +1)*n.traders)
+        if(sum(V(net)$money)!= (ts +1)*n.traders){
+          stop(paste0("After payoffs of some sequence past the first sequence,
+                      some money is create at t =", t))
+        } 
         #####
         ## Adapt approximate model
         #####

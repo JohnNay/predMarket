@@ -33,24 +33,8 @@ Adapt <- function( g
       
       if (length(richest)>1){
         richest <- sample(richest,1)
-        
-        # if the most successful neighbor does better than i
-        
-        if (V(g)$money[richest] > V(g)$money[i]) {
-          
-          # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
-          
-          if (sample(1:100,1) >= V(g)$ideo[i]*100){
-            
-            V(g)$approx[i] <- V(g)$approx[richest]
-          }
-        }
       }
       
-      ## If there is only one richest neighbour 
-      
-      if (length(richest)==1){
-        
         # if the most successful neighbor does better than i
         
         if (V(g)$money[richest] > V(g)$money[i]) {
@@ -61,8 +45,7 @@ Adapt <- function( g
             
             V(g)$approx[i] <- V(g)$approx[richest]
           }
-        }
-      }   
+        }  
     }
   }
   

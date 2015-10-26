@@ -6,8 +6,10 @@ Interact <- function (
   ## Useful variables, reset, initialize
   ######
   
-  n.secu    <- length((V(g)$secu)[[1]])
-  n.traders <- length(V(g))
+  n.secu          <- length((V(g)$secu)[[1]])
+  n.traders       <- length(V(g))
+  V(g)$buy.order  <- rep(0,n.traders)
+  V(g)$sell.order <- rep(0,n.traders)
   #   n.approx  <- length(unique(V(g)$approx))
   
   ############
@@ -49,31 +51,28 @@ Interact <- function (
                                    # at a price lower than max i is willing to pay
       )
       
-      # Realize trade if possible
+      potential.sellers <- potential.sellers[potential.sellers != i]
+      # i cannot sell to herself
+      
+      ### Realize trades if possible ###
       
       if(length(potential.sellers) > 0){
         
-        # determine minimum selling price
+        # determine minimum selling price among potential sellers
         
         min.price <- min(V(g)$sell.price[potential.sellers])
         
-        # pick a potential seller who sells at min price. The "if else"
-        # statement is needed because when there is only one
-        # potential.sellers "x" who sells at the minimum price,
-        #  the sample function will pick at random in the
-        # interval 1:x instead of picking x itself
+        # pick a potential seller who sells at min price. 
         
-        almost.seller <- which(V(g)$sell.price == min.price)
+        almost.seller <- potential.sellers[V(g)$sell.price[potential.sellers] == min.price]
+        if (length(almost.seller) == 1) seller <- almost.seller
+        else if (length(almost.seller) > 1) seller <- sample(almost.seller,1)
+        else stop("almost.seller must contain at least one seller")
         
-        seller <- sample(almost.seller,1)
-        
-#         if (length(potential.sellers[V(g)$sell.price[potential.sellers] == min.price]) == 1){
-#           seller <- potential.sellers[V(g)$sell.price[potential.sellers] == min.price]
-#         }
-#         else {
-#           seller <- sample(
-#             potential.sellers[V(g)$sell.price[potential.sellers] == min.price],1)
-#         }
+        #Safeguard
+        if (V(g)$sell.order[seller] != 1){
+          stop("Some buyer is going to buy a security from a agent who does not sell")
+        } 
         
         # pay for the security
         
@@ -115,18 +114,18 @@ Interact <- function (
         
         max.price <- max(V(g)$buy.price[potential.buyers])
         
-        # pick a potential buyer who buys at max price The "if else"
-        # statement is needed as otherwise, when potential.buy is 
-        # a singleton "x", the sample function will pick at random in the
-        # interval 1:x instead of picking x itself
+        # pick a potential buyer who buys at max price
+
+        almost.buyer <- potential.buyers[V(g)$buy.price[potential.buyers] == max.price]
         
-        if (length(potential.buyers[V(g)$buy.price[potential.buyers] == max.price])==1){
-          buyer <- potential.buyers[V(g)$buy.price[potential.buyers] == max.price]
-        }
-        else {
-          buyer <- sample(
-            potential.buyers[V(g)$buy.price[potential.buyers] == max.price],1)
-        }
+        if (length(almost.buyer) == 1) buyer <- almost.buyer
+        else if (length(almost.buyer) > 1) buyer <- sample(almost.buyer,1)
+        else stop("almost.buyer must contain at least one seller")
+        
+        #Safeguard
+        if (V(g)$buy.order[buyer] != 1){
+          stop("Some seller is going to sell a security to a agent who does not buy")
+        } 
         
         # pay for the security
         

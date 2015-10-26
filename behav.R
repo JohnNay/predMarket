@@ -47,12 +47,18 @@ Behav <- function (
   #######
   
   for (i in 1:n.traders){
-    # if trader own no securities
-    if (length(which(V(g)$secu[[1]]>0) == 0))   V(g)$sell.which[i] <- 0
-    # if trader own at least one security
-    if (length(which(V(g)$secu[[1]]>0)) > 0){
-      V(g)$sell.which[i] <- sample(which(V(g)$secu[[1]] >=1),1)}
+    # if trader owns no securities
+    if (length(which(V(g)$secu[[i]]>0) == 0))   V(g)$sell.which[i] <- 0
+    # if trader owns at least one security
+    if (length(which(V(g)$secu[[i]]>0)) > 0){
+      V(g)$sell.which[i] <- sample(which(V(g)$secu[[i]] >=1),1)}
+    # Safeguard
+    if(V(g)$secu[[i]][V(g)$sell.which[i]]<1) {
+      stop("a seller is trying to sell a security she does not own any
+           unit of")}
   }
+  
+
   
   #######
   ## Traders set a PRICE to place a SELL order
