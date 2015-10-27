@@ -345,8 +345,17 @@ range_check <- function(x, t.range, closed) {
   prob
 }
 
-interval_prob <- function(mdl, n_horizon, t.range, closed) {
+interval_prob <- function(mdl, n_horizon, t.range, closed = c('open', 'closed', 'left', 'right')) {
+  closed = match.arg(closed)
+  
   if (n_horizon > mdl@horizon) stop("n_horizon(", n_horizon, ") > mdl@horizon(", mdl@horizon, ")")
   prediction <- mdl@prediction %>% filter(step == mdl@today + n_horizon)
   range_check(prediction$t.anom, t.range, closed)
+}
+
+
+bin_prob <- function(mdl, n_horizon, intervals) {
+  if (n_horizon > mdl@horizon) stop("n_horizon(", n_horizon, ") > mdl@horizon(", mdl@horizon, ")")
+  prediction <- mdl@prediction %>% filter(step == mdl@today + n_horizon)
+  bins <- table(find_interval(prediction, intervals[-1])) / length(prediction)
 }
