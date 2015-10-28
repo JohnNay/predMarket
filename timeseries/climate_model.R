@@ -147,14 +147,14 @@ fit_model <- function(data, arma, covariates) {
     tryCatch(force(eval(substitute(gls(f, data = data, correlation = correlation),
                                    list(f = eval(f))))),
              error = function(e) {
-               if (str_detect(e, fc_message)) {
+               if (str_detect(as.character(e$message), fc_message)) {
                  warning("False convergence: retrying with optim")
                  tryCatch(force(eval(substitute(gls(f, data = data, 
                                                     correlation = correlation, 
                                                     control = glsControl(opt = "optim")),
                                                 list(f = eval(f))))),
                           error = function(e) {
-                            if (str_detect(e, fc_message)) {
+                            if (str_detect(as.character(e$message), fc_message)) {
                               warning("False convergence with optim: retrying with LS")
                               force(eval(substitute(gls(f, data = data, 
                                                         correlation = correlation, 
