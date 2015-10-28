@@ -41,7 +41,7 @@ DataPrediction <- function(
   if (is.na(time.span)) history_start <- nrow(climate_data)
   else history_start <- time.span # This must be compatible with the number of available 
   # historical data points
-  future_length = min(0, n.periods - burn.in)
+  future_length = max(0, n.periods - burn.in)
   
   sim.start <- switch(historical.temp,
                       'none' = 0,
@@ -60,7 +60,7 @@ DataPrediction <- function(
   else {
     stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
   }
-  message("Initializing Model: n_history = ", history_start, ", n_future = ", future_length,
+  message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
           ", true covars = ", true_covars[[1]])
   mdl <- init_model(mdl, n_history = burn.in,
                     n_future = future_length, true_covars = true_covars,
@@ -79,18 +79,9 @@ DataPrediction <- function(
   # selling anything in this period
   
   ### generate temperature intervals
-  
-  secu.intervals <- matrix(NA,nrow = 2, ncol = n.secu)
-  # open interval for lower security
-  secu.intervals[2,1] <- 1.001 * min(mdl@climate['t.anom'])
-  # open interval for upper security
-  secu.intervals[1,n.secu] <- 0.999 * max(mdl@climate['t.anom']) 
-  # intermediate intervals
-  size.intervals = (secu.intervals[1,n.secu] - secu.intervals[2,1])/(n.secu -2)
-  for (i in 2:(n.secu-1)){
-    secu.intervals[1,i] <- secu.intervals[2,1] + (i-2)*size.intervals
-    secu.intervals[2,i] <- secu.intervals[2,1] + (i-1)*size.intervals
-  }
+
+  secu.intervals <- seq(min(mdl@future['t.anom']), max(mdl@future['t.anom']), 
+                        length.out = n.secu)
   
   # For every sequence, every period in a sequence
   # and for both models,record reservation price
@@ -123,35 +114,10 @@ DataPrediction <- function(
       ### Record reservation prices
       ## trader model = Slow TSI
       # open interval for lower security
-      reserv.tsi[today,1] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                                t.range = c(secu.intervals[1,1],secu.intervals[2,1]),
-                                                closed = 'open')
-      # open interval for upper security
-      reserv.tsi[today,n.secu] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                           t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
-                                           closed = 'closed' )
-      # intermediate intervals
-      for (i in 2:(n.secu-1)){
-        reserv.tsi[today,i] <- interval_prob(trader.tsi, n_horizon = trader_horizon,
-                                             t.range = c(secu.intervals[1,i],secu.intervals[2,i]),
-                                             closed = 'left' )
-      }
-      ## trader model = log.co2
-      # open interval for lower security
-      reserv.co2[today,1] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                           t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
-                                           closed = 'open' )
-      # open interval for upper security
-      reserv.co2[today,n.secu] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                                t.range = c(secu.intervals[1,n.secu],secu.intervals[2,n.secu]),
-                                                closed = 'closed' )
-      # intermediate intervals
-      for (i in 2:(n.secu-1)){
-        reserv.co2[today,i] <- interval_prob(trader.co2, n_horizon = trader_horizon,
-                                             t.range = c(secu.intervals[1,i],secu.intervals[2,i]),
-                                             closed = 'left' )
-      }
-    
+      reserv.tsi[today,] <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
+                                      intervals = secu.intervals)
+      reserv.co2[today,] <- bin_prob(trader.co2, n_horizon = trader_horizon, 
+      intervals = secu.intervals)
     }
   }
   

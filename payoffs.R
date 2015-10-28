@@ -17,8 +17,8 @@ Payoffs <- function ( g,
   
   time      <- g$burn.in + g$horizon
   anom.star <- g$t.anom[ct,]
-  min.trad  <- g$secu.inter[2,1]
-  max.trad  <- g$secu.inter[1,n.secu]
+  min.trad  <- min(g$secu.inter)
+  max.trad  <- max(g$secu.inter)
 
   
   
@@ -40,11 +40,15 @@ Payoffs <- function ( g,
   
   #### Pay intermediate securities
   
-  from <- 2
+  from <- 1
   to <- (n.secu - 1)
   
+  
+  #
+  # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
+  #
   for (j in from:to){
-    if( g$secu.inter[1,j] <= anom.star & anom.star < g$secu.inter[2,j])
+    if( g$secu.inter[j] <= anom.star & anom.star < g$secu.inter[j + 1])
       for (i in 1:n.traders){
         V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][j]
       }

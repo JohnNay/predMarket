@@ -58,6 +58,7 @@ prepare_climate_data <- function(scenario, modeled_tsi = TRUE) {
   data <- na.omit(data)
   
   future <- merge(co2, tsi) %>% filter(year > max(data$year))
+  future <- rbind(data %>% select(one_of(names(future))), future) %>% arrange(year)
   
   invisible(list(data = data, future = future))
 }

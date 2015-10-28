@@ -183,6 +183,10 @@ setMethod("initialize", "climate_model",
 predict_future <- function(mdl, n_today, n_horizon, covars, samples, arma_model = NULL, 
                            auto_arma = FALSE, max_p = 2, max_q = 2, 
                            trace = FALSE) {
+  if (TRUE) 
+    message("predict_future(", paste(c(mdl@covariates[[1]], n_today, n_horizon, covars[[1]]), 
+                                      collapse = ", "), ")")
+            
   covars <- as.list(covars)
   past_data <- mdl@future[1:n_today,]
   if (is.null(arma_model)) {
@@ -318,16 +322,11 @@ update_model <- function(mdl, n_today, n_horizon, trader_covars = NULL,
 }
 
 range_check <- function(x, t.range, closed) {
-  if (closed) {
+  if (closed %in% c("closed", "left")) {
     if (is.na(t.range[1])) {
       within_lower <- TRUE
     } else {
       within_lower <- x >= t.range[1]
-    }
-    if (is.na(t.range[2])) {
-      within_upper <- TRUE
-    } else {
-      within_upper <- x <= t.range[2]
     }
   } else {
     if (is.na(t.range[1])) {
@@ -335,6 +334,14 @@ range_check <- function(x, t.range, closed) {
     } else {
       within_lower <- x > t.range[1]
     }
+  }
+  if (closed %in% c('closed', 'right')) {
+    if (is.na(t.range[2])) {
+      within_upper <- TRUE
+    } else {
+      within_upper <- x <= t.range[2]
+    }
+  } else {
     if (is.na(t.range[2])) {
       within_upper <- TRUE
     } else {
@@ -357,5 +364,9 @@ interval_prob <- function(mdl, n_horizon, t.range, closed = c('open', 'closed', 
 bin_prob <- function(mdl, n_horizon, intervals) {
   if (n_horizon > mdl@horizon) stop("n_horizon(", n_horizon, ") > mdl@horizon(", mdl@horizon, ")")
   prediction <- mdl@prediction %>% filter(step == mdl@today + n_horizon)
-  bins <- table(find_interval(prediction, intervals[-1])) / length(prediction)
+  x <- findInterval(prediction$t.anom, intervals)
+  x <- factor(x, levels = 0:length(intervals))
+  t <- table(x)
+  bins <- t / length(prediction)
+  bins  
 }
