@@ -137,6 +137,11 @@ main <- function(parameters,
     to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
     # are realized. The -1 accounts for the fact that no trade occurs in the last
     # periods. Securities are just realized and payoffs distributed.
+    
+    ## Initialize money 
+    
+    V(net)$money <- rep(1,length(V(net)))
+    
     message("sequence 1")
     for (t in from:to){
       message(paste0("period ",t))
@@ -157,8 +162,7 @@ main <- function(parameters,
 #      message("secu after interact")
 #      message(unlist(V(net)$secu))
 #       Safeguards
-      message(paste0("sum of money equals ", sum(V(net)$money)))
-      message(paste0("n.traders equals", sum(V(net)$money)))
+#       message(paste0("sum of money equals ", sum(V(net)$money)))
 #       if(sum(V(net)$money)!=n.traders){
 #         stop(paste0("In the first sequence, some money is create at t =", t))
 #       } 
@@ -173,6 +177,8 @@ main <- function(parameters,
     ## Pay the winning securities
     #####
     net <- Payoffs(g=net, ct = t)
+#     message(paste0("n.traders is ",n.traders)
+#     message(paste0("sum of money is ", sum(V(net)$money))
     # Safeguards
     if(sum(V(net)$money)!= 2*n.traders){
       stop(paste0("After payoffs of the first sequence, some money is create at t =", t))
@@ -234,8 +240,8 @@ main <- function(parameters,
         #####
         net <- Payoffs(g=net, ct = t)
         # Safeguards
-            message(sum(V(net)$money))
-            message((ts +1)*n.traders)
+#             message(sum(V(net)$money))
+#             message((ts +1)*n.traders)
         if(sum(V(net)$money)!= (ts +1)*n.traders){
           stop(paste0("After payoffs of some sequence past the first sequence,
                       some money is create at t =", t))
