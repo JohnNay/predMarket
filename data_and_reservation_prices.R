@@ -56,8 +56,7 @@ DataPrediction <- function(
   }
   else if (true.model == 2){
     true_covars = list('log.co2')
-  }
-  else {
+  } else {
     stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
   }
   message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
@@ -112,12 +111,11 @@ DataPrediction <- function(
                                  max_p = 1, max_q = 1)
     
       ### Record reservation prices
-      ## trader model = Slow TSI
       # open interval for lower security
       reserv.tsi[today,] <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
-                                      intervals = secu.intervals)
+                                     intervals = secu.intervals)
       reserv.co2[today,] <- bin_prob(trader.co2, n_horizon = trader_horizon, 
-      intervals = secu.intervals)
+                                     intervals = secu.intervals)
     }
   }
   
