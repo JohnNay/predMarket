@@ -71,11 +71,8 @@ DataPrediction <- function(
   
   ### Initialize reservation prices data frames
   
-  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
-  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
-  # the additional security (+1) is a void security. When a trader tries to
-  # sell a unit of the void security, it is interpreted as the seller not
-  # selling anything in this period
+  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
+  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
   
   ### generate temperature intervals
 

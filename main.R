@@ -148,20 +148,31 @@ main <- function(parameters,
       #####
       ## Traders chose their buy and sell orders
       #####
-#      message("secu before behav")
-#      message(unlist(V(net)$secu))
+
+      ### BEHAVE
       net <- Behav(net, ct = t)
-#      message("secu after behav")
-#      message(unlist(V(net)$secu))
+
       #####
       ## Traders exchange on the market
       #####
-#      message("secu before interact")
-#      message(unlist(V(net)$secu)) 
+      
+      ### Safeguards & prints
+#       money_pre_interact <- V(net)$money
+#       print("V(net)$money before interact")
+#       print(V(net)$money)
+#       print("V(net)$secu before interact")
+#       print(unlist(V(net)$secu))
+
+      ### TRADE
       net <- Interact(g = net)
-#      message("secu after interact")
-#      message(unlist(V(net)$secu))
-#       Safeguards
+  
+      ### Safeguards & prints
+#         print("Change in V(net)$money from interact")
+#         print(V(net)$money - money_pre_interact)
+#       print("V(net)$money after interact")
+#       print(V(net)$money)
+#       print("V(net)$secu after interact")
+#       print(unlist(V(net)$secu))
 #       message(paste0("sum of money equals ", sum(V(net)$money)))
 #       if(sum(V(net)$money)!=n.traders){
 #         stop(paste0("In the first sequence, some money is create at t =", t))
@@ -176,12 +187,19 @@ main <- function(parameters,
     #####
     ## Pay the winning securities
     #####
+
+    ### PAY    
+
     net <- Payoffs(g=net, ct = t)
+
+    ### Safeguards & prints
+
 #     message(paste0("n.traders is ",n.traders)
 #     message(paste0("sum of money is ", sum(V(net)$money))
-    # Safeguards
-    if(sum(V(net)$money)!= 2*n.traders){
-      stop(paste0("After payoffs of the first sequence, some money is create at t =", t))
+
+    if(abs(sum(V(net)$money)!= 2*n.traders) > 0.1){
+      stop(paste0("After payoffs of the first sequence, some money is create at t =", t,
+                  "The money created is ", sum(V(net)$money) - 2*n.traders))))
     } 
     #####
     ## Adapt approximate model
@@ -217,16 +235,37 @@ main <- function(parameters,
           ## Traders chose their buy and sell orders
           #####
           net <- Behav(net, ct = t)
+          
+
+          
           #####
           ## Traders exchange on the market
           #####
+          
+          ###       Safeguards & prints
+#           money_pre_interact <- V(net)$money
+#           print("V(net)$money before interact")
+#           print(V(net)$money)
+#           print("V(net)$secu before interact")
+#           print(unlist(V(net)$secu))
+          
+          ### TRADE
+          
           net <- Interact(g = net)
-          #       Safeguards
+          
+          ###       Safeguards & prints
+#           print("Change in V(net)$money from interact")
+#           print(V(net)$money - money_pre_interact)
+#           print("V(net)$money after interact")
+#           print(V(net)$money)
+#           print("V(net)$secu after interact")
+#           print(unlist(V(net)$secu))
 #           message(sum(V(net)$money))
 #           message((ts)*n.traders)
-          if(sum(V(net)$money)!=(ts)*n.traders){
+          if(abs(sum(V(net)$money)!=(ts)*n.traders)>0.1){
             stop(paste0("In a sequence after the first sequence,
-                        some money is create at t =", t))
+                        some money is create at t =", t,
+                        "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))  
           } 
           if(any(unlist(V(net)$secu)<0)){
             stop(paste0("Some securities fell below zero in period ",t))
@@ -238,14 +277,38 @@ main <- function(parameters,
         #####
         ## Pay the winning securities
         #####
+
+        ### Safeguards & prints
+        money_pre_payoff <- V(net)$money # record money pre-payoff for
+        # comparison after payoff
+
+#         print("V(net)$money before payoff")
+#         print(V(net)$money)
+#         print("V(net)$secu before payoff")
+#         print(unlist(V(net)$secu))
+
+        ### PAY
+
         net <- Payoffs(g=net, ct = t)
-        # Safeguards
+        
+        ### Safeguards & prints
+#           print("Change in V(net)$money from payoff")
+#           print(V(net)$money - money_pre_payoff)
+#         print("V(net)$money after payoff")
+#         print(V(net)$money)
+        
 #             message(sum(V(net)$money))
 #             message((ts +1)*n.traders)
-        if(sum(V(net)$money)!= (ts +1)*n.traders){
+        if(any(V(net)$money < money_pre_payoff)){
+          stop(paste0("In period t = ", t, "some trader got a negative payoff"))
+        }
+
+        if(abs(sum(V(net)$money)- (ts +1)*n.traders)>0.1){
           stop(paste0("After payoffs of some sequence past the first sequence,
-                      some money is create at t =", t))
+                      some money is create at t =", t,
+                      "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))
         } 
+
         #####
         ## Adapt approximate model
         #####
