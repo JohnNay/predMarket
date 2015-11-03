@@ -19,13 +19,13 @@ source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
 main <- function(parameters,
-                  iterations = 10,
-                  burn.in = 51,
-                  n.seq = 14,
-                  horizon = 6,
-                 out = c("segreg", "converg"),
+                 iterations = 10,
+                 burn.in = 51,
+                 n.seq = 14,
+                 horizon = 6,
                  visu = FALSE,
-                 record = FALSE) {
+                 record = FALSE,
+                 safeNprint=FALSE) {
   
   nyears <- 135
   # TODO: set nyears to adapt to whether there is future or not.
@@ -45,14 +45,12 @@ main <- function(parameters,
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
-  true.model <- parameters[4] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
+  true.model <- parameters[4] + 1 # the true model, 1 for slow.tsi, 2 for log.co2
   n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   n.traders <- round(parameters[6]*100) + 50 # integer in (50, 250)
   
   cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
-            "true.model", true.model, "\n")
-  
-  out <- match.arg(out)
+      "true.model", true.model, "n.edg", n.edg, "n.traders", n.traders,  "\n")
   
   if (visu){
     source("colored.R")
@@ -137,31 +135,50 @@ main <- function(parameters,
     to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
     # are realized. The -1 accounts for the fact that no trade occurs in the last
     # periods. Securities are just realized and payoffs distributed.
+    
+    ## Initialize money 
+    
+    V(net)$money <- rep(1,length(V(net)))
+    
     message("sequence 1")
     for (t in from:to){
       message(paste0("period ",t))
       #####
       ## Traders chose their buy and sell orders
       #####
-#      message("secu before behav")
-#      message(unlist(V(net)$secu))
+      
+      ### BEHAVE
       net <- Behav(net, ct = t)
-#      message("secu after behav")
-#      message(unlist(V(net)$secu))
+      
       #####
       ## Traders exchange on the market
       #####
-#      message("secu before interact")
-#      message(unlist(V(net)$secu)) 
+      
+      ### Safeguards & prints
+      if(safeNprint){
+        money_pre_interact <- V(net)$money
+        print("V(net)$money before interact")
+        print(V(net)$money)
+        print("V(net)$secu before interact")
+        print(unlist(V(net)$secu))
+      }
+      
+      ### TRADE
       net <- Interact(g = net)
-#      message("secu after interact")
-#      message(unlist(V(net)$secu))
-#       Safeguards
-      message(paste0("sum of money equals ", sum(V(net)$money)))
-      message(paste0("n.traders equals", sum(V(net)$money)))
-#       if(sum(V(net)$money)!=n.traders){
-#         stop(paste0("In the first sequence, some money is create at t =", t))
-#       } 
+      
+      ### Safeguards & prints
+      if(safeNprint){
+        print("Change in V(net)$money from interact")
+        print(V(net)$money - money_pre_interact)
+        print("V(net)$money after interact")
+        print(V(net)$money)
+        print("V(net)$secu after interact")
+        print(unlist(V(net)$secu))
+        message(paste0("sum of money equals ", sum(V(net)$money)))
+        if(sum(V(net)$money)!=n.traders){
+          stop(paste0("In the first sequence, some money is create at t =", t))
+        } 
+      }
       if(any(unlist(V(net)$secu)<0)){
         stop(paste0("Some securities fell below zero in period ",t))
       } 
@@ -172,10 +189,20 @@ main <- function(parameters,
     #####
     ## Pay the winning securities
     #####
+    
+    ### PAY    
+    
     net <- Payoffs(g=net, ct = t)
-    # Safeguards
-    if(sum(V(net)$money)!= 2*n.traders){
-      stop(paste0("After payoffs of the first sequence, some money is create at t =", t))
+    
+    ### Safeguards & prints
+    if(safeNprint){
+      message(paste0("n.traders is ",n.traders))
+              message(paste0("sum of money is ", sum(V(net)$money)))
+    }
+    
+    if(abs(sum(V(net)$money)!= 2*n.traders) > 0.1){
+      stop(paste0("After payoffs of the first sequence, some money is create at t =", t,
+                  "The money created is ", sum(V(net)$money) - 2*n.traders))
     } 
     #####
     ## Adapt approximate model
@@ -186,7 +213,7 @@ main <- function(parameters,
     
     if(record){
       result <- (length(V(net)$approx[V(net)$approx == true.model])/length(V(net))) - net$init.converg.util
-      }
+    }
     
     ########                            ############
     ######   Subsequent trading sequences   ########
@@ -211,16 +238,41 @@ main <- function(parameters,
           ## Traders chose their buy and sell orders
           #####
           net <- Behav(net, ct = t)
+          
+          
+          
           #####
           ## Traders exchange on the market
           #####
+          
+          ###       Safeguards & prints
+          if(safeNprint){
+            money_pre_interact <- V(net)$money
+            print("V(net)$money before interact")
+            print(V(net)$money)
+            print("V(net)$secu before interact")
+            print(unlist(V(net)$secu))
+          }
+          
+          ### TRADE
+          
           net <- Interact(g = net)
-          #       Safeguards
-#           message(sum(V(net)$money))
-#           message((ts)*n.traders)
-          if(sum(V(net)$money)!=(ts)*n.traders){
+          
+          ###       Safeguards & prints
+          if(safeNprint){
+            print("Change in V(net)$money from interact")
+            print(V(net)$money - money_pre_interact)
+            print("V(net)$money after interact")
+            print(V(net)$money)
+            print("V(net)$secu after interact")
+            print(unlist(V(net)$secu))
+            message(sum(V(net)$money))
+            message((ts)*n.traders)
+          }
+          if(abs(sum(V(net)$money)!=(ts)*n.traders)>0.1){
             stop(paste0("In a sequence after the first sequence,
-                        some money is created at t =", t))
+                        some money is create at t =", t,
+                        "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))  
           } 
           if(any(unlist(V(net)$secu)<0)){
             stop(paste0("Some securities fell below zero in period ",t))
@@ -232,14 +284,41 @@ main <- function(parameters,
         #####
         ## Pay the winning securities
         #####
+        
+        ### Safeguards & prints
+        money_pre_payoff <- V(net)$money # record money pre-payoff for
+        # comparison after payoff
+        
+        if(safeNprint){
+          print("V(net)$money before payoff")
+          print(V(net)$money)
+          print("V(net)$secu before payoff")
+          print(unlist(V(net)$secu))
+        }
+        ### PAY
+        
         net <- Payoffs(g=net, ct = t)
-        # Safeguards
-            message(sum(V(net)$money))
-            message((ts +1)*n.traders)
-        if(sum(V(net)$money)!= (ts +1)*n.traders){
+        
+        ### Safeguards & prints
+        if(safeNprint){
+          print("Change in V(net)$money from payoff")
+          print(V(net)$money - money_pre_payoff)
+          print("V(net)$money after payoff")
+          print(V(net)$money)
+          
+          message(sum(V(net)$money))
+          message((ts +1)*n.traders)
+        }
+        if(any(V(net)$money < money_pre_payoff)){
+          stop(paste0("In period t = ", t, "some trader got a negative payoff"))
+        }
+        
+        if(abs(sum(V(net)$money)- (ts +1)*n.traders)>0.1){
           stop(paste0("After payoffs of some sequence past the first sequence,
-                      some money is create at t =", t))
+                      some money is create at t =", t,
+                      "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))
         } 
+        
         #####
         ## Adapt approximate model
         #####
@@ -267,5 +346,3 @@ main <- function(parameters,
     return(colMeans(sapply(result_final, function(x) x)))
   }
 }
-
-

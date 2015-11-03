@@ -56,8 +56,7 @@ DataPrediction <- function(
   }
   else if (true.model == 2){
     true_covars = list('log.co2')
-  }
-  else {
+  } else {
     stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
   }
   message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
@@ -72,19 +71,13 @@ DataPrediction <- function(
   
   ### Initialize reservation prices data frames
   
-  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
-  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu + 1))
-  # the additional security (+1) is a void security. When a trader tries to
-  # sell a unit of the void security, it is interpreted as the seller not
-  # selling anything in this period
+  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
+  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
   
   ### generate temperature intervals
 
   secu.intervals <- seq(min(mdl@future['t.anom']), max(mdl@future['t.anom']), 
                         length.out = n.secu)
-  message("length secu.intervals = ", length(secu.intervals), 
-          ", dim(reserv.tsi) = ", paste(dim(reserv.tsi), collapse = ', '), 
-          ", dim(reserv.co2) = ", paste(dim(reserv.co2), collapse = ', '))
   
   # For every sequence, every period in a sequence
   # and for both models,record reservation price
@@ -115,16 +108,11 @@ DataPrediction <- function(
                                  max_p = 1, max_q = 1)
     
       ### Record reservation prices
-      ## trader model = Slow TSI
       # open interval for lower security
-      bp <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
-                     intervals = secu.intervals)
-      if (length(bp) != length(reserv.tsi[today,])) warning("Length mismatch bin_prob vs. reserv.tsi")
-      reserv.tsi[today,] <- bp
-      bp <- bin_prob(trader.co2, n_horizon = trader_horizon, 
-                     intervals = secu.intervals)
-      if (length(bp) != length(reserv.co2[today,])) warning("Length mismatch bin_prob vs. reserv.co2")
-      reserv.co2[today,] <- bp
+      reserv.tsi[today,] <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
+                                     intervals = secu.intervals)
+      reserv.co2[today,] <- bin_prob(trader.co2, n_horizon = trader_horizon, 
+                                     intervals = secu.intervals)
     }
   }
   

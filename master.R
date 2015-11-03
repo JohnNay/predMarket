@@ -39,20 +39,21 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # plot(pc, outcome_var = "Convergence of Beliefs")
 
 source("main.R")
-
-#manual tests
-# main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)))
+test <- TRUE
+if(test){
+  main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(4, min = 0.0001, max = 0.9999)))
+  main(c(runif(3, min = 0.0001, max = 0.9999), 0, runif(4, min = 0.0001, max = 0.9999)))
+}
 # for (i in rep(1,20)){
 # s <- c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999))
-# outcome.evolution <- main(parameters = s, out = "converg", visu = TRUE, record = TRUE)
+# test <- mainTestmarket(parameters = s, out = "converg", visu = TRUE, record = TRUE)
 # }
 
 
 ##############################################################################
 ## Estimate number of replicates needed for each param set
 ##############################################################################
-input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
-                            market.complet = NA), 
+input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA), 
                        function(x) list(random_function = "qunif",
                                         ARGS = list(min = 0.0001, max = 0.9999)))
 input_values$true.model <- list(random_function = "qbinom",
