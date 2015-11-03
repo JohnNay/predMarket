@@ -199,13 +199,13 @@ main <- function(parameters,
     
     ### Safeguards & prints
     if(safeNprint){
-      message(paste0("n.traders is ",n.traders)
-              message(paste0("sum of money is ", sum(V(net)$money))
+      message(paste0("n.traders is ",n.traders))
+              message(paste0("sum of money is ", sum(V(net)$money)))
     }
     
     if(abs(sum(V(net)$money)!= 2*n.traders) > 0.1){
       stop(paste0("After payoffs of the first sequence, some money is create at t =", t,
-                  "The money created is ", sum(V(net)$money) - 2*n.traders))))
+                  "The money created is ", sum(V(net)$money) - 2*n.traders))
     } 
     #####
     ## Adapt approximate model
