@@ -17,6 +17,7 @@ source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
 main <- function(parameters,
+                 out,
                  iterations = 10,
                  burn.in = 51,
                  n.seq = 14,
@@ -234,8 +235,6 @@ main <- function(parameters,
           ## Traders chose their buy and sell orders
           #####
           net <- Behav(net, ct = t)
-          
-          
           
           #####
           ## Traders exchange on the market
