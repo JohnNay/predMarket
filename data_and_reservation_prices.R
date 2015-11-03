@@ -129,7 +129,7 @@ DataPrediction <- function(
   #####
   g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
   g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
-  stopifnot(anyNA(mdl@climate[(g$burn.in):(n.periods),'t.anom']))
+  stopifnot(!anyNA(mdl@climate[(g$burn.in):(n.periods),'t.anom']))
   g <- set.graph.attribute(g,"t.anom",mdl@climate['t.anom'])
   g <- set.graph.attribute(g,"secu.inter",secu.intervals)
   
