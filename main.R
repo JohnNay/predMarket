@@ -220,7 +220,7 @@ main <- function(parameters,
 #           message((ts)*n.traders)
           if(sum(V(net)$money)!=(ts)*n.traders){
             stop(paste0("In a sequence after the first sequence,
-                        some money is create at t =", t))
+                        some money is created at t =", t))
           } 
           if(any(unlist(V(net)$secu)<0)){
             stop(paste0("Some securities fell below zero in period ",t))

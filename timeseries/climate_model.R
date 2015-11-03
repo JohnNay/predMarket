@@ -360,13 +360,23 @@ interval_prob <- function(mdl, n_horizon, t.range, closed = c('open', 'closed', 
   range_check(prediction$t.anom, t.range, closed)
 }
 
-
+#
+# Note: because findInterval returns 0 to length(intervals), 
+# The length of the binned output is length(intervals) + 1
+#
 bin_prob <- function(mdl, n_horizon, intervals) {
   if (n_horizon > mdl@horizon) stop("n_horizon(", n_horizon, ") > mdl@horizon(", mdl@horizon, ")")
   prediction <- mdl@prediction %>% filter(step == mdl@today + n_horizon)
+  if (any(is.na(prediction$t.anom))) warning("NA values in temperature prediction")
   x <- findInterval(prediction$t.anom, intervals)
-  x <- factor(x, levels = 0:length(intervals))
+  levels <- seq(0, length(intervals))
+  if (! all(x %in% levels)) stop("Error in bin_prob: unexpected values from findInterval")
+  if (any(is.na(x))) warning("NA values in findIntervals result")
+  x <- factor(x, levels = levels)
   t <- table(x)
-  bins <- t / length(prediction)
+  if (length(t) != length(intervals) + 1) warning("Length mismatch in climate_model::bin_prob")
+  bins <- t / nrow(prediction)
+  if (sum(bins) != 1) 
+    message("Probability leakage in bin_prob: ", formatC(sum(bins), digits = 5, format='f'))
   bins  
 }

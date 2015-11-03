@@ -1,0 +1,6 @@
+#
+# test_main.R Test the main function
+#
+options(warn = 2)
+source('main.R')
+x <- main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)))
