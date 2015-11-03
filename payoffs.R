@@ -40,10 +40,6 @@ Payoffs <- function ( g,
   
   #### Pay intermediate securities
   
-  from <- 1
-  to <- (n.secu - 2)
-  
-  
   #
   # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
   #
@@ -57,6 +53,8 @@ Payoffs <- function ( g,
       if (which.payoff != i) warning("Internal inconsistency in Payoffs")
     }
   }
+  
+  # Make payoffs
   for (i in 1:n.traders) {
     V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][which.payoff]
   }
