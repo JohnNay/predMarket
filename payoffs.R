@@ -44,6 +44,7 @@ Payoffs <- function ( g,
   # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
   #
   which.payoff <- findInterval(anom.star, g$secu.inter) + 1
+  if(length(g$secu.inter) != n.secu - 1) warning("Mismatch between n.secu and length of secu.inter")
   if (! which.payoff %in% 1:n.secu) warning("Index out of range in Payoffs")
   if (length(g$secu.inter != n.secu)) warning("Mismatched lengths in Payoffs")
   message("Payoff for ", ct, " = ", which.payoff, ": temperature = ", anom.star)
