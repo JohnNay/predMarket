@@ -7,7 +7,7 @@ DataPrediction <- function(
                'rcp 4.5', 'rcp4.5', 'rcp45',
                'rcp 6.0', 'rcp6.0', 'rcp60', 'rcp 6', 'rcp6', 
                'rcp 8.5', 'rcp8.5', 'rcp85'),
-  true.model, time.span = NA, historical.temp = c('past', 'all', 'none')
+  true.model, historical.temp = c('past', 'all', 'none')
 ){
   
   scenario <- match.arg(scenario)
@@ -38,9 +38,10 @@ DataPrediction <- function(
   
   ### Set timing parameters
   
-  if (is.na(time.span)) history_start <- nrow(climate_data)
-  else history_start <- time.span # This must be compatible with the number of available 
-  # historical data points
+#   if (is.na(time.span)) {
+#     history_start <- nrow(climate_data)
+#   } else history_start <- time.span # This must be compatible with the number of available 
+#   # historical data points
   future_length = max(0, n.periods - burn.in)
   
   sim.start <- switch(historical.temp,
@@ -51,10 +52,9 @@ DataPrediction <- function(
   
   ### Initialize the true models
 
-  if (true.model == 1){  
+  if (true.model == 1){
     true_covars = list('slow.tsi')
-  }
-  else if (true.model == 2){
+  } else if (true.model == 2){
     true_covars = list('log.co2')
   } else {
     stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
@@ -127,16 +127,14 @@ DataPrediction <- function(
   #####
   ## Store reservation prices and data in network
   #####
-  
   g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
   g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
+  stopifnot(anyNA(mdl@climate[(g$burn.in):(n.periods),'t.anom']))
   g <- set.graph.attribute(g,"t.anom",mdl@climate['t.anom'])
   g <- set.graph.attribute(g,"secu.inter",secu.intervals)
   
   #####
   ## Return the network
   #####
-  
   g
-  
 }
