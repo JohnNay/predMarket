@@ -4,6 +4,10 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code
 source("main.R")
+devtools::install_github("JohnNay/eat", 
+                         auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
+library(eat)
+
 test <- FALSE
 estimate_replicates <- FALSE
 
@@ -29,9 +33,6 @@ if(estimate_replicates){
   ##############################################################################
   ## Estimate number of replicates needed for each param set
   ##############################################################################
-  source("utilities/create_set.R")
-  source("utilities/compute_iters.R")
-  ## SD
   iters_res <- compute_iters(main, input_values, "converg", 
                              initial_iters = 1,
                              max_iters = 20, 
@@ -47,6 +48,29 @@ if(estimate_replicates){
 ## Main sens analysis
 ##############################################################################
 
+# pc2 <- pc_sa(abm = main, 
+#              input_values = input_values,
+#              out = "converg", 
+#              sample_count = 10000, 
+#              nboot = 1000, 
+#              parallel = TRUE,
+#              cores = 30,
+#              rank = TRUE, method = "pcc")
+# save(pc2, file = "output/pc2.Rda")
+# plot(pc2, outcome_var = "Convergence of Beliefs")
+
+# Standardized Regression Coefficient
+src <- pc_sa(abm = main, 
+             input_values = input_values,
+             out = "converg", 
+             iterations = 1,
+             sample_count = 30,
+             nboot = 1000, 
+             parallel = TRUE,
+             cores = 30,
+             rank = TRUE, method = "src")
+save(src, file = "output/src.Rda")
+plot(src, outcome_var = paste0("Convergence of Beliefs (R^2= ", src@r_squared, ")"))
 
 
 
@@ -160,41 +184,3 @@ ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
   theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
   scale_color_discrete(name="True Model")
 
-##############################################################################
-## Sensitivity analysis on all variables
-##############################################################################
-input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
-                            market.complet = NA), 
-                       function(x) list(random_function = "qunif",
-                                        ARGS = list(min = 0.0001, max = 0.9999)))
-input_values$true.model <- list(random_function = "qbinom",
-                                ARGS = list(size = 1, prob = 0.5))
-input_values$n.edg <- list(random_function = "qunif",
-                           ARGS = list(min = 0.0001, max = 0.9999))
-input_values$n.traders <- list(random_function = "qunif",
-                               ARGS = list(min = 0.0001, max = 0.19999))
-
-source("utilities/pc_sa.R") # Need to have package "sensitivity" installed.
-pc2 <- pc_sa(abm = main, 
-             input_values = input_values,
-             out = "converg", 
-             sample_count = 10000, 
-             nboot = 1000, 
-             parallel = TRUE,
-             cores = 30,
-             rank = TRUE, method = "pcc") 
-save(pc2, file = "output/pc2.Rda")
-plot(pc2, outcome_var = "Convergence of Beliefs")
-
-# Standardized Regression Coefficient
-src2 <- pc_sa(abm = main, 
-              input_values = input_values,
-              out = "converg", 
-              sample_count = 10000, 
-              nboot = 1000, 
-              parallel = TRUE,
-              cores = 30,
-              rank = TRUE, method = "src") 
-save(src2, file = "output/src2.Rda")
-plot(src2, outcome_var = paste0("Convergence of Beliefs (R^2= ", src2@r_squared, ")"))
-plot(src2, outcome_var = "Convergence of Beliefs")
