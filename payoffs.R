@@ -41,14 +41,14 @@ Payoffs <- function ( g,
   #### Pay intermediate securities
   
   from <- 1
-  to <- (n.secu - 1)
+  to <- (n.secu - 2)
   
   
   #
   # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
   #
   for (j in from:to){
-    if( g$secu.inter[j] <= anom.star & anom.star < g$secu.inter[j + 1])
+    if( g$secu.inter[j] <= anom.star && anom.star < g$secu.inter[j + 1])
       for (i in 1:n.traders){
         V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][j]
       }
