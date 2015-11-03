@@ -1,6 +1,4 @@
-
 library(igraph)
-
 # Construct model:
 source("generate_model.R")
 # Sub functions needed inside of generate_model():
@@ -23,14 +21,12 @@ main <- function(parameters,
                  burn.in = 51,
                  n.seq = 14,
                  horizon = 6,
+                 nyears = 135,
                  visu = FALSE,
                  record = FALSE,
                  safeNprint=FALSE) {
-  
-  nyears <- 135
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
-  
   stopifnot((burn.in + n.seq * horizon) == nyears)
   
   ### Market structure parameters:

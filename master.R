@@ -2,56 +2,18 @@
 rm(list=ls()) # make sure to always run this line of code and see that the next two 
 # lines of code work without error, ensuring that the working of the model is not 
 # dependent on anything in your global workspace, if it is, then you need to create 
-# whatever is in your global workpace in the code that is sourced in the next two lines of code.
-
-# #####
-# ## Sensitivity analysis
-# #####
-# input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
-#                             market.complet = NA), 
-#                        function(x) list(random_function = "qunif",
-#                                         ARGS = list(min = 0.0001, max = 0.9999)))
-# input_values$true.model <- list(random_function = "qbinom",
-#                                 ARGS = list(size = 1, prob = 0.5))
-# # # if there are any params that are binary valued give them a binom prior distribution:
-# # input_values[["param2"]] <- list(random_function = "qbinom",
-# #                                  ARGS = list(size = 1, prob = 0.5))
-# 
-# sobol <- sobol_sa(abm = main, 
-#                        input_values = input_values,
-#                        out = "converg", 
-#                        sample_count = 3000, 
-#                        sobol_nboot = 1000, 
-#                        parallel = TRUE,
-#                        cores = 25)
-# save(sobol, file = "output/sobol.Rda")
-# plot(sobol, "Convergence of Beliefs", legend_pos = "bottomright")
-# 
-# pc <- pc_sa(abm = main, 
-#                  input_values = input_values,
-#                  out = "converg", 
-#                  sample_count = 5000, 
-#                  nboot = 1000, 
-#                  parallel = TRUE,
-#                  cores = 25,
-#                  rank = TRUE, method = "pcc") 
-# save(pc, file = "output/pc.Rda")
-# plot(pc, outcome_var = "Convergence of Beliefs")
-
+# whatever is in your global workpace in the code
 source("main.R")
-test <- TRUE
-if(test){
-  main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(4, min = 0.0001, max = 0.9999)))
-  main(c(runif(3, min = 0.0001, max = 0.9999), 0, runif(4, min = 0.0001, max = 0.9999)))
-}
-# for (i in rep(1,20)){
-# s <- c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999))
-# test <- mainTestmarket(parameters = s, out = "converg", visu = TRUE, record = TRUE)
-# }
+test <- FALSE
+estimate_replicates <- FALSE
 
+if(test){
+  main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)))
+  main(c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999)))
+}
 
 ##############################################################################
-## Estimate number of replicates needed for each param set
+## Param distributions to draw from
 ##############################################################################
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA), 
                        function(x) list(random_function = "qunif",
@@ -62,35 +24,37 @@ input_values$n.edg <- list(random_function = "qunif",
                            ARGS = list(min = 0.0001, max = 0.9999))
 input_values$n.traders <- list(random_function = "qunif",
                                ARGS = list(min = 0.0001, max = 0.19999))
-source("utilities/create_set.R")
-source("utilities/compute_iters.R")
-## SD
-iters_res <- compute_iters(main, input_values, "converg", 
-                           initial_iters = 1,
-                           max_iters = 20, 
-                           sample_count = 60, parallel = TRUE, cores = 30,
-                           measure = "sd", thresh = 0.05, repeats = 100)
-save(iters_res, file = "output/iters_res.Rda")
-plot(iters_res, ylab = "100 Standard Deviations", 
-     outcome = "Samples of 60 Convergence of Beliefs Outcomes")
-summary(iters_res)
+
+if(estimate_replicates){
+  ##############################################################################
+  ## Estimate number of replicates needed for each param set
+  ##############################################################################
+  source("utilities/create_set.R")
+  source("utilities/compute_iters.R")
+  ## SD
+  iters_res <- compute_iters(main, input_values, "converg", 
+                             initial_iters = 1,
+                             max_iters = 20, 
+                             sample_count = 60, parallel = TRUE, cores = 30,
+                             measure = "sd", thresh = 0.05, repeats = 100)
+  save(iters_res, file = "output/iters_res.Rda")
+  plot(iters_res, ylab = "100 Standard Deviations", 
+       outcome = "Samples of 60 Convergence of Beliefs Outcomes")
+  summary(iters_res)
+}
+
+##############################################################################
+## Main sens analysis
+##############################################################################
+
+
+
 
 ##############################################################################
 ## collecting the value of outcome.converge for the same value of the parameters 
 # we test on the sa, and plot them as an histogram
 ##############################################################################
 
-input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA,
-                            market.complet = NA), 
-                       function(x) list(random_function = "qunif",
-                                        ARGS = list(min = 0.0001, max = 0.9999)))
-input_values$true.model <- list(random_function = "qbinom",
-                                ARGS = list(size = 1, prob = 0.5))
-input_values$n.edg <- list(random_function = "qunif",
-                           ARGS = list(min = 0.0001, max = 0.9999))
-input_values$n.traders <- list(random_function = "qunif",
-                               ARGS = list(min = 0.0001, max = 0.19999))
-input_names <- names(input_values)
 
 cores <- parallel::detectCores() - 1
 sample_count <- 7000
