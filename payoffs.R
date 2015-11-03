@@ -47,13 +47,20 @@ Payoffs <- function ( g,
   #
   # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
   #
-  for (j in from:to){
-    if( g$secu.inter[j] <= anom.star && anom.star < g$secu.inter[j + 1])
-      for (i in 1:n.traders){
-        V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][j]
-      }
-  } 
-  
+  which.payoff <- findInterval(anom.star, g$secu.inter)
+  if (! which.payoff %in% seq_len(length(g$secu.inter))) warning("Index out of range in Payoffs")
+  if (length(g$secu.inter != n.secu)) warning("Mismatched lengths in Payoffs")
+  message("Payoff for ", ct, " = ", which.payoff, ": temperature = ", anom.star)
+  ## Check for accuracy
+  for (i in 1:n.secu) {
+    if ((i == 1 || g$secu.inter[i-1] <= anom.star) && (i == n.secu || anom.star < g$secu.inter[i])) {
+      if (which.payoff != i) warning("Internal inconsistency in Payoffs")
+    }
+  }
+  for (i in 1:n.traders) {
+    V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][which.payoff]
+  }
+
   #######
   ## Return the network
   #######
