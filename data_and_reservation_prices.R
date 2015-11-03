@@ -71,13 +71,13 @@ DataPrediction <- function(
   
   ### Initialize reservation prices data frames
   
-  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
-  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu ))
+  reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
+  reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
   
   ### generate temperature intervals
 
   secu.intervals <- seq(min(mdl@future['t.anom']), max(mdl@future['t.anom']), 
-                        length.out = n.secu)
+                        length.out = n.secu - 1)
   
   # For every sequence, every period in a sequence
   # and for both models,record reservation price
@@ -98,21 +98,29 @@ DataPrediction <- function(
       ### Update models
       # trader model = log.co2
       trader.co2 <- update_model(mdl, n_today = today,
-                                      n_horizon = trader_horizon,
-                                      trader_covars = list('log.co2'),
+                                 n_horizon = trader_horizon,
+                                 trader_covars = list('log.co2'),
                                  max_p = 1, max_q = 1)
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
-                                      n_horizon = trader_horizon,
-                                      trader_covars = list('slow.tsi'),
+                                 n_horizon = trader_horizon,
+                                 trader_covars = list('slow.tsi'),
                                  max_p = 1, max_q = 1)
-    
+      
       ### Record reservation prices
       # open interval for lower security
-      reserv.tsi[today,] <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
-                                     intervals = secu.intervals)
-      reserv.co2[today,] <- bin_prob(trader.co2, n_horizon = trader_horizon, 
-                                     intervals = secu.intervals)
+      bp <- bin_prob(trader.tsi, n_horizon = trader_horizon, 
+                     intervals = secu.intervals)
+      if (length(bp) != length(reserv.tsi[today,])) 
+        warning("Length mismatch: length(bp) = ", length(bp), ", 
+                length(reserv.tsi[today,]) = ", length(reserv.tsi[today,]))
+      reserv.tsi[today,] <- bp
+      bp <- bin_prob(trader.co2, n_horizon = trader_horizon, 
+                     intervals = secu.intervals)
+      if (length(bp) != length(reserv.co2[today,])) 
+        warning("Length mismatch: length(bp) = ", length(bp), ", 
+                length(reserv.co2[today,]) = ", length(reserv.co2[today,]))
+      reserv.co2[today,]
     }
   }
   
