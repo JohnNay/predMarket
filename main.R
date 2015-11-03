@@ -23,7 +23,6 @@ main <- function(parameters,
                  burn.in = 51,
                  n.seq = 14,
                  horizon = 6,
-                 out = c("segreg", "converg"),
                  visu = FALSE,
                  record = FALSE,
                  safeNprint=FALSE) {
@@ -46,14 +45,12 @@ main <- function(parameters,
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
-  true.model <- parameters[4] + 1 # the true model, 1 for ACC is a myth, 2 for ACC is fction of GHG
+  true.model <- parameters[4] + 1 # the true model, 1 for slow.tsi, 2 for log.co2
   n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   n.traders <- round(parameters[6]*100) + 50 # integer in (50, 250)
   
   cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
-      "true.model", true.model, "\n")
-  
-  out <- match.arg(out)
+      "true.model", true.model, "n.edg", n.edg, "n.traders", n.traders,  "\n")
   
   if (visu){
     source("colored.R")
@@ -349,5 +346,3 @@ main <- function(parameters,
     return(colMeans(sapply(result_final, function(x) x)))
   }
 }
-
-
