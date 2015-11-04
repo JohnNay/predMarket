@@ -23,9 +23,11 @@ main <- function(parameters,
                  n.seq = 14,
                  horizon = 6,
                  nyears = 135,
+                 historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
                  safeNprint=FALSE) {
+  historical.temp <- match.arg(historical.temp)
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
   stopifnot((burn.in + n.seq * horizon) == nyears)
@@ -112,7 +114,8 @@ main <- function(parameters,
     ## Generate data and reservation prices, and attach to network
     #####
     
-    net <- DataPrediction(net, scenario = 'rcp26', true.model = true.model)
+    net <- DataPrediction(net, scenario = 'rcp26', 
+                          true.model = true.model, historical.temp=historical.temp)
     
     # Visualize network (optional)
     if (visu){

@@ -7,11 +7,11 @@ DataPrediction <- function(
                'rcp 4.5', 'rcp4.5', 'rcp45',
                'rcp 6.0', 'rcp6.0', 'rcp60', 'rcp 6', 'rcp6', 
                'rcp 8.5', 'rcp8.5', 'rcp85'),
-  true.model, historical.temp = c('past', 'all', 'none')
+  true.model, 
+  historical.temp # c('past', 'all', 'none')
 ){
   
   scenario <- match.arg(scenario)
-  historical.temp <- match.arg(historical.temp)
   
   #####
   ## Useful variables

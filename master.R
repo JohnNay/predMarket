@@ -63,14 +63,14 @@ if(estimate_replicates){
 src <- pc_sa(abm = main, 
              input_values = input_values,
              out = "converg", 
-             iterations = 1,
+             iterations = 10,
              sample_count = 30,
              nboot = 1000, 
              parallel = TRUE,
              cores = 30,
              rank = TRUE, method = "src")
 save(src, file = "output/src.Rda")
-plot(src, outcome_var = paste0("Convergence of Beliefs (R^2= ", src@r_squared, ")"))
+plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
 
 
 
