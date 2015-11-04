@@ -21,24 +21,7 @@ Payoffs <- function ( g,
   max.trad  <- max(g$secu.inter)
 
   
-  
-  ### Pay lower security if actual temperature is in lower security range
-  
-  if (anom.star < min.trad){
-    for (i in 1:n.traders){
-      V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][1]
-    }
-  }
-  
-  ### Pay upper security if actual temperature is in upper security range
-  
-  if (anom.star >= max.trad){
-    for (i in 1:n.traders){
-      V(g)$money[i] <- V(g)$money[i] + V(g)$secu[[i]][n.secu]
-    }
-  }
-  
-  #### Pay intermediate securities
+  #### Pay securities
   
   #
   # TODO: Check that indexing is correct. Check for edge conditions and off-by-one. 
