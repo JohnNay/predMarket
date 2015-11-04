@@ -307,7 +307,7 @@ main <- function(parameters,
         if(any(V(net)$money < money_pre_payoff)){
           stop(paste0("In period t = ", t, "some trader got a negative payoff"))
         }
-        if(sum(V(net)$secu != length(V(net)$secu[[1]])*n.traders )){
+        if(sum(unlist(V(net)$secu)) != length(V(net)$secu[[1]])*n.traders ){
           stop(paste0("Some securities are created at =", t,
                       "The total number of securities is ",sum(V(net)$secu,
                       "and should be", length(V(net)$secu[[1]])*n.traders)))
