@@ -310,8 +310,8 @@ main <- function(parameters,
         if(sum(V(net)$secu != length(V(net)$secu[[1]])*n.traders )){
           stop(paste0("Some securities are created at =", t,
                       "The total number of securities is ",sum(V(net)$secu,
-                      "and should be",length(V(net)$secu[[1]])*n.traders))
-        
+                      "and should be", length(V(net)$secu[[1]])*n.traders)))
+        }
         if(abs(sum(V(net)$money)- (ts +1)*n.traders)>0.1){
           stop(paste0("After payoffs of some sequence past the first sequence,
                       some money is create at t =", t,
