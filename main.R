@@ -267,7 +267,7 @@ main <- function(parameters,
           if(abs(sum(V(net)$money)!=(ts)*n.traders)>0.1){
             stop(paste0("In a sequence after the first sequence,
                         some money is create at t =", t,
-                        "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))  
+                        "The money created is ", sum(V(net)$money) - (ts)*n.traders))  
           } 
           if(any(unlist(V(net)$secu)<0)){
             stop(paste0("Some securities fell below zero in period ",t))
@@ -307,6 +307,10 @@ main <- function(parameters,
         if(any(V(net)$money < money_pre_payoff)){
           stop(paste0("In period t = ", t, "some trader got a negative payoff"))
         }
+        if(sum(V(net)$secu != length(V(net)$secu[[1]])*n.traders )){
+          stop(paste0("Some securities are created at =", t,
+                      "The total number of securities is ",sum(V(net)$secu,
+                      "and should be",length(V(net)$secu[[1]])*n.traders))
         
         if(abs(sum(V(net)$money)- (ts +1)*n.traders)>0.1){
           stop(paste0("After payoffs of some sequence past the first sequence,
