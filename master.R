@@ -61,7 +61,7 @@ if(estimate_replicates){
 future <- TRUE
 
 # Standardized Regression Coefficient
-if(historical){
+if(!future){
   # burn.in = 51,
   # n.seq = 14,
   # horizon = 6,
