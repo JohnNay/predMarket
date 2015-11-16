@@ -63,7 +63,7 @@ DataPrediction <- function(
           ", true covars = ", true_covars[[1]])
   mdl <- init_model(mdl, n_history = burn.in,
                     n_future = future_length, true_covars = true_covars,
-                    future_covars = future_data, max_p = 1, max_q = 0)
+                    future_covars = future_data, p = 1, q = 0)
   
   #####
   ## Construct reservation prices from predictions
