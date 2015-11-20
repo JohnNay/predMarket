@@ -77,6 +77,17 @@ if(!future){
                rank = TRUE, method = "src")
   save(src, file = "output/src.Rda")
   plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+  # src2 <- pc_sa(abm = main, 
+  #              input_values = input_values,
+  #              previous_pc_sa = list(src),
+  #              out = "converg", 
+  #              iterations = 7,
+  #              sample_count = 30,
+  #              nboot = 1000, 
+  #              parallel = TRUE,
+  #              cores = 30,
+  #              rank = TRUE, method = "src")
+  # save(src2, file = "output/src2.Rda")
 }
 
 if(future){
@@ -96,18 +107,6 @@ if(future){
   save(src_future, file = "output/src_future.Rda")
 }
 
-# src2 <- pc_sa(abm = main, 
-#              input_values = input_values,
-#              previous_pc_sa = list(src),
-#              out = "converg", 
-#              iterations = 7,
-#              sample_count = 30,
-#              nboot = 1000, 
-#              parallel = TRUE,
-#              cores = 30,
-#              rank = TRUE, method = "src")
-# save(src2, file = "output/src2.Rda")
-# 
 # ##############################################################################
 # ## collecting the value of outcome.converge for the same value of the parameters 
 # # we test on the sa, and plot them as an histogram
