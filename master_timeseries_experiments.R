@@ -41,11 +41,14 @@ for(j in set){
   # TRUE model is Human-induced
   input_values$true.model <- list(random_function = "qbinom",
                                   ARGS = list(size = 1, prob = 1))
-  input_set <- create_set(input_values, input_names, sample_count = sample_count,
-                               constraints = "none")
+  input_set <- create_set(input_values = input_values, 
+                          input_names = names(input_values), 
+                          sample_count = sample_count,
+                          constraints = "none",
+                          model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
     main(parameters = as.numeric(input_set[i, ]), 
-          out = "converg", visu = FALSE, record = TRUE)
+          out = "converg", record = TRUE)
   })
   average_convergence <- rbind(average_convergence,
                                data.frame(avg = colMeans(outcome.evolution), 
@@ -56,11 +59,14 @@ for(j in set){
   # TRUE model is Sun Spots
   input_values$true.model <- list(random_function = "qbinom",
                                   ARGS = list(size = 1, prob = 0))
-  input_set <- create_set(input_values, input_names, sample_count = sample_count,
-                          constraints = "none")
+  input_set <- create_set(input_values = input_values, 
+                          input_names = names(input_values), 
+                          sample_count = sample_count,
+                          constraints = "none",
+                          model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
     main(parameters = as.numeric(input_set[i, ]), 
-          out = "converg", visu = FALSE, record = TRUE)
+          out = "converg", record = TRUE)
   })
   average_convergence <- rbind(average_convergence,
                                data.frame(avg = colMeans(outcome.evolution), 
@@ -70,13 +76,13 @@ for(j in set){
 }
 save(average_convergence, file = "output/average_convergence.Rda")
 
-library(ggplot2)
-plot_data <- average_convergence
-plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
-ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
-  geom_smooth(method = "loess") + #geom_line() +
-  ggplot2::facet_wrap(~set, ncol = 1) +
-  ggtitle("Average Convergence Over Trading Sequences") +
-  xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
-  theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-  scale_color_discrete(name="True Model")
+# library(ggplot2)
+# plot_data <- average_convergence
+# plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
+# ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
+#   geom_smooth(method = "loess") + #geom_line() +
+#   ggplot2::facet_wrap(~set, ncol = 1) +
+#   ggtitle("Average Convergence Over Trading Sequences") +
+#   xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
+#   theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
+#   scale_color_discrete(name="True Model")
