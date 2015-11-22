@@ -67,29 +67,6 @@ setMethod("mdl_formula", signature = "climate_model",
 )
 
 
-setGeneric("fit_arma", function(p, q, res, covariates, data) {
-  standardGeneric("fit_arma")
-})
-
-setMethod("fit_arma", signature(res = "numeric", covariates = "missing", data = "missing"),
-          function(p, q, res, covariates, data) {
-            invisible(arma(res, order=c(p,q), include.intercept = FALSE, method="BFGS"))
-          }
-)
-
-
-setMethod("fit_arma", signature(res = "missing", covariates = "list", data = "data.frame"),
-          function(p, q, res, covariates, data) {
-            if (is.null(res)) {
-              f <- mdl_formula(covariates)
-              
-              lin.model <- lm(f, data = data)
-              res <- residuals(lin.model)
-            }
-            fit_arma(p, q, res)
-          }
-)
-
 arma_model <- function(data, covariates, p, q, res = NULL) {
   if (is.null(res)) {
     f <- mdl_formula(covariates)

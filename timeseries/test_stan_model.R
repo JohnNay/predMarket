@@ -1,0 +1,65 @@
+library(rstan)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+source('prepare_data.R')
+
+data <- prepare_climate_data('rcp 4.5')
+climate_data <- data$data
+future_data <- data$future
+
+model <- stan_model('climate_model.stan', 'ARMA climate model', auto_write = TRUE)
+
+cd <- climate_data
+if (FALSE)
+  cd <- climate_data %>% filter(year >= 1960)
+if (TRUE) {
+  scaled_data <- cd %>% mutate_each_(funs((. - mean(.)) / sd(.)), vars = list(~-year))
+} else {
+  scaled_data <- cd
+}
+
+m0 <- mean(cd$t.anom) - mean(scaled_data$t.anom)
+s0 <- sd(cd$t.anom) / sd(scaled_data$t.anom)
+
+mdl <- lm(t.anom ~ log.co2, data = scaled_data)
+res <- residuals(mdl)
+arma <- tseries::arma(res, c(1,1), include.intercept = 0)
+
+parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future', 'y_horizon', 'log_lik')
+
+P <- 1
+Q <- 1
+
+stan_data <- list(T = nrow(scaled_data), T_future = nrow(scaled_data), P = P, Q = Q, 
+                  y = scaled_data$t.anom, x = scaled_data$log.co2,
+                  m0 = summary(mdl)$coef['log.co2', 'Estimate'], sm0 = 3 * summary(mdl)$coef['log.co2','Std. Error'], 
+                  b0 = summary(mdl)$coef['(Intercept)','Estimate'], sb0 = 3 * summary(mdl)$coef['(Intercept)','Std. Error'], 
+                  ssig0 = summary(mdl)$sigma, 
+                  phi0 = summary(arma)$coef['ar1',' Estimate'], sphi0 = 3 * summary(arma)$coef['ar1',' Std. Error'], 
+                  theta0 = summary(arma)$coef['ma1',' Estimate'], stheta0 = 3 * summary(arma)$coef['ma1',' Std. Error'], 
+                  x_future = scaled_data$log.co2, horizon = 50)
+
+initf <- function(chain_id = 1) {
+  clip <- function(x, lower = -1, upper = 1) pmin(pmax(x, lower),upper)
+  list(b = clip(rnorm(1,0,0.25)), m = clip(rnorm(1,0,0.25)), 
+                sigma = clip(abs(rnorm(1,0, 0.25)),1E-6,1),
+                phi = list(clip(rnorm(P,0,0.25))), theta = list(clip(rnorm(Q,0,0.25))))
+  if (P == 0) list$phi <- numeric(0)
+  if (Q == 0) list$theta <- numeric(0)
+}
+
+fit <- sampling(model, data = stan_data, pars = parameters, 
+                chains = 4, iter = 400, cores = 4)
+
+
+df <- extract(fit, pars = 'y_future')[[1]] %>% as.data.frame() %>% 
+  mutate(iteration = row_number()) %>%
+  sample_n(min(500, nrow(.)),replace=FALSE) %>%
+  gather(key = year, value = t.anom, -iteration) %>% 
+  mutate(year = as.numeric(str_sub(year, 2)) + min(cd$year) - 1)
+if (TRUE) {
+ df <- df %>% mutate(t.anom = t.anom * s0 + m0)
+}
+
