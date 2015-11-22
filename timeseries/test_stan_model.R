@@ -2,6 +2,7 @@ library(rstan)
 library(dplyr)
 library(tidyr)
 library(stringr)
+library(loo)
 
 source('prepare_data.R')
 
@@ -41,6 +42,12 @@ stan_data <- list(T = nrow(scaled_data), T_future = nrow(scaled_data), P = P, Q 
                   theta0 = summary(arma)$coef['ma1',' Estimate'], stheta0 = 3 * summary(arma)$coef['ma1',' Std. Error'], 
                   x_future = scaled_data$log.co2, horizon = 50)
 
+stan_data_ar1 <- stan_data
+stan_data_ar1$Q <- 0
+
+stan_data_ma1 <- stan_data
+stan_data_ma1$P <- 0
+
 initf <- function(chain_id = 1) {
   clip <- function(x, lower = -1, upper = 1) pmin(pmax(x, lower),upper)
   list(b = clip(rnorm(1,0,0.25)), m = clip(rnorm(1,0,0.25)), 
@@ -50,11 +57,26 @@ initf <- function(chain_id = 1) {
   if (Q == 0) list$theta <- numeric(0)
 }
 
-fit <- sampling(model, data = stan_data, pars = parameters, 
-                chains = 4, iter = 400, cores = 4)
+n_sample <- 800
 
+fit.1 <- sampling(model, data = stan_data, pars = parameters, 
+                chains = 4, iter = n_sample, cores = 4)
 
-df <- extract(fit, pars = 'y_future')[[1]] %>% as.data.frame() %>% 
+fit.2 <- sampling(model, data = stan_data_ar1, 
+                  pars = parameters[parameters != 'theta'], 
+                chains = 4, iter = n_sample, cores = 4)
+
+fit.3 <- sampling(model, data = stan_data_ma1, 
+                  pars = parameters[parameters != 'eta'], 
+                  chains = 4, iter = n_sample, cores = 4)
+
+log_lik.1 <- extract_log_lik(fit.1)
+log_lik.2 <- extract_log_lik(fit.2)
+log_lik.3 <- extract_log_lik(fit.3)
+
+compare(waic(log_lik.1), waic(log_lik.2), waic(log_lik.3))
+
+df <- extract(fit.1, pars = 'y_future')[[1]] %>% as.data.frame() %>% 
   mutate(iteration = row_number()) %>%
   sample_n(min(500, nrow(.)),replace=FALSE) %>%
   gather(key = year, value = t.anom, -iteration) %>% 

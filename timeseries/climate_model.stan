@@ -83,7 +83,7 @@ generated quantities {
         eta <- eta + theta[q] * err[t - q]; // moving average part
       }
       err[t] <- res[t] - nu - eta;
-      log_lik[t] <- normal_log(y[t], nu + eta, sigma);
+      log_lik[t] <- normal_log(y[t], m * x[t] + b + nu + eta, sigma);
     }
   
     for(t in 1:T_future) {
@@ -94,7 +94,7 @@ generated quantities {
         nu <- nu + phi[p] * yy[T + t-p];
       }
       for (q in 1:Q) {
-        eta <- eta + phi[q] * err[T + t-q];
+        eta <- eta + theta[q] * err[T + t-q];
       }
       err[T + t] <- normal_rng(0, sigma);
       yy[T + t] <- nu + eta + err[T + t];
