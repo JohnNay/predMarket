@@ -196,7 +196,9 @@ main <- function(parameters,
     
     ### PAY    
     
-    net <- Payoffs(g=net, ct = t)
+    # See above : to <- net$burn.in + net$horizon - 1
+    
+    net <- Payoffs(g=net, ct = to +1)
     
     ### Safeguards & prints
     if(safeNprint){
@@ -299,7 +301,9 @@ main <- function(parameters,
         }
         ### PAY
         
-        net <- Payoffs(g=net, ct = t)
+        # See above : to <- net$burn.in + (net$horizon * ts) - 1
+        
+        net <- Payoffs(g=net, ct = to + 1)
         
         ### Safeguards & prints
         if(safeNprint){
