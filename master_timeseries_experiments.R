@@ -72,7 +72,7 @@ for(j in set){
                           sample_count = sample_count,
                           constraints = "none",
                           model_data = NULL)
-  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
+  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
     main(parameters = as.numeric(input_set[i, ]), 
          burn.in = 51,
          n.seq = n.seq,
