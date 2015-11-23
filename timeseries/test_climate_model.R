@@ -20,7 +20,7 @@ today <- which(climate_data$year == 1999)
 mdl.co2 <- new('climate_model', climate = climate_data)
 mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = 100, true_covar = 'log.co2', future_covars = future_data)
 
-future.co2.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covar = 'log.co2')
+future.co2.co2 <- update_model(mdl.co2, n_today = today-20, n_horizon = 30, trader_covar = 'log.co2')
 
 p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -34,7 +34,7 @@ p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) +
 plot(p1a)
 
 
-future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covars = 'slow.tsi')
+future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covar = 'slow.tsi')
 
 p1b <- ggplot(future.tsi.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -48,9 +48,9 @@ p1b <- ggplot(future.tsi.co2@future, aes(x = year, y = t.anom)) +
 plot(p1b)
 
 mdl.tsi <- new('climate_model', climate = climate_data)
-mdl.tsi <- init_model(mdl.tsi, n_history = today, n_future = 100, true_covars = list('slow.tsi'), future_covars = future_covars)
+mdl.tsi <- init_model(mdl.tsi, n_history = today, n_future = 100, true_covar = 'slow.tsi', future_covars = future_data)
 
-future.tsi.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covars = list('slow.tsi'))
+future.tsi.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covar = 'slow.tsi')
 p2a <- ggplot(future.tsi.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
   geom_point() + geom_line() + 
@@ -63,7 +63,7 @@ p2a <- ggplot(future.tsi.tsi@future, aes(x = year, y = t.anom)) +
 plot(p2a)
 
 
-future.co2.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covars = list('log.co2'))
+future.co2.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covar = 'log.co2')
 p2b <- ggplot(future.co2.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
   geom_point() + geom_line() + 
@@ -75,8 +75,8 @@ p2b <- ggplot(future.co2.tsi@future, aes(x = year, y = t.anom)) +
 
 plot(p2b)
 
-mdl.co2 <- init_model(mdl.co2, nrow(mdl.co2@climate), 0, true_covars = list('log.co2'), NULL)
-future2.co2.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covars = list('log.co2'))
+mdl.co2 <- init_model(mdl.co2, nrow(mdl.co2@climate), 0, true_covar = 'log.co2', NULL)
+future2.co2.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covar = 'log.co2')
 
 p3a <- ggplot(future2.co2.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -89,7 +89,7 @@ p3a <- ggplot(future2.co2.co2@future, aes(x = year, y = t.anom)) +
 
 plot(p3a)
 
-future2.tsi.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covars = list('slow.tsi'))
+future2.tsi.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covar = 'slow.tsi')
 
 p3b <- ggplot(future2.tsi.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -102,8 +102,8 @@ p3b <- ggplot(future2.tsi.co2@future, aes(x = year, y = t.anom)) +
 
 plot(p3b)
 
-mdl.tsi <- init_model(mdl.tsi, nrow(mdl.tsi@climate), 0, true_covars = list('slow.tsi'), NULL, p = 1, q = 0)
-future2.tsi.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covars = list('slow.tsi'), auto_arma = FALSE)
+mdl.tsi <- init_model(mdl.tsi, nrow(mdl.tsi@climate), 0, true_covar = 'slow.tsi', NULL, p = 1, q = 0)
+future2.tsi.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covar = 'slow.tsi', auto_arma = FALSE)
 
 p4a <- ggplot(future2.tsi.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -116,7 +116,7 @@ p4a <- ggplot(future2.tsi.tsi@future, aes(x = year, y = t.anom)) +
 
 plot(p4a)
 
-future2.co2.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covars = list('log.co2'), auto_arma = FALSE)
+future2.co2.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covar = 'log.co2', auto_arma = FALSE)
 
 p4b <- ggplot(future2.co2.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures

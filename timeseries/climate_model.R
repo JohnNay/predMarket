@@ -86,7 +86,7 @@ scale_data <- function(data) {
 
 unscale_projection <- function(proj, scale) {
   scale <- scale %>% filter(var == 't.anom')
-  proj %>% mutate(t.anom = t.anom * scale$sd + scale$mean)
+  proj %>% mutate(t.anom = t.anom.s * scale$sd + scale$mean)
 }
 
 scale_covar <- function(data, covariate, scale) {
@@ -188,14 +188,17 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
   if (t.future > 0) {
     projection <- rstan::extract(fit, pars = 'y_future')$y_future %>% as.data.frame() %>% 
       mutate(iteration = row_number()) %>%
-      gather(key = key, value = t.anom, -iteration) %>% 
-      separate(key, c('year','rep'), convert=T) %>%
-      mutate(year = year + this.year)
+      gather(key = key, value = t.anom.s, -iteration) %>% 
+      separate(key, c('step','rep'), convert=T) %>%
+      mutate(year = step + this.year, sim = iteration * max(rep) + rep) %>%
+      select(step, year, iteration, rep, sim, t.anom.s)
   } else {
-    projection <- data.frame(year = numeric(0),
-                             rep = numeric(0),
+    projection <- data.frame(step = numeric(0),
+                             year = numeric(0),
                              iteration = numeric(0),
-                             t.anom = numeric(0))
+                             rep = numeric(0),
+                             sim = numeric(0),
+                             t.anom.s = numeric(0))
   }
   invisible(list(fit = fit, projection = projection))
 }
@@ -234,6 +237,7 @@ predict_future <- function(mdl, covariate, n_today, n_horizon,
   future_data <- mdl@scaled.future %>% slice(n_today + 1:n_horizon)
   
   fit <- fit_model(past_data, covariate, prior.coefs, future_data)
+  fit$projection <- unscale_projection(fit$projection, mdl@future.scale.coefs)
   
   invisible(fit)
 }
@@ -286,21 +290,24 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
                                      max_p = max_p, max_q = max_q,
                                      auto_arma = any(is.na(c(p,q))))
   
+  p <- mdl@prior.coefs$P
+  q <- mdl@prior.coefs$Q
+  
   if (is.null(q) || is.na(q)) {
     mdl@label <- "NULL"
   } else if (q > 0) {
     if (p > 0) {
-      mdl@label <- with(am, paste0("ARMA(", p, ',', q, ")"))
+      mdl@label <- paste0("ARMA(", p, ',', q, ")")
     } else {
-      mdl@label <- with(am, paste0("MA(", q, ")"))
+      mdl@label <- paste0("MA(", q, ")")
     }
   } else {
-    mdl@label <- with(am, paste0("AR(", p, ")"))
+    mdl@label <- paste0("AR(", p, ")")
   }
   
-  true_future  <- predict_future(mdl, true_covar, 
+  true_future  <- predict_future(mdl, covariate = true_covar, 
                                  n_today = n_history, n_horizon = n_future, 
-                                 covar = true_covar)
+                                 p.samples = 1)
   
   if (n_future > 0) {
     tf <- rstan::extract(true_future$fit, pars = 'y_future', permuted = FALSE, inc_warmup = FALSE)
@@ -314,20 +321,21 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
       df <- rbind(df, x)
     }
     df <- df %>% sample_n(1) %>%
-      gather(key = key, value = t.anom) %>% 
+      gather(key = key, value = t.anom.s) %>% 
       mutate(key = str_replace(key, 'y_future\\[([:digit:]+),([:digit:]+)\\]','\\1,\\2')) %>%
       separate(key, c('year','rep'), remove=T, convert=T)
     r = base::sample(max(df$rep), 1)
-    df <- df %>% filter(rep == r)
+    df <- df %>% filter(rep == r) %>% unscale_projection(mdl@future.scale.coefs)
     
-    mdl@scaled.future$t.anom[n_history + seq_len(n_future)] <- df$t.anom
-    mdl@future$t.anom[n_history + seq_len(n_future)] <-  
-      unscale_projection(df, mdl@future.scale.coefs)$t.anom
-    
+    mdl@scaled.future$t.anom[n_history + seq_len(n_future)] <- df$t.anom.s
+    mdl@future$t.anom[n_history + seq_len(n_future)] <-  df$t.anom
   }
   mdl@today <- n_history
   mdl@horizon <- n_history
-  mdl@prediction = data.frame(sim = 1, step = n_history, t.anom = mdl@future$t.anom[n_history])
+  mdl@prediction = data.frame(sim = 1,  rep = 1, iteration = 1,
+                              year = mdl@future$year[n_history],
+                              step = n_history,
+                              t.anom = mdl@future$t.anom[n_history])
   invisible(mdl)
 }
 
@@ -364,7 +372,7 @@ update_model <- function(mdl, n_today, n_horizon,
   
   prediction  <- predict_future(mdl, n_today = n_today, n_horizon = n_horizon, 
                                 covar = trader_covar,
-                                gen_priors = TRUE,
+                                gen_priors = FALSE,
                                 p = p, q = q, 
                                 auto_arma = auto_arma, max_p = max_p, max_q = max_q,
                                 p.samples = p.samples,
