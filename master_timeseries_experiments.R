@@ -55,9 +55,9 @@ for(j in set){
          iterations = 1,
          out = "converg", record = TRUE)
   })
-  message(paste(n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
+  cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
-                               data.frame(convergence = outcome.evolution, 
+                               data.frame(convergence = outcome.evolution,
                                           trading_seq = rep(seq(n.seq), nrow(input_set)),
                                           true_mod = rep(rep("LogCo2", length(seq(n.seq)), nrow(input_set))),
                                           set = rep(rep(paste(as.character(j), collapse = ", "),  length(seq(n.seq))), nrow(input_set)),
@@ -81,7 +81,7 @@ for(j in set){
          iterations = 1,
          out = "converg", record = TRUE)
   })
-  message(paste(n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
+  cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
                                data.frame(convergence = outcome.evolution, 
                                           trading_seq = rep(seq(n.seq), nrow(input_set)),
