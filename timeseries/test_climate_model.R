@@ -18,9 +18,9 @@ future_data <- data$future
 today <- which(climate_data$year == 1999)
 
 mdl.co2 <- new('climate_model', climate = climate_data)
-mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = 100, true_covars = list('log.co2'), future_covars = future_covars)
+mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = 100, true_covar = 'log.co2', future_covars = future_data)
 
-future.co2.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covars = list('log.co2'))
+future.co2.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covar = 'log.co2')
 
 p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -34,7 +34,7 @@ p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) +
 plot(p1a)
 
 
-future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covars = list('slow.tsi'))
+future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covars = 'slow.tsi')
 
 p1b <- ggplot(future.tsi.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures

@@ -67,7 +67,10 @@ auto_arma <- function(res, max_p = 2, max_q = 2) {
 }
 
 extract_covar <- function(data, covariate) {
-  data <- data %>% select_(~year, ~t.anom, covar = covariate)
+  if ('t.anom' %in% names(data))
+    data <- data %>% select_(~year, ~t.anom, covar = covariate)
+  else
+    data <- data %>% select_(~year, covar = covariate)
 }
 
 scale_data <- function(data) {
@@ -220,7 +223,7 @@ predict_future <- function(mdl, covariate, n_today, n_horizon,
   start.year <- max(past_data$year)
   if (is.null(prior.coefs)) {
     if (gen_priors) {
-      prior.coefs<- gen_prior_coefs(past_data$data, covariate, 
+      prior.coefs<- gen_prior_coefs(past_data, covariate, 
                                     p = p, q = q,
                                     auto_arma = auto_arma, max_p = max_p, max_q = max_q)
     } else {
@@ -336,7 +339,7 @@ update_model <- function(mdl, n_today, n_horizon,
                          auto_arma = FALSE,
                          max_p = 2, max_q = 2,
                          n_sample = 800, n_chains = 4) {
-  if (is.null(trader_covars)) trader_covars <- mdl@covariates
+  if (is.null(trader_covar)) trader_covar <- mdl@covariates
   n_today <- as.integer(n_today)
   n_horizon <- as.integer(n_horizon)
   max_p <- as.integer(max_p)
@@ -354,12 +357,12 @@ update_model <- function(mdl, n_today, n_horizon,
     p <- mdl@prior.coefs$P
     q <- mdl@prior.coefs$Q
   }
-  message("update_model: ", n_today, ", ", n_horizon, ", ", trader_covars,
+  message("update_model: ", n_today, ", ", n_horizon, ", ", trader_covar,
           ", ", p.samples, ", arma is ", 
           ifelse(is.na(p), paste0("(",p,",",q,")"), mdl@label), 
           ", auto_arma is ", auto_arma, ", ", max_p, ", ", max_q)
   
-  prediction  <- predict_future(mdl, n_today = n_history, n_horizon = n_future, 
+  prediction  <- predict_future(mdl, n_today = n_today, n_horizon = n_horizon, 
                                 covar = trader_covar,
                                 gen_priors = TRUE,
                                 p = p, q = q, 
@@ -369,7 +372,7 @@ update_model <- function(mdl, n_today, n_horizon,
   
   mdl@today <- n_today
   mdl@horizon <- n_today + n_horizon
-  mdl@prediction <- prediction
+  mdl@prediction <- prediction$projection
   invisible(mdl)
 }
 
