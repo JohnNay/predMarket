@@ -48,6 +48,10 @@ for(j in set){
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
     main(parameters = as.numeric(input_set[i, ]), 
+         burn.in = 51,
+         n.seq = 14,
+         horizon = 6,
+         nyears = 135,
           out = "converg", record = TRUE)
   })
   average_convergence <- rbind(average_convergence,
@@ -66,6 +70,10 @@ for(j in set){
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
     main(parameters = as.numeric(input_set[i, ]), 
+         burn.in = 51,
+         n.seq = 14,
+         horizon = 6,
+         nyears = 135,
           out = "converg", record = TRUE)
   })
   average_convergence <- rbind(average_convergence,
