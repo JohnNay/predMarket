@@ -28,7 +28,7 @@ mdl <- lm(t.anom ~ log.co2, data = scaled_data)
 res <- residuals(mdl)
 arma <- tseries::arma(res, c(1,1), include.intercept = 0)
 
-parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future', 'y_horizon', 'log_lik')
+parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future', 'log_lik')
 
 P <- 1
 Q <- 1
@@ -40,7 +40,8 @@ stan_data <- list(T = nrow(scaled_data), T_future = nrow(scaled_data), P = P, Q 
                   ssig0 = summary(mdl)$sigma, 
                   phi0 = summary(arma)$coef['ar1',' Estimate'], sphi0 = 3 * summary(arma)$coef['ar1',' Std. Error'], 
                   theta0 = summary(arma)$coef['ma1',' Estimate'], stheta0 = 3 * summary(arma)$coef['ma1',' Std. Error'], 
-                  x_future = scaled_data$log.co2, horizon = 50)
+                  x_future = scaled_data$log.co2,
+                  reps = 100)
 
 stan_data_ar1 <- stan_data
 stan_data_ar1$Q <- 0
@@ -76,12 +77,18 @@ log_lik.3 <- extract_log_lik(fit.3)
 
 compare(waic(log_lik.1), waic(log_lik.2), waic(log_lik.3))
 
-df <- extract(fit.1, pars = 'y_future')[[1]] %>% as.data.frame() %>% 
+df <- rstan::extract(fit.1, pars = 'y_future')[[1]] %>% as.data.frame() %>% 
   mutate(iteration = row_number()) %>%
-  sample_n(min(500, nrow(.)),replace=FALSE) %>%
-  gather(key = year, value = t.anom, -iteration) %>% 
-  mutate(year = as.numeric(str_sub(year, 2)) + min(cd$year) - 1)
+  gather(key = key, value = t.anom, -iteration) %>% 
+  separate(key, c('year','rep'), convert=T) %>%
+  mutate(year = year + min(cd$year) - 1)
 if (TRUE) {
  df <- df %>% mutate(t.anom = t.anom * s0 + m0)
 }
+
+s1 <- sample(max(df$iteration), 500, 500 > max(df$iteration))
+s2 <- sample(max(df$rep), 500, 500 > max(df$rep))
+sdf <- str_c(s1, s2, sep=':')
+
+x <- df %>% filter(str_c(iteration, year, sep=':') %in% sdf)
 

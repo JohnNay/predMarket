@@ -15,8 +15,6 @@ data <- prepare_climate_data('rcp 4.5')
 climate_data <- data$data
 future_data <- data$future
 
-
-
 today <- which(climate_data$year == 1999)
 
 mdl.co2 <- new('climate_model', climate = climate_data)
@@ -35,7 +33,6 @@ p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) +
 
 plot(p1a)
 
-print(interval_prob(future.co2.co2, 10, c(0.5,0.7),  'closed'))
 
 future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covars = list('slow.tsi'))
 
@@ -49,9 +46,6 @@ p1b <- ggplot(future.tsi.co2@future, aes(x = year, y = t.anom)) +
   labs(x = "Year", y = "T anomaly", title = "True = log(CO2), Trader = Slow TSI")
 
 plot(p1b)
-
-print(interval_prob(future.tsi.co2, 10, c(0.5,0.7),  'closed'))
-
 
 mdl.tsi <- new('climate_model', climate = climate_data)
 mdl.tsi <- init_model(mdl.tsi, n_history = today, n_future = 100, true_covars = list('slow.tsi'), future_covars = future_covars)
@@ -68,8 +62,6 @@ p2a <- ggplot(future.tsi.tsi@future, aes(x = year, y = t.anom)) +
 
 plot(p2a)
 
-print(interval_prob(future.tsi.tsi, 10, c(0.5,0.7),  'closed'))
-
 
 future.co2.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covars = list('log.co2'))
 p2b <- ggplot(future.co2.tsi@future, aes(x = year, y = t.anom)) + 
@@ -82,8 +74,6 @@ p2b <- ggplot(future.co2.tsi@future, aes(x = year, y = t.anom)) +
   labs(x = "Year", y = "T anomaly", title = "True = Slow TSI, Trader = log(CO2)")
 
 plot(p2b)
-
-print(interval_prob(future.co2.tsi, 10, c(0.5,0.7),  'closed'))
 
 mdl.co2 <- init_model(mdl.co2, nrow(mdl.co2@climate), 0, true_covars = list('log.co2'), NULL)
 future2.co2.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covars = list('log.co2'))
@@ -99,9 +89,6 @@ p3a <- ggplot(future2.co2.co2@future, aes(x = year, y = t.anom)) +
 
 plot(p3a)
 
-print(interval_prob(future2.co2.co2, 10, c(0.3, 0.7),  'closed'))
-
-
 future2.tsi.co2 <- update_model(mdl.co2, which(mdl.co2@climate$year == 1980), 20, trader_covars = list('slow.tsi'))
 
 p3b <- ggplot(future2.tsi.co2@future, aes(x = year, y = t.anom)) + 
@@ -114,8 +101,6 @@ p3b <- ggplot(future2.tsi.co2@future, aes(x = year, y = t.anom)) +
   labs(x = "Year", y = "T anomaly", title = "True = log(CO2), Trader = Slow TSI")
 
 plot(p3b)
-
-print(interval_prob(future.tsi.co2, 10, c(0.3, 0.7),  'closed'))
 
 mdl.tsi <- init_model(mdl.tsi, nrow(mdl.tsi@climate), 0, true_covars = list('slow.tsi'), NULL, p = 1, q = 0)
 future2.tsi.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covars = list('slow.tsi'), auto_arma = FALSE)
@@ -131,8 +116,6 @@ p4a <- ggplot(future2.tsi.tsi@future, aes(x = year, y = t.anom)) +
 
 plot(p4a)
 
-print(interval_prob(future2.tsi.tsi, 10, c(0.3, 0.7), 'closed'))
-
 future2.co2.tsi <- update_model(mdl.tsi, which(mdl.tsi@climate$year == 1980), 20, trader_covars = list('log.co2'), auto_arma = FALSE)
 
 p4b <- ggplot(future2.co2.tsi@future, aes(x = year, y = t.anom)) + 
@@ -145,5 +128,3 @@ p4b <- ggplot(future2.co2.tsi@future, aes(x = year, y = t.anom)) +
   labs(x = "Year", y = "T anomaly", title = "True = Slow TSI, Trader = log(CO2)")
 
 plot(p4b)
-
-print(interval_prob(future2.co2.tsi, 10, c(0.3, 0.7), 'closed'))
