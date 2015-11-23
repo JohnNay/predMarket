@@ -349,6 +349,7 @@ main <- function(parameters,
   if (record==FALSE){
     return(mean(sapply(result_final, function(x) x)))
   } else {
-    return(colMeans(sapply(result_final, function(x) x)))
+    return(colMeans(do.call(rbind, result_final)))
+    #return(colMeans(sapply(result_final, function(x) x)))
   }
 }
