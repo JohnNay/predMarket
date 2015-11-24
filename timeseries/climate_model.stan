@@ -33,7 +33,7 @@ model {
     vector[T] eta;
     
 
-    res <- y - m * x + b;
+    res <- y - (m * x + b);
     
     nu <- rep_vector(0, T);
     eta <- rep_vector(0, T);
