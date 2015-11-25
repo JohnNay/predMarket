@@ -22,8 +22,10 @@ cm_debug <- FALSE
 get_model <- function() {
   if (is.null(climate_model) || file.info(model_path)$mtime > climate_model_ts) {
     message("Compiling Model")
+    ptm <- proc.time()
     climate_model <<- stan_model(model_path, "ARMA Climate Model", 
                                  auto_write = TRUE)
+    message("Done compiling: ", paste(names(ptm), round(proc.time() - ptm,2), sep = " = ", collapse = ", "))
     climate_model_ts <<- Sys.time()
   }
   invisible(climate_model)
@@ -201,7 +203,8 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                       scaled_future_covar  = NULL,
                       sim.reps = 1,
                       n_sample = 800, n_chains = 4,
-                      filter_results = TRUE) {
+                      filter_results = TRUE,
+                      threshold = 0.25) {
   scaled_data <- extract_covar(scaled_data, covariate)
   this.year <- max(scaled_data$year)
   if (FALSE)
@@ -233,12 +236,12 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                     x_future = scaled_future_covar, reps = reps)
   stan_data <- c(stan_data, prior.coefs[! names(prior.coefs) %in% names(stan_data)])
   message("Sampling from Stan Model")
+  ptm <- proc.time()
   for (i in 1:5) {
     fit <- sampling(model, data = stan_data, pars = parameters, 
                     chains = n_chains, iter = n_sample)
     compare_priors(fit, prior.coefs)
     sp <- get_sampler_params(fit, inc_warmup = FALSE)
-    projection <- data.frame()
     nd <- c()
     td <- c()
     mtd <- attr(fit@sim$samples[[1]], 'args')$control$max_treedepth
@@ -248,14 +251,14 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
       td <- c(td, sp[[i]][,'treedepth__'] > mtd)
       td_max <- max(td_max, sp[[i]][,'treedepth__'])
     }
-    if (sum(nd | td) > n_chains * n_sample / 20)
+    if (sum(nd | td) > threshold * length(nd))
       warning("Excessive bad steps in stan simulation: ", sum(nd|td))
     else 
       break
   }
   message(sum(nd|td), " bad samples.")
   message('Max treedepth = ', td_max, ', limit = ', mtd)
-  message("Done sampling")
+  message("Done sampling: ", paste(names(ptm), round(proc.time() - ptm, 2), sep = " = ", collapse = ", "))
   if (t.future > 0) {
     if (filter_results) {
       df <- rstan::extract(fit, pars = 'y_future', permuted = FALSE, inc_warmup = FALSE)

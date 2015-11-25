@@ -37,6 +37,7 @@ model {
     
     nu <- rep_vector(0, T);
     eta <- rep_vector(0, T);
+    epsilon <- rep_vector(0,T);
 
     for (t in 1:T) {
       for(p in 1:min(t-1,P)) {

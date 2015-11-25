@@ -17,7 +17,6 @@ source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
 main <- function(parameters,
-                 out,
                  iterations = 10,
                    burn.in = 135,
                    n.seq = 14,
