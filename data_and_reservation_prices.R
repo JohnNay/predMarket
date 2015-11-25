@@ -3,6 +3,9 @@ source("timeseries/climate_model.R",chdir=T)
 
 show_plots <- FALSE
 
+max_p <- 1
+max_q <- 1
+
 DataPrediction <- function(
   g,
   scenario = c('rcp 2.6', 'rcp2.6', 'rcp26',
@@ -65,7 +68,8 @@ DataPrediction <- function(
           ", true covars = ", true_covar)
   mdl <- init_model(mdl, n_history = burn.in,
                     n_future = future_length, true_covar = true_covar,
-                    future_covars = future_data)
+                    future_covars = future_data,
+                    max_p = max_p, max_q = max_q)
   
   #####
   ## Construct reservation prices from predictions
@@ -102,14 +106,16 @@ DataPrediction <- function(
       trader.co2 <- update_model(mdl, n_today = today,
                                  n_horizon = trader_horizon,
                                  trader_covar = 'log.co2',
-                                 auto_arma = TRUE)
+                                 auto_arma = TRUE,
+                                 max_p = max_p, max_q = max_q)
       if (show_plots)
         plot_model(trader.co2, trader.covar = 'log.co2')
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
                                  n_horizon = trader_horizon,
                                  trader_covar = 'slow.tsi',
-                                 auto_arma = TRUE)
+                                 auto_arma = TRUE,
+                                 max_p = max_p, max_q = max_q)
       if (show_plots)
         plot_model(trader.tsi, trader.covar = 'slow.tsi')
       

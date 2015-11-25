@@ -9,8 +9,10 @@ library(stringr)
 library(purrr)
 library(rstan)
 
-options(auto_write = TRUE)
+rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
+
+TRACE_CLIMATE_MODEL <- FALSE
 
 model_path = normalizePath('climate_model.stan')
 
@@ -19,13 +21,23 @@ climate_model_ts <- NA
 
 cm_debug <- FALSE
 
+paste_with_names <- function(x) {
+  paste(names(x), x, sep = " = ", collapse = ", ")
+}
+
 get_model <- function() {
   if (is.null(climate_model) || file.info(model_path)$mtime > climate_model_ts) {
-    message("Compiling Model")
+    if (TRACE_CLIMATE_MODEL) {
+      message("Compiling Model")
+    }
     ptm <- proc.time()
     climate_model <<- stan_model(model_path, "ARMA Climate Model", 
-                                 auto_write = TRUE)
-    message("Done compiling: ", paste(names(ptm), round(proc.time() - ptm,2), sep = " = ", collapse = ", "))
+                                 auto_write = TRUE, save_dso = TRUE,
+                                 verbose = FALSE)
+    ptm <- head(proc.time() - ptm, 3)
+    if (TRACE_CLIMATE_MODEL) {
+      message("Done compiling: ", paste_with_names(round(ptm, 2)))
+    }
     climate_model_ts <<- Sys.time()
   }
   invisible(climate_model)
@@ -177,8 +189,10 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
                        stheta0 = 0
                      ))
   }
-  message("Generating priors for ", covariate, ": ", 
-          paste(names(prior.coefs), signif(unlist(prior.coefs),2), sep = " = ", collapse = ", "))
+  if (TRACE_CLIMATE_MODEL) {
+    message("Generating priors for ", covariate, ": ", 
+            paste_with_names(signif(unlist(prior.coefs, use.names = TRUE), 2)))
+  }
   prior.coefs
 }
 
@@ -196,7 +210,9 @@ compare_priors <- function(fit, priors) {
     index <- paste0('theta[',i,']')
     means[,index] <- (means[,index] - priors$theta0) / priors$stheta0
   }
-  message("Prior z-scores: ", paste(names(means), signif(means,2), sep=" = ", collapse=", "))
+  if (TRACE_CLIMATE_MODEL) {
+    message("Prior z-scores: ", paste_with_names(signif(unlist(means, use.names = TRUE), 2)))
+  }
 }
 
 fit_model <- function(scaled_data, covariate, prior.coefs, 
@@ -207,8 +223,6 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                       threshold = 0.25) {
   scaled_data <- extract_covar(scaled_data, covariate)
   this.year <- max(scaled_data$year)
-  if (FALSE)
-    message("Compiling Stan Model")
   model <- get_model()
   parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future')
   if (is.null(scaled_future_covar)) {
@@ -225,21 +239,26 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
     reps = ceiling(sim.reps * 2.0 / (n_sample * n_chains))
   }
   
-  if (TRUE) {
+  if (TRACE_CLIMATE_MODEL) {
     message("fit_model: history = ", nrow(scaled_data), " years, future = ", 
             length(scaled_future_covar), " years. sim.reps = ", sim.reps, 
             ", reps = ", reps, ".")
   }
-
+  
   stan_data <- list(T = nrow(scaled_data), T_future = t.future, 
                     y = scaled_data$t.anom, x = scaled_data$covar,
                     x_future = scaled_future_covar, reps = reps)
   stan_data <- c(stan_data, prior.coefs[! names(prior.coefs) %in% names(stan_data)])
-  message("Sampling from Stan Model")
-  ptm <- proc.time()
+  if (TRACE_CLIMATE_MODEL) {
+    message("Sampling from Stan Model")
+    ptm <- proc.time()
+  }
   for (i in 1:5) {
-    fit <- sampling(model, data = stan_data, pars = parameters, 
-                    chains = n_chains, iter = n_sample)
+    # prevent stop for sampling warnings when warn = 2
+    suppressWarnings(
+      fit <- sampling(model, data = stan_data, pars = parameters, 
+                      chains = n_chains, iter = n_sample)
+    )
     compare_priors(fit, prior.coefs)
     sp <- get_sampler_params(fit, inc_warmup = FALSE)
     nd <- c()
@@ -252,20 +271,23 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
       td_max <- max(td_max, sp[[i]][,'treedepth__'])
     }
     if (sum(nd | td) > threshold * length(nd))
-      warning("Excessive bad steps in stan simulation: ", sum(nd|td))
+      if (TRACE_CLIMATE_MODEL) {
+        message("Excessive bad steps in stan simulation: ", sum(nd|td))
+      }
     else 
       break
   }
-  message(sum(nd|td), " bad samples.")
-  message('Max treedepth = ', td_max, ', limit = ', mtd)
-  message("Done sampling: ", paste(names(ptm), round(proc.time() - ptm, 2), sep = " = ", collapse = ", "))
+  if (TRACE_CLIMATE_MODEL) {
+    message(sum(nd|td), " bad samples: ", sum(nd), " divergent steps and ", sum(td), " steps exceeded max_treedepth")
+    # message('Max treedepth = ', td_max, ', limit = ', mtd)
+    ptm <- head(proc.time() - ptm, 3)
+    message("Done sampling: ", paste_with_names(round(ptm, 2)))
+  }
   if (t.future > 0) {
     if (filter_results) {
       df <- rstan::extract(fit, pars = 'y_future', permuted = FALSE, inc_warmup = FALSE)
       sp <- get_sampler_params(fit, inc_warmup = FALSE)
       projection <- data.frame()
-      message(paste(dim(df), collapse=', '))
-      message(dimnames(df)[[3]][[1]])
       for(i in seq_along(sp)) {
         mtd <- attr(fit@sim$samples[[i]], 'args')$control$max_treedepth
         nd <- sp[[i]][,'n_divergent__'] > 0
@@ -296,10 +318,12 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
         gather(key = key, value = t.anom.s, -iteration) %>% 
         separate(key, c('step','rep'), convert=T)
     }
-    message(with(projection, paste0("Step: (", paste(range(step), collapse=", "),
-                                    ") rep: (", paste(range(rep), collapse = ", "),
-                                    ") iteration: (", paste(range(iteration), collapse = ", "),
-                                    "), this.year = ", this.year)))
+    if (TRACE_CLIMATE_MODEL && FALSE) {
+      message(with(projection, paste0("Step: (", paste(range(step), collapse=", "),
+                                      ") rep: (", paste(range(rep), collapse = ", "),
+                                      ") iteration: (", paste(range(iteration), collapse = ", "),
+                                      "), this.year = ", this.year)))
+    }
     projection <- projection %>%
       mutate(year = step + this.year, sim = iteration * max(rep) + rep) %>%
       mutate(step = step + nrow(scaled_data)) %>%
@@ -328,9 +352,8 @@ predict_future <- function(mdl, covariate, n_today, n_horizon,
                            gen_priors = FALSE,
                            p = 1, q = 1, 
                            auto_arma = FALSE, max_p = 2, max_q = 2,
-                           n_sample = 800, n_chains = 4,
-                           trace = FALSE) {
-  if (TRUE) 
+                           n_sample = 800, n_chains = 4) {
+  if (TRACE_CLIMATE_MODEL) 
     message("predict_future(", paste(c(mdl@covariate, n_today, n_horizon, covariate), 
                                      collapse = ", "), ")")
   
@@ -347,7 +370,7 @@ predict_future <- function(mdl, covariate, n_today, n_horizon,
   }
   
   future_data <- mdl@scaled.future %>% slice(n_today + 1:n_horizon)
-  if (FALSE) {
+  if (TRACE_CLIMATE_MODEL && FALSE) {
     message(" future data sliced from ", n_today + 1, " to ", n_today + n_horizon, " and has ", nrow(future_data), " rows.")
   }
   
@@ -467,17 +490,19 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
                               year = mdl@future$year[n_history],
                               step = n_history,
                               t.anom = mdl@future$t.anom[n_history])
-  
-  message("Model initialized. future is ", nrow(mdl@future), " years: Temp range is ",
-          formatC(min(mdl@future$t.anom, na.rm=T), digits=2, format='g'), " -- ", 
-          formatC(max(mdl@future$t.anom, na.rm=T), digits=2, format='g'),
-          ", with ", sum(is.na(mdl@future$t.anom)), " NA's")
-  if (any(is.na(mdl@future$t.anom))) {
-    message("NAs at ", paste(which(is.na(mdl@future$t.anom)), collapse = ", "))
-    message("Scaled temp range is ",
+  if (TRACE_CLIMATE_MODEL) {
+    message("Model initialized. future is ", nrow(mdl@future), " years (",
+            tail(mdl@future$year,1),"): Temp range is ",
+            formatC(min(mdl@future$t.anom, na.rm=T), digits=2, format='g'), " -- ", 
+            formatC(max(mdl@future$t.anom, na.rm=T), digits=2, format='g'),
+            " (", 
             formatC(min(mdl@scaled.future$t.anom, na.rm=T), digits=2, format='g'), " -- ", 
             formatC(max(mdl@scaled.future$t.anom, na.rm=T), digits=2, format='g'),
-            ", with ", sum(is.na(mdl@scaled.future$t.anom)), " NA's")
+            ") with ", sum(is.na(mdl@prediction$t.anom)), " NA's")
+    if (any(is.na(mdl@future$t.anom))) {
+      message("NAs at ", paste(which(is.na(mdl@future$t.anom)), collapse = ", "))
+    }
+    message("")
   }
   
   invisible(mdl)
@@ -509,10 +534,12 @@ update_model <- function(mdl, n_today, n_horizon,
     p <- mdl@prior.coefs$P
     q <- mdl@prior.coefs$Q
   }
-  message("update_model: ", n_today, ", ", n_horizon, ", ", trader_covar,
-          ", ", p.samples, ", arma is ", 
-          ifelse(is.na(p), paste0("(",p,",",q,")"), mdl@label), 
-          ", auto_arma is ", auto_arma, ", ", max_p, ", ", max_q)
+  if (TRACE_CLIMATE_MODEL && FALSE) {
+    message("update_model: ", n_today, ", ", n_horizon, ", ", trader_covar,
+            ", ", p.samples, ", arma is ", 
+            ifelse(is.na(p), paste0("(",p,",",q,")"), mdl@label), 
+            ", auto_arma is ", auto_arma, ", ", max_p, ", ", max_q)
+  }
   
   prediction  <- predict_future(mdl, n_today = n_today, n_horizon = n_horizon, 
                                 covar = trader_covar,
@@ -526,19 +553,21 @@ update_model <- function(mdl, n_today, n_horizon,
   mdl@horizon <- n_today + n_horizon
   mdl@prediction <- prediction$projection
   
-  message("Model updated prediction for ", mdl@covariate, ":", trader_covar, 
-          " is ", length(unique(mdl@prediction$year)), " years: Temp range is ",
-          formatC(min(mdl@prediction$t.anom, na.rm=T), digits=2, format='g'), " -- ", 
-          formatC(max(mdl@prediction$t.anom, na.rm=T), digits=2, format='g'),
-          ", with ", sum(is.na(mdl@prediction$t.anom)), " NA's")
-  if (any(is.na(mdl@prediction$t.anom))) {
-    message("NAs at ", paste(which(is.na(mdl@prediction$t.anom)), collapse = ", "))
-  }
-  if (FALSE)
-    message("Scaled temp range is ",
+  if (TRACE_CLIMATE_MODEL) {
+    message("Model updated prediction from ", n_today, " to ", n_today + n_horizon, 
+            " (", mdl@future$year[n_today + n_horizon], ") for ", mdl@covariate, ":", trader_covar, 
+            ": Temp range is ",
+            formatC(min(mdl@prediction$t.anom, na.rm=T), digits=2, format='g'), " -- ", 
+            formatC(max(mdl@prediction$t.anom, na.rm=T), digits=2, format='g'),
+            " (", 
             formatC(min(mdl@prediction$t.anom.s, na.rm=T), digits=2, format='g'), " -- ", 
             formatC(max(mdl@prediction$t.anom.s, na.rm=T), digits=2, format='g'),
-            ", with ", sum(is.na(mdl@prediction$t.anom.s)), " NA's")
+            ") with ", sum(is.na(mdl@prediction$t.anom)), " NA's")
+    if (any(is.na(mdl@prediction$t.anom))) {
+      message("NAs at ", paste(which(is.na(mdl@prediction$t.anom)), collapse = ", "))
+    }
+    message("")
+  }
   
   invisible(mdl)
 }
@@ -564,8 +593,8 @@ bin_prob <- function(mdl, n_horizon, intervals) {
     warning( sum(is.na(bins)), " NA values in bins: ", bins, 
              " (table = ", t, ", nrow = ", nrow(prediction),")")
   }
-  if (sum(bins, na.rm=T) != 1) 
-    message("Probability leakage in bin_prob: ", formatC(sum(bins), digits = 5, format='f'))
+  if (! isTRUE(all.equal(sum(bins, na.rm=T), 1, tolerance = 1E-6)))
+    warning("Probability leakage in bin_prob: ", formatC(sum(bins), digits = 5, format='f'))
   bins  
 }
 
@@ -590,11 +619,14 @@ plot_model <- function(mdl, trader.covar = NA) {
     lab.t <- ''
   }
   
+  n5 <- fivenum(mdl@prediction$t.anom)[c(1,5)]
+  predictions <- mdl@prediction %>% filter(t.anom >= n5[1] & t.anom <= n5[2] & sim %in% sample(sim, 500))
+  
   p <- ggplot(mdl@future, aes(x = year, y = t.anom)) + 
     # simulated future temperatures
     geom_point() + geom_line() + 
     # vertical bands: predictions
-    geom_point(data = mdl@prediction %>% filter(sim <= 500), alpha = 0.02) + 
+    geom_point(data = predictions, alpha = 0.02) + 
     # actual temperatures
     geom_point(data = mdl@climate, color = 'blue') +
     labs(x = "Year", y = expression(T[anomaly]), 

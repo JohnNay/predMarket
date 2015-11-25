@@ -2,10 +2,11 @@
 # test_main.R Test the main function
 #
 rm(list = ls())
-options(warn = 1)
+options(warn = 2)
 source('main.R')
 
 show_plots <- TRUE
+TRACE_CLIMATE_MODEL <- FALSE
 
 if (TRUE) {
   burn.in <- 135
