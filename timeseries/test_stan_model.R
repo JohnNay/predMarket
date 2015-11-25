@@ -10,7 +10,7 @@ data <- prepare_climate_data('rcp 4.5')
 climate_data <- data$data
 future_data <- data$future
 
-model <- stan_model('climate_model.stan', 'ARMA climate model', auto_write = TRUE)
+model <- stan_model('climate_model.stan', 'ARMA climate model', auto_write = TRUE, save_dso = TRUE)
 
 cd <- climate_data
 if (FALSE)

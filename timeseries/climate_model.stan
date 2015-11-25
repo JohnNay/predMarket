@@ -21,41 +21,54 @@ data {
 parameters {
   real b; // intercept
   real m; // slope
-  real<lower=0> sigma; // noise standard deviation
+  real<lower=1E-8> sigma; // noise standard deviation
   real phi[P]; // autoregression coefficient
   real theta[Q]; // moving average coefficient
 }
 
 model {
     vector[T] res;
-    vector[T] epsilon;
-    vector[T] nu;
-    vector[T] eta;
+    vector[T] ar;
+    vector[T] ma;
+    vector[T] eps;
     
+    b ~ normal(b0, sb0);
+    m ~ normal(m0, sm0);
+    theta ~ normal(theta0, stheta0);
+    phi ~ normal(phi0, sphi0);
+    sigma ~ cauchy(0, ssig0);
 
     res <- y - (m * x + b);
     
-    nu <- rep_vector(0, T);
-    eta <- rep_vector(0, T);
-    epsilon <- rep_vector(0,T);
+    ar <- rep_vector(0., T);
+    ma <- rep_vector(0., T);
+    eps <- rep_vector(0.,T);
 
     for (t in 1:T) {
       for(p in 1:min(t-1,P)) {
-        nu[t] <- nu[t] + phi[p] * res[t - p]; // autoregressive part
+        ar[t] <- ar[t] + phi[p] * res[t - p]; // autoregressive part
       }
+      eps[t] <- res[t];
       for (q in 1:min(t-1,Q)) {
-        eta[t] <- eta[t] + theta[q] * epsilon[t - q]; // moving average part
+        eps[t] <- eps[t] - theta[q] * eps[t-q];
+        ma[t] <- ma[t] + theta[q] * eps[t-q];
       }
-      epsilon[t] <- res[t] - (nu[t] + eta[t]);
+#      if (fabs(eps[t]) > 1E+6) {
+#        print("t = ", t, ", ar = ", ar[t], ", ma = ", ma[t], ", eps = ", eps[t]);
+#        print("t = ", t, ", x = ", x[t], ", y = ", y[t], ", res = ", res[t]);
+#        print("t = ", t, ", m = ", m, ", b = ", b, 
+#        ", m0 = ", m0, ", sm0 = ", sm0,
+#        ", b0 = ", b0, ", sb0 = ", sb0);
+#        if (P > 0) {
+#          print("t = ", t, ", phi[1] = ", phi[1]);
+#        }
+#        if (Q > 0) {
+#          print("t = ", t, ", theta[1] = ", theta[1]);
+#        }
+#      }
     }
 
-  
-  b ~ normal(b0, sb0);
-  m ~ normal(m0, sm0);
-  theta ~ normal(theta0, stheta0);
-  phi ~ normal(phi0, sphi0);
-  sigma ~ cauchy(0, ssig0);
-  y ~ normal(m * x + b + nu + eta, sigma);
+  y ~ normal(m * x + b + ar + ma, sigma);
 }
 
 generated quantities {

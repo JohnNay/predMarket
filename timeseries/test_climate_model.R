@@ -2,12 +2,15 @@
 #
 #
 rm(list = ls())
-source('prepare_data.R')
-source('climate_model.R')
-
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+
+source('prepare_data.R')
+source('climate_model.R')
+
+TRACE_CLIMATE_MODEL <- TRUE
+PARALLEL_STAN <- FALSE
 
 theme_set(theme_bw(base_size=20))
 

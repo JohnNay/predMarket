@@ -5,8 +5,9 @@ rm(list = ls())
 options(warn = 2)
 source('main.R')
 
-show_plots <- TRUE
-TRACE_CLIMATE_MODEL <- FALSE
+SHOW_CLIMATE_PLOTS <- TRUE
+TRACE_CLIMATE_MODEL <- TRUE
+PARALLEL_STAN <- FALSE
 
 if (TRUE) {
   burn.in <- 135

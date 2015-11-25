@@ -10,9 +10,9 @@ library(purrr)
 library(rstan)
 
 rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
 
 TRACE_CLIMATE_MODEL <- FALSE
+PARALLEL_STAN <- FALSE
 
 model_path = normalizePath('climate_model.stan')
 
@@ -249,6 +249,13 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                     y = scaled_data$t.anom, x = scaled_data$covar,
                     x_future = scaled_future_covar, reps = reps)
   stan_data <- c(stan_data, prior.coefs[! names(prior.coefs) %in% names(stan_data)])
+  
+  if (PARALLEL_STAN) {
+    n_cores <- min(n_chains, parallel::detectCores())
+  } else {
+    n_cores <- 1
+  }
+  
   if (TRACE_CLIMATE_MODEL) {
     message("Sampling from Stan Model")
     ptm <- proc.time()
@@ -257,7 +264,8 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
     # prevent stop for sampling warnings when warn = 2
     suppressWarnings(
       fit <- sampling(model, data = stan_data, pars = parameters, 
-                      chains = n_chains, iter = n_sample)
+                      chains = n_chains, iter = n_sample,
+                      cores = n_cores)
     )
     compare_priors(fit, prior.coefs)
     sp <- get_sampler_params(fit, inc_warmup = FALSE)
@@ -270,12 +278,11 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
       td <- c(td, sp[[i]][,'treedepth__'] > mtd)
       td_max <- max(td_max, sp[[i]][,'treedepth__'])
     }
-    if (sum(nd | td) > threshold * length(nd))
-      if (TRACE_CLIMATE_MODEL) {
-        message("Excessive bad steps in stan simulation: ", sum(nd|td))
-      }
-    else 
+    if (sum(nd | td) < threshold * length(nd))
       break
+    if (TRACE_CLIMATE_MODEL) {
+      message("Excessive bad steps in stan simulation: ", sum(nd|td))
+    }
   }
   if (TRACE_CLIMATE_MODEL) {
     message(sum(nd|td), " bad samples: ", sum(nd), " divergent steps and ", sum(td), " steps exceeded max_treedepth")

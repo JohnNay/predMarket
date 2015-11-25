@@ -1,7 +1,7 @@
 source("timeseries/prepare_data.R",chdir=T)
 source("timeseries/climate_model.R",chdir=T)
 
-show_plots <- FALSE
+SHOW_CLIMATE_PLOTS <- FALSE
 
 max_p <- 1
 max_q <- 1
@@ -108,7 +108,7 @@ DataPrediction <- function(
                                  trader_covar = 'log.co2',
                                  auto_arma = TRUE,
                                  max_p = max_p, max_q = max_q)
-      if (show_plots)
+      if (SHOW_CLIMATE_PLOTS)
         plot_model(trader.co2, trader.covar = 'log.co2')
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
@@ -116,7 +116,7 @@ DataPrediction <- function(
                                  trader_covar = 'slow.tsi',
                                  auto_arma = TRUE,
                                  max_p = max_p, max_q = max_q)
-      if (show_plots)
+      if (SHOW_CLIMATE_PLOTS)
         plot_model(trader.tsi, trader.covar = 'slow.tsi')
       
       ### Record reservation prices
