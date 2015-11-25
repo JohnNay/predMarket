@@ -21,6 +21,7 @@ cm_debug <- FALSE
 
 get_model <- function() {
   if (is.null(climate_model) || file.info(model_path)$mtime > climate_model_ts) {
+    message("Compiling Model")
     climate_model <<- stan_model(model_path, "ARMA Climate Model", 
                                  auto_write = TRUE)
     climate_model_ts <<- Sys.time()
@@ -118,7 +119,8 @@ apply_scale <- function(data, scale) {
 }
 
 gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
-                            max_p = 2, max_q = 2, auto_arma = FALSE) {
+                            max_p = 2, max_q = 2, auto_arma = FALSE,
+                            doubt = 10) {
   scaled_data <- extract_covar(scaled_data, covariate)
   lin.model <- lm(t.anom ~ covar, data = scaled_data)
   res <- residuals(lin.model)
@@ -139,8 +141,10 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
     P = p, Q = q,
     list(
       ssig0 = s$sigma, 
-      m0 = s$coef['covar','Estimate'], sm0 = 3 * s$coef['covar','Std. Error'],
-      b0 = s$coef['(Intercept)','Estimate'], sb0 = 3 * s$coef['(Intercept)','Std. Error']
+      m0 = s$coef['covar','Estimate'], 
+      sm0 = doubt * s$coef['covar','Std. Error'],
+      b0 = s$coef['(Intercept)','Estimate'], 
+      sb0 = doubt * s$coef['(Intercept)','Std. Error']
     )
   )
   
@@ -148,7 +152,7 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
     prior.coefs <- c(prior.coefs,
                      list(
                        phi0 = arma.s$coef['ar1', ' Estimate'], 
-                       sphi0 = arma.s$coef['ar1', ' Std. Error']
+                       sphi0 = doubt * arma.s$coef['ar1', ' Std. Error']
                      ))
   } else {
     prior.coefs <- c(prior.coefs,
@@ -162,7 +166,7 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
     prior.coefs <- c(prior.coefs,
                      list(
                        theta0 = arma.s$coef['ma1', ' Estimate'], 
-                       stheta0 = arma.s$coef['ma1', ' Std. Error']
+                       stheta0 = doubt * arma.s$coef['ma1', ' Std. Error']
                      ))
   } else {
     prior.coefs <- c(prior.coefs,
@@ -171,7 +175,26 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
                        stheta0 = 0
                      ))
   }
+  message("Generating priors for ", covariate, ": ", 
+          paste(names(prior.coefs), signif(unlist(prior.coefs),2), sep = " = ", collapse = ", "))
   prior.coefs
+}
+
+compare_priors <- function(fit, priors) {
+  means <- as.data.frame(t(get_posterior_mean(fit, pars=c('b','m','sigma','phi','theta'))))['mean-all chains',]
+  means$b <- (means$b - priors$b0) / priors$sb0
+  means$m <- (means$m - priors$m0) / priors$sm0
+  means$sigma <- means$sigma / priors$ssig0
+  if (priors$P > 0)
+    for (i in 1:priors$P) {
+      index <- paste0('phi[',i,']')
+      means[,index] <- (means[,index] - priors$phi0) / priors$sphi0
+    }
+  if (priors$Q > 0) {
+    index <- paste0('theta[',i,']')
+    means[,index] <- (means[,index] - priors$theta0) / priors$stheta0
+  }
+  message("Prior z-scores: ", paste(names(means), signif(means,2), sep=" = ", collapse=", "))
 }
 
 fit_model <- function(scaled_data, covariate, prior.coefs, 
@@ -213,15 +236,16 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
   for (i in 1:5) {
     fit <- sampling(model, data = stan_data, pars = parameters, 
                     chains = n_chains, iter = n_sample)
+    compare_priors(fit, prior.coefs)
     sp <- get_sampler_params(fit, inc_warmup = FALSE)
     projection <- data.frame()
     nd <- c()
     td <- c()
-    mtd <- attr(fit@sim$samples[[i]], 'args')$control$max_treedepth
+    mtd <- attr(fit@sim$samples[[1]], 'args')$control$max_treedepth
     td_max <- 0
     for(i in seq_along(sp)) {
       nd <- c(nd, sp[[i]][,'n_divergent__'] > 0)
-      td <- c(td, sp[[i]][,'treedepth__'] >= mtd)
+      td <- c(td, sp[[i]][,'treedepth__'] > mtd)
       td_max <- max(td_max, sp[[i]][,'treedepth__'])
     }
     if (sum(nd | td) > n_chains * n_sample / 20)
@@ -242,8 +266,8 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
       for(i in seq_along(sp)) {
         mtd <- attr(fit@sim$samples[[i]], 'args')$control$max_treedepth
         nd <- sp[[i]][,'n_divergent__'] > 0
-        td <- sp[[i]][,'treedepth__'] >= mtd
-        x <- as.data.frame(df[,i,])[! any(nd,td), , drop=F]
+        td <- sp[[i]][,'treedepth__'] > mtd
+        x <- as.data.frame(df[,i,])[! (nd|td), , drop=F]
         if (nrow(x) > 0)
           projection <- rbind(projection, x)
       }
@@ -348,9 +372,11 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
   n_future <- as.integer(n_future)
   max_p <- as.integer(max_p)
   max_q <- as.integer(max_q)
-  if (is.na(p)) {
-    if (! is.na(q)) 
-      p <- 0
+  auto_arma <- FALSE
+  if (is.na(p) && is.na(q)) {
+    auto_arma <- TRUE
+  } else if (is.na(p)) {
+    p <- 0
   } else if (is.na(q)) {
     q <- 0
   }
@@ -379,7 +405,7 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
   mdl@prior.coefs <- gen_prior_coefs(mdl@scaled.future[1:n_history,], true_covar,
                                      p = p, q = q, 
                                      max_p = max_p, max_q = max_q,
-                                     auto_arma = any(is.na(c(p,q))))
+                                     auto_arma = auto_arma)
   
   p <- mdl@prior.coefs$P
   q <- mdl@prior.coefs$Q
@@ -407,7 +433,7 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
     for(i in seq_along(sp)) {
       mtd <- attr(true_future$fit@sim$samples[[i]], 'args')$control$max_treedepth
       nd <- sp[[i]][,'n_divergent__'] > 0
-      td <- sp[[i]][,'treedepth__'] >= mtd
+      td <- sp[[i]][,'treedepth__'] > mtd
       x <- as.data.frame(tf[,i,])[! any(nd,td),]
       df <- rbind(df, x)
     }
@@ -540,16 +566,28 @@ bin_prob <- function(mdl, n_horizon, intervals) {
   bins  
 }
 
-plot_model <- function(mdl) {
+plot_model <- function(mdl, trader.covar = NA) {
   require(ggplot2)
   
   if (mdl@covariate == 'log.co2') {
-    lab <- quote(log(CO[2]))
+    cvr <- quote(log(CO[2]))
+  } else if(mdl@covariate == 'slow.tsi') {
+    cvr <- "Slow TSI"
+  }
+  else cvr <- ''
+  
+  if (trader.covar == 'log.co2') {
+    cvr.t <- quote(log(CO[2]))
+    lab.t <- ', Trader covar: '
+  } else if(trader.covar == 'slow.tsi') {
+    cvr.t <- "Slow TSI"
+    lab.t <- ', Trader covar: '
   } else {
-    lab <- "Slow TSI"
+    cvr.t <- ''
+    lab.t <- ''
   }
   
-  p1a <- ggplot(mdl@future, aes(x = year, y = t.anom)) + 
+  p <- ggplot(mdl@future, aes(x = year, y = t.anom)) + 
     # simulated future temperatures
     geom_point() + geom_line() + 
     # vertical bands: predictions
@@ -557,8 +595,8 @@ plot_model <- function(mdl) {
     # actual temperatures
     geom_point(data = mdl@climate, color = 'blue') +
     labs(x = "Year", y = expression(T[anomaly]), 
-         title = substitute(paste("Climate Model: ", x), list(x = lab)))
-  
-  plot(p1a)
-  invisible(p1a)
+         title = substitute(paste("Climate Model: ", x, lab.t, x.t), 
+                            list(x = cvr, x.t = cvr.t, lab.t = lab.t)))
+  plot(p)
+  invisible(p)
 }

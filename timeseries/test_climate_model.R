@@ -1,6 +1,7 @@
 #
 #
 #
+rm(list = ls())
 source('prepare_data.R')
 source('climate_model.R')
 

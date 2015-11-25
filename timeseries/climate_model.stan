@@ -45,7 +45,7 @@ model {
       for (q in 1:min(t-1,Q)) {
         eta[t] <- eta[t] + theta[q] * epsilon[t - q]; // moving average part
       }
-      epsilon[t] <- res[t] - nu[t] - eta[t];
+      epsilon[t] <- res[t] - (nu[t] + eta[t]);
     }
 
   
@@ -89,10 +89,10 @@ generated quantities {
         nu <- 0;
         eta <- 0;
   
-        for (p in 1:P) {
+        for (p in 1:min(T + t - 1,P)) {
           nu <- nu + phi[p] * yy[T + t-p];
         }
-        for (q in 1:Q) {
+        for (q in 1:min(T + t - 1,Q)) {
           eta <- eta + theta[q] * err[T + t-q];
         }
         err[T + t] <- normal_rng(0, sigma);

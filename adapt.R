@@ -41,7 +41,7 @@ Adapt <- function( g
           
           # With proba V(g)$ideo[i], adopt the model of the most successful neighbor
           
-          if (sample(1:100,1) >= V(g)$ideo[i]*100){
+          if (runif(1) >= V(g)$ideo[i]){
             
             V(g)$approx[i] <- V(g)$approx[richest]
           }

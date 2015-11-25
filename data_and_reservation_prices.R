@@ -1,6 +1,8 @@
 source("timeseries/prepare_data.R",chdir=T)
 source("timeseries/climate_model.R",chdir=T)
 
+show_plots <- FALSE
+
 DataPrediction <- function(
   g,
   scenario = c('rcp 2.6', 'rcp2.6', 'rcp26',
@@ -63,7 +65,7 @@ DataPrediction <- function(
           ", true covars = ", true_covar)
   mdl <- init_model(mdl, n_history = burn.in,
                     n_future = future_length, true_covar = true_covar,
-                    future_covars = future_data, p = 1, q = 1)
+                    future_covars = future_data)
   
   #####
   ## Construct reservation prices from predictions
@@ -76,7 +78,7 @@ DataPrediction <- function(
   
   ### generate temperature intervals
 
-  secu.intervals <- seq(min(mdl@future$t.anom), max(mdl@future$'t.anom'), 
+  secu.intervals <- seq(min(mdl@future$t.anom), max(mdl@future$t.anom), 
                         length.out = n.secu - 1)
   
   # For every sequence, every period in a sequence
@@ -100,16 +102,16 @@ DataPrediction <- function(
       trader.co2 <- update_model(mdl, n_today = today,
                                  n_horizon = trader_horizon,
                                  trader_covar = 'log.co2',
-                                 max_p = 1, max_q = 1)
-      if (TRUE)
-        plot_model(trader.co2)
+                                 auto_arma = TRUE)
+      if (show_plots)
+        plot_model(trader.co2, trader.covar = 'log.co2')
       # trader model = Slow TSI
       trader.tsi <- update_model(mdl, n_today = today,
                                  n_horizon = trader_horizon,
                                  trader_covar = 'slow.tsi',
-                                 max_p = 1, max_q = 1)
-      if (TRUE)
-        plot_model(trader.tsi)
+                                 auto_arma = TRUE)
+      if (show_plots)
+        plot_model(trader.tsi, trader.covar = 'slow.tsi')
       
       ### Record reservation prices
       # open interval for lower security
@@ -133,8 +135,12 @@ DataPrediction <- function(
   #####
   g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
   g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
-  stopifnot(!anyNA(mdl@climate[(g$burn.in):(n.periods),'t.anom']))
-  g <- set.graph.attribute(g,"t.anom",mdl@climate$t.anom)
+  if (FALSE) {
+    if (anyNA(mdl@future$t.anom[burn.in:n.periods]))
+      browser()
+  }
+  stopifnot( ! anyNA(mdl@future$t.anom[burn.in:n.periods]))
+  g <- set.graph.attribute(g,"t.anom",mdl@future$t.anom)
   g <- set.graph.attribute(g,"secu.inter",secu.intervals)
   
   #####

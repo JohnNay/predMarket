@@ -1,12 +1,12 @@
 
 PopulateNet <- function( 
                         n.traders    = 100,
-                        mon.dis      = rep(1,n.traders),
+                        mon.dis      = rep(1, n.traders),
                         approx.dis   = 
                           sample ( 
                             append( 
-                              rep(1,n.traders%/%2),
-                              append(rep(2,n.traders%/%2),sample(1:2,n.traders%%2))
+                              rep(1, n.traders %/% 2),
+                              append(rep(2, n.traders %/% 2), sample(1:2, n.traders %% 2))
                                   )
                                  ),
                         behav.dis    = sample(1:1, n.traders, replace = TRUE),

@@ -16,7 +16,7 @@ Payoffs <- function ( g,
   ######
   
   time      <- g$burn.in + g$horizon
-  anom.star <- g$t.anom[ct,]
+  anom.star <- g$t.anom[ct]
   min.trad  <- min(g$secu.inter)
   max.trad  <- max(g$secu.inter)
 
