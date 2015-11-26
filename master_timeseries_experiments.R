@@ -1,8 +1,7 @@
-# master script for conducting ABM experiments
-rm(list=ls()) # make sure to always run this line of code and see that the next two 
-# lines of code work without error, ensuring that the working of the model is not 
-# dependent on anything in your global workspace, if it is, then you need to create 
-# whatever is in your global workpace in the code
+args <- commandArgs(trailingOnly = TRUE)
+numcores <- as.integer(args[1])
+message(paste("Number of cores", numcores))
+
 source("main.R")
 library(eat)
 
@@ -22,15 +21,16 @@ input_values$n.traders <- list(random_function = "qunif",
 ##############################################################################
 ## random analysis on all variables
 ##############################################################################
-sample_count <- 10
-doParallel::registerDoParallel(cores = parallel::detectCores() - 1)
+sample_count <- numcores
+doParallel::registerDoParallel(cores = numcores)
 
 set <- list()
 set[[1]] <- list(n.edg = 0.95, ideo = 0.95)
 set[[2]] <- list(n.edg = 0.95, ideo = 0.05)
 set[[3]] <- list(n.edg = 0.05, ideo = 0.95)
 set[[4]] <- list(n.edg = 0.05, ideo = 0.05)
-average_convergence <- data.frame()
+average_convergence <- data.frame(stringsAsFactors = FALSE)
+n.seq <- 14
 
 for(j in set){
   input_values$n.edg <- list(random_function = "qunif",
@@ -46,15 +46,23 @@ for(j in set){
                           sample_count = sample_count,
                           constraints = "none",
                           model_data = NULL)
-  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
+  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
     main(parameters = as.numeric(input_set[i, ]), 
-          out = "converg", record = TRUE)
+         burn.in = 51,
+         n.seq = n.seq,
+         horizon = 6,
+         nyears = 135,
+         iterations = 1,
+         out = "converg", record = TRUE)
   })
+  cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
-                               data.frame(avg = colMeans(outcome.evolution), 
-                                          trading_seq = seq(length(colMeans(outcome.evolution))),
-                                          true_mod = rep("Co2", length(colMeans(outcome.evolution))),
-                                          set = rep(paste(as.character(j), collapse = ", "), length(colMeans(outcome.evolution)))))
+                               data.frame(convergence = outcome.evolution,
+                                          trading_seq = rep(seq(n.seq), nrow(input_set)),
+                                          true_mod = rep(rep("LogCo2", length(seq(n.seq)), nrow(input_set))),
+                                          set = rep(rep(paste(as.character(j), collapse = ", "),  length(seq(n.seq))), nrow(input_set)),
+                                          stringsAsFactors = FALSE)
+  )
   
   # TRUE model is Sun Spots
   input_values$true.model <- list(random_function = "qbinom",
@@ -64,15 +72,28 @@ for(j in set){
                           sample_count = sample_count,
                           constraints = "none",
                           model_data = NULL)
-  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='rbind'), {
+  outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
     main(parameters = as.numeric(input_set[i, ]), 
-          out = "converg", record = TRUE)
+         burn.in = 51,
+         n.seq = n.seq,
+         horizon = 6,
+         nyears = 135,
+         iterations = 1,
+         out = "converg", record = TRUE)
   })
+  cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
-                               data.frame(avg = colMeans(outcome.evolution), 
-                                          trading_seq = seq(length(colMeans(outcome.evolution))),
-                                          true_mod = rep("SunSpots", length(colMeans(outcome.evolution))),
-                                          set = rep(paste(as.character(j), collapse = ", "), length(colMeans(outcome.evolution)))))
+                               data.frame(convergence = outcome.evolution, 
+                                          trading_seq = rep(seq(n.seq), nrow(input_set)),
+                                          true_mod = rep(rep("SlowTSI", length(seq(n.seq)), nrow(input_set))),
+                                          set = rep(rep(paste(as.character(j), collapse = ", "),  length(seq(n.seq))), nrow(input_set)),
+                                          stringsAsFactors = FALSE)
+  )
+#   average_convergence <- rbind(average_convergence,
+#                                data.frame(avg = colMeans(outcome.evolution), 
+#                                           trading_seq = seq(length(colMeans(outcome.evolution))),
+#                                           true_mod = rep("SlowTSI", length(colMeans(outcome.evolution))),
+#                                           set = rep(paste(as.character(j), collapse = ", "), length(colMeans(outcome.evolution)))))
 }
 save(average_convergence, file = "output/average_convergence.Rda")
 

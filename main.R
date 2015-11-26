@@ -18,14 +18,14 @@ source("assortativity_coefficient.R")
 
 main <- function(parameters,
                  iterations = 10,
-                   burn.in = 135,
-                   n.seq = 14,
-                   horizon = 6,
-                   nyears = 219,
-#                  burn.in = 51,
-#                  n.seq = 14,
-#                  horizon = 6,
-#                  nyears = 135,
+#                    burn.in = 135,
+#                    n.seq = 14,
+#                    horizon = 6,
+#                    nyears = 219,
+                 burn.in = 51,
+                 n.seq = 14,
+                 horizon = 6,
+                 nyears = 135,
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
@@ -195,7 +195,9 @@ main <- function(parameters,
     
     ### PAY    
     
-    net <- Payoffs(g=net, ct = t)
+    # See above : to <- net$burn.in + net$horizon - 1
+    
+    net <- Payoffs(g=net, ct = to +1)
     
     ### Safeguards & prints
     if(safeNprint){
@@ -298,7 +300,9 @@ main <- function(parameters,
         }
         ### PAY
         
-        net <- Payoffs(g=net, ct = t)
+        # See above : to <- net$burn.in + (net$horizon * ts) - 1
+        
+        net <- Payoffs(g=net, ct = to + 1)
         
         ### Safeguards & prints
         if(safeNprint){
@@ -348,6 +352,7 @@ main <- function(parameters,
   if (record==FALSE){
     return(mean(sapply(result_final, function(x) x)))
   } else {
-    return(colMeans(sapply(result_final, function(x) x)))
+    return(colMeans(do.call(rbind, result_final)))
+    #return(colMeans(sapply(result_final, function(x) x)))
   }
 }
