@@ -7,17 +7,31 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(purrr)
+
+# This is so rstan:::rstan_load_time will get updated for the purpose of loading the stan model.
+if ('package:rstan' %in% search())
+  detach('package:rstan', unload=TRUE)
 library(rstan)
 
 rstan_options(auto_write = TRUE)
 
 TRACE_CLIMATE_MODEL <- FALSE
 PARALLEL_STAN <- FALSE
+WHICH_MODEL <- 'ar1'
 
 model_path = normalizePath('climate_model.stan')
+model_path_arma11 = normalizePath('climate_model_arma11.stan')
+model_path_ar1 = normalizePath('climate_model_ar1.stan')
+
 
 climate_model <- NULL
 climate_model_ts <- NA
+
+climate_model_arma11 <- NULL
+climate_model_arma11_ts <- NA
+
+climate_model_ar1 <- NULL
+climate_model_ar1_ts <- NA
 
 cm_debug <- FALSE
 
@@ -28,10 +42,10 @@ paste_with_names <- function(x) {
 get_model <- function() {
   if (is.null(climate_model) || file.info(model_path)$mtime > climate_model_ts) {
     if (TRACE_CLIMATE_MODEL) {
-      message("Compiling Model")
+      message("Compiling ARMA(p,q) Model")
     }
     ptm <- proc.time()
-    climate_model <<- stan_model(model_path, "ARMA Climate Model", 
+    climate_model <<- stan_model(model_path, "ARMA(p,q) Climate Model", 
                                  auto_write = TRUE, save_dso = TRUE,
                                  verbose = FALSE)
     ptm <- head(proc.time() - ptm, 3)
@@ -42,6 +56,46 @@ get_model <- function() {
   }
   invisible(climate_model)
 }
+
+get_model_arma11 <- function() {
+  if (is.null(climate_model_arma11) || 
+      file.info(model_path_arma11)$mtime > climate_model_arma11_ts) {
+    if (TRACE_CLIMATE_MODEL) {
+      message("Compiling ARMA(1,1) Model")
+    }
+    ptm <- proc.time()
+    climate_model_arma11 <<- stan_model(model_path_arma11, "ARMA(1,1) Climate Model", 
+                                 auto_write = TRUE, save_dso = TRUE,
+                                 verbose = FALSE)
+    ptm <- head(proc.time() - ptm, 3)
+    if (TRACE_CLIMATE_MODEL) {
+      message("Done compiling: ", paste_with_names(round(ptm, 2)))
+    }
+    climate_model_arma11_ts <<- Sys.time()
+  }
+  invisible(climate_model_arma11)
+}
+
+get_model_ar1 <- function() {
+  if (is.null(climate_model_ar1) || 
+      file.info(model_path_ar1)$mtime > climate_model_ar1_ts) {
+    if (TRACE_CLIMATE_MODEL) {
+      message("Compiling AR(1) Model")
+    }
+    ptm <- proc.time()
+    climate_model_ar1 <<- stan_model(model_path_ar1, "AR(1) Climate Model", 
+                                        auto_write = TRUE, save_dso = TRUE,
+                                        verbose = FALSE)
+    ptm <- head(proc.time() - ptm, 3)
+    if (TRACE_CLIMATE_MODEL) {
+      message("Done compiling: ", paste_with_names(round(ptm, 2)))
+    }
+    climate_model_ar1_ts <<- Sys.time()
+  }
+  invisible(climate_model_ar1)
+}
+
+
 
 setClass("climate_model", 
          slots = list(
@@ -81,8 +135,9 @@ setClass("climate_model",
 auto_arma <- function(res, max_p = 2, max_q = 2) {
   best.model <- NULL
   best.aic <- NA
-  for(p in 0:max_p) {
-    q_start = ifelse(p == 0, 1, 0)
+  p_start <- ifelse(max_q > 0, 0, 1)
+  for(p in p_start:max_p) {
+    q_start = ifelse(p > 0, 0, 1)
     for (q in q_start:max_q) {
       model.arma <-  arma(res, order=c(p,q), include.intercept = FALSE, method="BFGS")
       model.aic <- summary(model.arma)$aic
@@ -138,6 +193,16 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
   scaled_data <- extract_covar(scaled_data, covariate)
   lin.model <- lm(t.anom ~ covar, data = scaled_data)
   res <- residuals(lin.model)
+  
+  if (WHICH_MODEL == 'arma11') {
+    p <- 1
+    q <- 1
+    auto_arma <- FALSE
+  } else if (WHICH_MODEL == 'ar1') {
+    p <- 1
+    q <- 0
+    auto_arma <- FALSE
+  }
   
   if (auto_arma) {
     arma.model <- auto_arma(res, max_p, max_q)
@@ -197,7 +262,10 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
 }
 
 compare_priors <- function(fit, priors) {
-  means <- as.data.frame(t(get_posterior_mean(fit, pars=c('b','m','sigma','phi','theta'))))['mean-all chains',]
+  pars <- c('b','m','sigma','phi','theta')
+  if (priors$P == 0) pars <- pars %>% discard(. == 'phi')
+  if (priors$Q == 0) pars <- pars %>% discard(. == 'theta')
+  means <- as.data.frame(t(get_posterior_mean(fit, pars=pars)))['mean-all chains',]
   means$b <- (means$b - priors$b0) / priors$sb0
   means$m <- (means$m - priors$m0) / priors$sm0
   means$sigma <- means$sigma / priors$ssig0
@@ -223,8 +291,13 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                       threshold = 0.25) {
   scaled_data <- extract_covar(scaled_data, covariate)
   this.year <- max(scaled_data$year)
-  model <- get_model()
-  parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future')
+  if (WHICH_MODEL == 'arma11') {
+    model = get_model_arma11()
+  } else if (WHICH_MODEL == 'ar1') {
+    model <- get_model_ar1()
+  } else {
+    model <- get_model()
+  }
   if (is.null(scaled_future_covar)) {
     t.future = 0
     reps = 0
@@ -245,10 +318,21 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
             ", reps = ", reps, ".")
   }
   
+  parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future')
+  if (WHICH_MODEL == 'ar1') {
+    parameters <- parameters %>% discard(. == 'theta')
+  }
   stan_data <- list(T = nrow(scaled_data), T_future = t.future, 
                     y = scaled_data$t.anom, x = scaled_data$covar,
                     x_future = scaled_future_covar, reps = reps)
   stan_data <- c(stan_data, prior.coefs[! names(prior.coefs) %in% names(stan_data)])
+  if (WHICH_MODEL == 'arma11') {
+    stan_data$P <- 1
+    stan_data$Q <- 1
+  } else if (WHICH_MODEL == 'ar1') {
+    stan_data$P <- 1
+    stan_data$Q <- 0
+  }
   
   if (PARALLEL_STAN) {
     n_cores <- min(n_chains, parallel::detectCores())
@@ -626,7 +710,8 @@ plot_model <- function(mdl, trader.covar = NA) {
     lab.t <- ''
   }
   
-  n5 <- fivenum(mdl@prediction$t.anom)[c(1,5)]
+#  n5 <- fivenum(mdl@prediction$t.anom)[c(1,5)]
+  n5 <- quantile(mdl@prediction$t.anom, c(0.02,0.98))
   predictions <- mdl@prediction %>% filter(t.anom >= n5[1] & t.anom <= n5[2] & sim %in% sample(sim, 500))
   
   p <- ggplot(mdl@future, aes(x = year, y = t.anom)) + 

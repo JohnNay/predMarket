@@ -11,6 +11,7 @@ source('climate_model.R')
 
 TRACE_CLIMATE_MODEL <- TRUE
 PARALLEL_STAN <- FALSE
+WHICH_MODEL <- 'ar1'
 
 theme_set(theme_bw(base_size=20))
 
