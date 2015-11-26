@@ -104,7 +104,7 @@ generated quantities {
           ma <- ma + theta[q] * err[t - q]; // moving average part
         }
         err[t] <- yy[t] - (ar + ma);
-        log_lik[t] <- normal_log(y[t], m * x[t] + b + nu + eta, sigma);
+        log_lik[t] <- normal_log(y[t], m * x[t] + b + ar + ma, sigma);
       }
     
       for(t in 1:T_future) {
