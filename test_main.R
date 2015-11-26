@@ -10,11 +10,11 @@ TRACE_CLIMATE_MODEL <- TRUE
 PARALLEL_STAN <- FALSE
 
 if (TRUE) {
-  burn.in <- 135
+  burn.in <- 120
   n.seq <- 14
   horizon <- 6
 } else {
-  burn.in <- 135
+  burn.in <- 120
   n.seq <- 2
   horizon <- 6
 }

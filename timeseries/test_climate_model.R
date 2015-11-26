@@ -1,7 +1,7 @@
 #
 #
 #
-rm(list = ls())
+# rm(list = ls())
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -24,7 +24,7 @@ today <- which(climate_data$year == 1999)
 mdl.co2 <- new('climate_model', climate = climate_data)
 mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = 100, true_covar = 'log.co2', future_covars = future_data)
 
-future.co2.co2 <- update_model(mdl.co2, n_today = today-20, n_horizon = 30, trader_covar = 'log.co2')
+future.co2.co2 <- update_model(mdl.co2, n_today = today + 50, n_horizon = 30, trader_covar = 'log.co2')
 
 p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -38,7 +38,7 @@ p1a <- ggplot(future.co2.co2@future, aes(x = year, y = t.anom)) +
 plot(p1a)
 
 
-future.tsi.co2 <- update_model(mdl.co2, n_today = today, n_horizon = 10, trader_covar = 'slow.tsi')
+future.tsi.co2 <- update_model(mdl.co2, n_today = today + 50, n_horizon = 30, trader_covar = 'slow.tsi')
 
 p1b <- ggplot(future.tsi.co2@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
@@ -54,7 +54,7 @@ plot(p1b)
 mdl.tsi <- new('climate_model', climate = climate_data)
 mdl.tsi <- init_model(mdl.tsi, n_history = today, n_future = 100, true_covar = 'slow.tsi', future_covars = future_data)
 
-future.tsi.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covar = 'slow.tsi')
+future.tsi.tsi <- update_model(mdl.tsi, n_today = today + 50, n_horizon = 10, trader_covar = 'slow.tsi')
 p2a <- ggplot(future.tsi.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
   geom_point() + geom_line() + 
@@ -67,7 +67,7 @@ p2a <- ggplot(future.tsi.tsi@future, aes(x = year, y = t.anom)) +
 plot(p2a)
 
 
-future.co2.tsi <- update_model(mdl.tsi, n_today = today, n_horizon = 10, trader_covar = 'log.co2')
+future.co2.tsi <- update_model(mdl.tsi, n_today = today + 50, n_horizon = 10, trader_covar = 'log.co2')
 p2b <- ggplot(future.co2.tsi@future, aes(x = year, y = t.anom)) + 
   # simulated future temperatures
   geom_point() + geom_line() + 
