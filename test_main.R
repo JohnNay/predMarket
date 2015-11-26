@@ -5,8 +5,9 @@ rm(list = ls())
 options(warn = 2)
 source('main.R')
 
-SHOW_CLIMATE_PLOTS <- TRUE
-TRACE_CLIMATE_MODEL <- TRUE
+SHOW_CLIMATE_PLOTS <- FALSE
+TRACE_CLIMATE_MODEL <- FALSE
+STAN_REFRESH <-  0
 PARALLEL_STAN <- FALSE
 WHICH_MODEL <- 'ar1'
 
@@ -14,7 +15,7 @@ max_p <- 1
 max_q <- 0
 
 if (TRUE) {
-  burn.in <- 120
+  burn.in <- 135
   n.seq <- 14
   horizon <- 6
 } else {

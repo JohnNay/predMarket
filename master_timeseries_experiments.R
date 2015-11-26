@@ -6,6 +6,20 @@ source("main.R")
 library(eat)
 
 ##############################################################################
+## Set up parameters for climate_model to control level of tracing to screen
+##############################################################################
+
+SHOW_CLIMATE_PLOTS <- FALSE  # Plot graph of temperature after each year?
+TRACE_CLIMATE_MODEL <- FALSE # Show diagnostic traces for stan runs?
+STAN_REFRESH <-  0           # Frequency to show stan chain progress. 0 for silent
+PARALLEL_STAN <- FALSE       # Run chains in parallel?
+WHICH_MODEL <- 'ar1'         # "default", "arma11", or "ar1". "ar1" is recommended for speed and stability.
+
+max_p <- 1                   # Maximum order for AR when running auto_arma
+max_q <- 0                   # Maximum order for MA when running auto_arma
+
+
+##############################################################################
 ## Param distributions to draw from
 ##############################################################################
 input_values <- lapply(list(seg = NA, ideo = NA, risk.tak = NA), 

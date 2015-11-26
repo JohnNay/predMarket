@@ -18,6 +18,7 @@ rstan_options(auto_write = TRUE)
 TRACE_CLIMATE_MODEL <- FALSE
 PARALLEL_STAN <- FALSE
 WHICH_MODEL <- 'ar1'
+STAN_REFRESH <- NA
 
 model_path = normalizePath('climate_model.stan')
 model_path_arma11 = normalizePath('climate_model_arma11.stan')
@@ -344,29 +345,31 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
     message("Sampling from Stan Model")
     ptm <- proc.time()
   }
-  for (i in 1:5) {
-    # prevent stop for sampling warnings when warn = 2
-    suppressWarnings(
-      fit <- sampling(model, data = stan_data, pars = parameters, 
-                      chains = n_chains, iter = n_sample,
-                      cores = n_cores)
-    )
-    compare_priors(fit, prior.coefs)
-    sp <- get_sampler_params(fit, inc_warmup = FALSE)
-    nd <- c()
-    td <- c()
-    mtd <- attr(fit@sim$samples[[1]], 'args')$control$max_treedepth
-    td_max <- 0
-    for(i in seq_along(sp)) {
-      nd <- c(nd, sp[[i]][,'n_divergent__'] > 0)
-      td <- c(td, sp[[i]][,'treedepth__'] > mtd)
-      td_max <- max(td_max, sp[[i]][,'treedepth__'])
-    }
-    if (sum(nd | td) < threshold * length(nd))
-      break
-    if (TRACE_CLIMATE_MODEL) {
-      message("Excessive bad steps in stan simulation: ", sum(nd|td))
-    }
+  if (is.na(STAN_REFRESH)) {
+    refresh <- max(n_sample / 10, 1)
+  } else {
+    refresh <- STAN_REFRESH
+  }
+  # prevent stop for sampling warnings when warn = 2
+  suppressWarnings(
+    fit <- sampling(model, data = stan_data, pars = parameters, 
+                    chains = n_chains, iter = n_sample,
+                    cores = n_cores,
+                    refresh = refresh)
+  )
+  compare_priors(fit, prior.coefs)
+  sp <- get_sampler_params(fit, inc_warmup = FALSE)
+  nd <- c()
+  td <- c()
+  mtd <- attr(fit@sim$samples[[1]], 'args')$control$max_treedepth
+  td_max <- 0
+  for(i in seq_along(sp)) {
+    nd <- c(nd, sp[[i]][,'n_divergent__'] > 0)
+    td <- c(td, sp[[i]][,'treedepth__'] > mtd)
+    td_max <- max(td_max, sp[[i]][,'treedepth__'])
+  }
+  if (TRACE_CLIMATE_MODEL) {
+    message("Excessive bad steps in stan simulation: ", sum(nd|td))
   }
   if (TRACE_CLIMATE_MODEL) {
     message(sum(nd|td), " bad samples: ", sum(nd), " divergent steps and ", sum(td), " steps exceeded max_treedepth")
