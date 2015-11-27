@@ -4,8 +4,8 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code
 source("main.R")
-devtools::install_github("JohnNay/eat", 
-                         auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
+# devtools::install_github("JohnNay/eat", 
+#                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
 library(eat)
 
 test <- FALSE
@@ -62,18 +62,28 @@ future <- TRUE
 
 # Standardized Regression Coefficient
 if(!future){
-  # burn.in = 51,
-  # n.seq = 14,
-  # horizon = 6,
-  # nyears = 135,
-  src <- pc_sa(abm = main, 
+  main2 <- function(parameters,
+                    iterations = 10,
+                    burn.in = 51,
+                    n.seq = 14,
+                    horizon = 6,
+                    nyears = 135,
+                    out){
+    main(parameters = parameters,
+         iterations = iterations,
+         burn.in = burn.in,
+         n.seq = n.seq,
+         horizon = horizon,
+         nyears = nyears)
+  }
+  src <- pc_sa(abm = main2, 
                input_values = input_values,
                out = "converg", 
                iterations = 7,
                sample_count = 196,
                nboot = 1000, 
                parallel = TRUE,
-               cores = 28,
+               cores = 30,
                rank = TRUE, method = "src")
   save(src, file = "output/src.Rda")
   plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
@@ -91,18 +101,28 @@ if(!future){
 }
 
 if(future){
-#   burn.in = 135,
-#   n.seq = 14,
-#   horizon = 6,
-#   nyears = 219,
-  src_future <- pc_sa(abm = main, 
+    main2 <- function(parameters,
+                      iterations = 10,
+                      burn.in = 135,
+                      n.seq = 14,
+                      horizon = 6,
+                      nyears = 219,
+                      out){
+      main(parameters = parameters,
+           iterations = iterations,
+           burn.in = burn.in,
+           n.seq = n.seq,
+           horizon = horizon,
+           nyears = nyears)
+    }
+  src_future <- pc_sa(abm = main2, 
                input_values = input_values,
                out = "converg", 
                iterations = 7,
-               sample_count = 196,
+               sample_count = 16,
                nboot = 1000, 
                parallel = TRUE,
-               cores = 28,
+               cores = 30,
                rank = TRUE, method = "src")
   save(src_future, file = "output/src_future.Rda")
 }
