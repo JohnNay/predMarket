@@ -6,7 +6,7 @@ library(tseries)
 library(dplyr)
 library(tidyr)
 library(stringr)
-library(purrr)
+# library(purrr)
 
 # This is so rstan:::rstan_load_time will get updated for the purpose of loading the stan model.
 if ('package:rstan' %in% search())
@@ -182,7 +182,9 @@ scale_covar <- function(data, covariate, scale) {
 }
 
 apply_scale <- function(data, scale) {
-  for (n in discard(names(data), ~ .x == 'year')) {
+  nd <- names(data)
+  nd <- nd[nd != 'year']
+  for (n in nd) {
     data <- scale_covar(data, n, scale)
   }
   data
@@ -264,8 +266,8 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
 
 compare_priors <- function(fit, priors) {
   pars <- c('b','m','sigma','phi','theta')
-  if (priors$P == 0) pars <- pars %>% discard(. == 'phi')
-  if (priors$Q == 0) pars <- pars %>% discard(. == 'theta')
+  if (priors$P == 0) pars <- pars[pars != 'phi']
+  if (priors$Q == 0) pars <- pars[pars != 'theta']
   means <- as.data.frame(t(get_posterior_mean(fit, pars=pars)))['mean-all chains',]
   means$b <- (means$b - priors$b0) / priors$sb0
   means$m <- (means$m - priors$m0) / priors$sm0
@@ -321,7 +323,7 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
   
   parameters <- c('b', 'm', 'sigma', 'phi', 'theta', 'y_future')
   if (WHICH_MODEL == 'ar1') {
-    parameters <- parameters %>% discard(. == 'theta')
+    parameters <- parameters[parameters != 'theta']
   }
   stan_data <- list(T = nrow(scaled_data), T_future = t.future, 
                     y = scaled_data$t.anom, x = scaled_data$covar,
@@ -487,7 +489,7 @@ init_model <- function(mdl, n_history, n_future, true_covar, future_covars,
   } else {
     all_covars <- names(future_covars)
   }
-  all_covars <- discard(all_covars, ~ .x %in% c('year', 't.anom'))
+  all_covars <- all_covars[! all_covars %in% c('year', 't.anom')]
   n_history <- as.integer(n_history)
   n_future <- as.integer(n_future)
   max_p <- as.integer(max_p)
