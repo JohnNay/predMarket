@@ -114,7 +114,10 @@ save(average_convergence, file = "output/average_convergence.Rda")
 
 library(ggplot2)
 plot_data <- average_convergence
-plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
+#plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
+# n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
+plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
+       labels = c("n.edge = 105, ideo = 0.05", "n.edge = 105, ideo = 0.95", "n.edge = 195, ideo = 0.05", "n.edge = 195, ideo = 0.95"))
 ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
   geom_point() + geom_smooth() +
   ggplot2::facet_wrap(~set, ncol = 1) +
