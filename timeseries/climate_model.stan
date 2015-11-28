@@ -11,7 +11,7 @@ data {
   real<lower = 0> ssig0;
   real phi0;
   real<lower = 0> sphi0;
-  real theta0;
+  real<lower = -1, upper = 1> theta0;
   real<lower = 0> stheta0;
   int<lower=0> T_future;
   int<lower=0> reps;
@@ -21,9 +21,9 @@ data {
 parameters {
   real b; // intercept
   real m; // slope
-  real<lower=1E-8> sigma; // noise standard deviation
+  real<lower=0> sigma; // noise standard deviation
   real phi[P]; // autoregression coefficient
-  real theta[Q]; // moving average coefficient
+  real<lower = -1, upper = 1> theta[Q]; // moving average coefficient
 }
 
 model {

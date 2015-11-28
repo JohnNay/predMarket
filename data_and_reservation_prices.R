@@ -3,10 +3,10 @@ source("timeseries/climate_model.R",chdir=T)
 
 SHOW_CLIMATE_PLOTS <- FALSE
 TRACE_CLIMATE_MODEL <- FALSE
-WHICH_MODEL <- 'ar1'
+WHICH_MODEL <- 'default'
 
 max_p <- 1
-max_q <- 0
+max_q <- 1
 
 DataPrediction <- function(
   g,

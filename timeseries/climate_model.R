@@ -17,7 +17,7 @@ rstan_options(auto_write = TRUE)
 
 TRACE_CLIMATE_MODEL <- FALSE
 PARALLEL_STAN <- FALSE
-WHICH_MODEL <- 'ar1'
+WHICH_MODEL <- 'default'
 STAN_REFRESH <- NA
 
 model_path = normalizePath('climate_model.stan')
@@ -212,7 +212,7 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
   } else {
     arma.model <- arma(res, order=c(p,q), include.intercept = FALSE, method="BFGS")
   }
-  
+
   arma.s <- summary(arma.model)
   p <- arma.s$p
   q <- arma.s$q
@@ -257,6 +257,12 @@ gen_prior_coefs <- function(scaled_data, covariate, p = 1, q = 1,
                        stheta0 = 0
                      ))
   }
+  # to ensure identifiability, -1 < theta < 1
+  if (abs(prior.coefs$theta0) > 1) {
+    prior.coefs$theta0 <- 1 / prior.coefs$theta0
+  }
+  # to enxure stationarity -1 < phi < 1
+  # prior.coefs$phi0 <- min(0.999, max(-0.999, prior.coefs$phi0))
   if (TRACE_CLIMATE_MODEL) {
     message("Generating priors for ", covariate, ": ", 
             paste_with_names(signif(unlist(prior.coefs, use.names = TRUE), 2)))
