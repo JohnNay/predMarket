@@ -48,16 +48,6 @@ if(estimate_replicates){
 ## Main sens analysis
 ##############################################################################
 
-# pc2 <- pc_sa(abm = main, 
-#              input_values = input_values,
-#              out = "converg", 
-#              sample_count = 10000, 
-#              nboot = 1000, 
-#              parallel = TRUE,
-#              cores = 30,
-#              rank = TRUE, method = "pcc")
-# save(pc2, file = "output/pc2.Rda")
-# plot(pc2, outcome_var = "Convergence of Beliefs")
 future <- TRUE
 
 # Standardized Regression Coefficient
@@ -67,7 +57,7 @@ if(!future){
                     burn.in = 51,
                     n.seq = 14,
                     horizon = 6,
-                    nyears = 135,
+                    nyears = burn.in + n.seq * horizon, #135,
                     out){
     main(parameters = parameters,
          iterations = iterations,
@@ -76,55 +66,76 @@ if(!future){
          horizon = horizon,
          nyears = nyears)
   }
-  src <- pc_sa(abm = main2, 
-               input_values = input_values,
-               out = "converg", 
-               iterations = 7,
-               sample_count = 196,
-               nboot = 1000, 
-               parallel = TRUE,
-               cores = 30,
-               rank = TRUE, method = "src")
+  
+  if(file.exists("output/src.Rda")){
+    load("output/src.Rda")
+    src <- pc_sa(abm = main2, 
+                 input_values = input_values,
+                 previous_pc_sa = list(src),
+                 out = "converg", 
+                 iterations = 5,
+                 sample_count = 120,
+                 nboot = 1000, 
+                 parallel = TRUE,
+                 cores = 30,
+                 rank = TRUE, method = "src")
+  } else{
+    src <- pc_sa(abm = main2, 
+                 input_values = input_values,
+                 out = "converg", 
+                 iterations = 5,
+                 sample_count = 120,
+                 nboot = 1000, 
+                 parallel = TRUE,
+                 cores = 30,
+                 rank = TRUE, method = "src") 
+  }
   save(src, file = "output/src.Rda")
   plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
-  # src2 <- pc_sa(abm = main, 
-  #              input_values = input_values,
-  #              previous_pc_sa = list(src),
-  #              out = "converg", 
-  #              iterations = 7,
-  #              sample_count = 30,
-  #              nboot = 1000, 
-  #              parallel = TRUE,
-  #              cores = 30,
-  #              rank = TRUE, method = "src")
-  # save(src2, file = "output/src2.Rda")
 }
 
+future <- TRUE
 if(future){
-    main2 <- function(parameters,
-                      iterations = 10,
-                      burn.in = 135,
-                      n.seq = 14,
-                      horizon = 6,
-                      nyears = 219,
-                      out){
-      main(parameters = parameters,
-           iterations = iterations,
-           burn.in = burn.in,
-           n.seq = n.seq,
-           horizon = horizon,
-           nyears = nyears)
-    }
-  src_future <- pc_sa(abm = main2, 
-               input_values = input_values,
-               out = "converg", 
-               iterations = 7,
-               sample_count = 16,
-               nboot = 1000, 
-               parallel = TRUE,
-               cores = 30,
-               rank = TRUE, method = "src")
+  main2 <- function(parameters,
+                    iterations = 10,
+                    burn.in = 135,
+                    n.seq = 14,
+                    horizon = 6,
+                    nyears = burn.in + n.seq * horizon,# 219,
+                    out){
+    main(parameters = parameters,
+         iterations = iterations,
+         burn.in = burn.in,
+         n.seq = n.seq,
+         horizon = horizon,
+         nyears = nyears)
+  }
+  
+  if(file.exists("output/src_future.Rda")){
+    load("output/src_future.Rda")
+    src_future <- pc_sa(abm = main2, 
+                        input_values = input_values,
+                        previous_pc_sa = list(src_future),
+                        out = "converg", 
+                        iterations = 5,
+                        sample_count = 120,
+                        nboot = 1000, 
+                        parallel = TRUE,
+                        cores = 30,
+                        rank = TRUE, method = "src")
+  } else {
+    src_future <- pc_sa(abm = main2, 
+                        input_values = input_values,
+                        out = "converg", 
+                        iterations = 5,
+                        sample_count = 120,
+                        nboot = 1000, 
+                        parallel = TRUE,
+                        cores = 30,
+                        rank = TRUE, method = "src")
+  }
   save(src_future, file = "output/src_future.Rda")
+  plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
 }
 
 # ##############################################################################

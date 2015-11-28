@@ -1,5 +1,5 @@
-args <- commandArgs(trailingOnly = TRUE)
-numcores <- as.integer(args[1])
+#args <- commandArgs(trailingOnly = TRUE)
+numcores <- 30#as.integer(args[1])
 message(paste("Number of cores", numcores))
 
 source("main.R")
@@ -9,7 +9,7 @@ library(eat)
 ## Set up parameters for climate_model to control level of tracing to screen
 ##############################################################################
 
-SHOW_CLIMATE_PLOTS <- FALSE  # Plot graph of temperature after each year?
+SHOW_CLIMATE_PLOTS <- TRUE  # Plot graph of temperature after each year?
 TRACE_CLIMATE_MODEL <- FALSE # Show diagnostic traces for stan runs?
 STAN_REFRESH <-  0           # Frequency to show stan chain progress. 0 for silent
 PARALLEL_STAN <- FALSE       # Run chains in parallel?
@@ -62,12 +62,12 @@ for(j in set){
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
     main(parameters = as.numeric(input_set[i, ]), 
-         burn.in = 51,
+         burn.in = 135,
          n.seq = n.seq,
          horizon = 6,
-         nyears = 135,
+         nyears = burn.in + n.seq * horizon,# 219,
          iterations = 1,
-         out = "converg", record = TRUE)
+         record = TRUE)
   })
   cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
@@ -88,12 +88,12 @@ for(j in set){
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
     main(parameters = as.numeric(input_set[i, ]), 
-         burn.in = 51,
+         burn.in = 135,
          n.seq = n.seq,
          horizon = 6,
-         nyears = 135,
+         nyears = burn.in + n.seq * horizon,# 219,
          iterations = 1,
-         out = "converg", record = TRUE)
+         record = TRUE)
   })
   cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
