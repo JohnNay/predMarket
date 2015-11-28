@@ -32,15 +32,11 @@ model {
     vector[T] ma;
     vector[T] eps;
 
-    
-    b ~ normal(b0, sb0);
-    m ~ normal(m0, sm0);
+    b ~ cauchy(b0, sb0);
+    m ~ cauchy(m0, sm0);
+    sigma ~ cauchy(0, ssig0);
     theta ~ normal(theta0, stheta0);
     phi ~ normal(phi0, sphi0);
-    sigma ~ cauchy(0, ssig0);
-#    phi ~ normal(0,2);
-#    theta ~ normal(0, 2);
-    
 
     res <- y - (m * x + b);
     
@@ -55,25 +51,10 @@ model {
       for(p in 1:min(t-1,P)) {
         ar[t] <- ar[t] + phi[p] * res[t-p]; // autoregressive part
       }
-      eps[t] <- res[t] - ar[t];
       for (q in 1:min(t-1,Q)) {
         ma[t] <- ma[t] + theta[q] * eps[t-q];
-        eps[t] <- eps[t] - theta[q] * eps[t-q];
       }
-      /*
-      if (fabs(eps[t]) > 100) {
-        print("t = ", t, ", ar = ", ar[t], ", ma = ", ma[t], ", eps = ", eps[t]);
-        print("t = ", t, ", x = ", x[t], ", y = ", y[t], ", res = ", res[t]);
-        print("t = ", t, ", m = ", m, ", b = ", b);
-        print("t = ", t, ", m0 = ", m0, ", sm0 = ", sm0, ", b0 = ", b0, ", sb0 = ", sb0);
-        if (P > 0) {
-          print("t = ", t, ", phi[1] = ", phi[1]);
-        }
-        if (Q > 0) {
-          print("t = ", t, ", theta[1] = ", theta[1]);
-        }
-      }
-      */
+      eps[t] <- res[t] - (ar[t] + ma[t]);
     }
 
   res ~ normal(ar + ma, sigma);

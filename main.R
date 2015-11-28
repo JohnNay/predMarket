@@ -117,7 +117,7 @@ main <- function(parameters,
     ## Generate data and reservation prices, and attach to network
     #####
     
-    net <- DataPrediction(net, scenario = 'rcp26', 
+    net <- DataPrediction(net, scenario = 'rcp85', 
                           true.model = true.model, historical.temp=historical.temp)
     
     # Visualize network (optional)
