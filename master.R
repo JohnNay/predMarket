@@ -48,7 +48,7 @@ if(estimate_replicates){
 ## Main sens analysis
 ##############################################################################
 
-future <- TRUE
+future <- FALSE
 
 # Standardized Regression Coefficient
 if(!future){
@@ -57,7 +57,7 @@ if(!future){
                     burn.in = 51,
                     n.seq = 14,
                     horizon = 6,
-                    nyears = burn.in + n.seq * horizon, #135,
+                    nyears = 135,
                     out){
     main(parameters = parameters,
          iterations = iterations,
@@ -91,17 +91,17 @@ if(!future){
                  rank = TRUE, method = "src") 
   }
   save(src, file = "output/src.Rda")
-  plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+  #plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
 }
 
-future <- TRUE
+
 if(future){
   main2 <- function(parameters,
                     iterations = 10,
                     burn.in = 135,
                     n.seq = 14,
                     horizon = 6,
-                    nyears = burn.in + n.seq * horizon,# 219,
+                    nyears = 219,
                     out){
     main(parameters = parameters,
          iterations = iterations,

@@ -1,3 +1,4 @@
+rm(list=ls())
 #args <- commandArgs(trailingOnly = TRUE)
 numcores <- 30#as.integer(args[1])
 message(paste("Number of cores", numcores))
@@ -65,7 +66,7 @@ for(j in set){
          burn.in = 135,
          n.seq = n.seq,
          horizon = 6,
-         nyears = burn.in + n.seq * horizon,# 219,
+         nyears =  219,
          iterations = 1,
          record = TRUE)
   })
@@ -91,7 +92,7 @@ for(j in set){
          burn.in = 135,
          n.seq = n.seq,
          horizon = 6,
-         nyears = burn.in + n.seq * horizon,# 219,
+         nyears =  219,
          iterations = 1,
          record = TRUE)
   })
@@ -111,13 +112,13 @@ for(j in set){
 }
 save(average_convergence, file = "output/average_convergence.Rda")
 
-# library(ggplot2)
-# plot_data <- average_convergence
-# plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
-# ggplot(data=plot_data, aes(x= trading_seq, y=avg, color = true_mod)) +
-#   geom_smooth(method = "loess") + #geom_line() +
-#   ggplot2::facet_wrap(~set, ncol = 1) +
-#   ggtitle("Average Convergence Over Trading Sequences") +
-#   xlab("Trading Sequences") + ylab(paste0("Average Convergence (n = ", sample_count, ")")) + 
-#   theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-#   scale_color_discrete(name="True Model")
+library(ggplot2)
+plot_data <- average_convergence
+plot_data[ , "set"] <- factor(plot_data[ , "set"], levels = gtools::mixedsort(unique(plot_data[ , "set"])))
+ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
+  geom_point() + geom_smooth() +
+  ggplot2::facet_wrap(~set, ncol = 1) +
+  ggtitle("Convergence Over Trading Sequences") +
+  xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+  theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
+  scale_color_discrete(name="True Model")

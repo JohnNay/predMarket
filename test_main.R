@@ -14,14 +14,17 @@ WHICH_MODEL <- 'ar1'
 max_p <- 1
 max_q <- 0
 
-if (TRUE) {
+future <- FALSE
+
+if (future) {
   burn.in <- 135
   n.seq <- 14
   horizon <- 6
 } else {
-  burn.in <- 120
-  n.seq <- 2
-  horizon <- 6
+  burn.in = 51
+  n.seq = 14
+  horizon = 6
+  #nyears = burn.in + n.seq * horizon, #135,
 }
 
 ptm0 <- proc.time()
