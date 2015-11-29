@@ -1,6 +1,6 @@
 rm(list=ls())
-#args <- commandArgs(trailingOnly = TRUE)
-numcores <- 30#as.integer(args[1])
+args <- commandArgs(trailingOnly = TRUE)
+numcores <- as.integer(args[1])
 message(paste("Number of cores", numcores))
 
 source("main.R")
@@ -19,6 +19,7 @@ WHICH_MODEL <- 'ar1'         # "default", "arma11", or "ar1". "ar1" is recommend
 max_p <- 1                   # Maximum order for AR when running auto_arma
 max_q <- 0                   # Maximum order for MA when running auto_arma
 
+plot_final <- FALSE
 
 ##############################################################################
 ## Param distributions to draw from
@@ -44,8 +45,11 @@ set[[1]] <- list(n.edg = 0.95, ideo = 0.95)
 set[[2]] <- list(n.edg = 0.95, ideo = 0.05)
 set[[3]] <- list(n.edg = 0.05, ideo = 0.95)
 set[[4]] <- list(n.edg = 0.05, ideo = 0.05)
+burn.in = 51
+n.seq = 14
+horizon = 6
+nyears = burn.in + n.seq * horizon
 average_convergence <- data.frame(stringsAsFactors = FALSE)
-n.seq <- 14
 
 for(j in set){
   input_values$n.edg <- list(random_function = "qunif",
@@ -62,13 +66,15 @@ for(j in set){
                           constraints = "none",
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
-    main(parameters = as.numeric(input_set[i, ]), 
-         burn.in = 135,
-         n.seq = n.seq,
-         horizon = 6,
-         nyears =  219,
-         iterations = 1,
-         record = TRUE)
+    tryCatch(
+      main(parameters = as.numeric(input_set[i, ]), 
+           burn.in = burn.in,
+           n.seq = n.seq,
+           horizon = horizon,
+           nyears =  nyears,
+           iterations = 1,
+           record = TRUE),
+      error = function(e) rep(NA, n.seq))
   })
   cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
@@ -88,13 +94,15 @@ for(j in set){
                           constraints = "none",
                           model_data = NULL)
   outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
-    main(parameters = as.numeric(input_set[i, ]), 
-         burn.in = 135,
-         n.seq = n.seq,
-         horizon = 6,
-         nyears =  219,
-         iterations = 1,
-         record = TRUE)
+    tryCatch(
+      main(parameters = as.numeric(input_set[i, ]), 
+           burn.in = burn.in,
+           n.seq = n.seq,
+           horizon = horizon,
+           nyears =  nyears,
+           iterations = 1,
+           record = TRUE),
+      error = function(e) rep(NA, n.seq))
   })
   cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
   average_convergence <- rbind(average_convergence,
@@ -104,24 +112,21 @@ for(j in set){
                                           set = rep(rep(paste(as.character(j), collapse = ", "),  length(seq(n.seq))), nrow(input_set)),
                                           stringsAsFactors = FALSE)
   )
-#   average_convergence <- rbind(average_convergence,
-#                                data.frame(avg = colMeans(outcome.evolution), 
-#                                           trading_seq = seq(length(colMeans(outcome.evolution))),
-#                                           true_mod = rep("SlowTSI", length(colMeans(outcome.evolution))),
-#                                           set = rep(paste(as.character(j), collapse = ", "), length(colMeans(outcome.evolution)))))
 }
-save(average_convergence, file = "output/average_convergence.Rda")
+save(average_convergence, file = "output/average_convergence_past.Rda")
 
-library(ggplot2)
-plot_data <- average_convergence
-#plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
-# n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
-plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-       labels = c("n.edge = 105, ideo = 0.05", "n.edge = 105, ideo = 0.95", "n.edge = 195, ideo = 0.05", "n.edge = 195, ideo = 0.95"))
-ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
-  geom_point() + geom_smooth() +
-  ggplot2::facet_wrap(~set, ncol = 1) +
-  ggtitle("Convergence Over Trading Sequences") +
-  xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
-  theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-  scale_color_discrete(name="True Model")
+if(plot_final){
+  library(ggplot2)
+  plot_data <- average_convergence
+  #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
+  # n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
+  plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
+         labels = c("n.edge = 105, ideo = 0.05", "n.edge = 105, ideo = 0.95", "n.edge = 195, ideo = 0.05", "n.edge = 195, ideo = 0.95"))
+  ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
+    geom_point() + geom_smooth() +
+    ggplot2::facet_wrap(~set, ncol = 1) +
+    ggtitle("Convergence Over Trading Sequences") +
+    xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+    theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
+    scale_color_discrete(name="True Model")
+}
