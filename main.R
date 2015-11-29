@@ -16,12 +16,26 @@ source("adapt.R")
 source("mixing_matrix.R")
 source("assortativity_coefficient.R")
 
+measure_outcome <- function(outcome = c("converge", "fraction_converge"), net, true.model){
+  outcome <- match.arg(outcome)
+  if(outcome=="converge"){
+    return(
+      (length(V(net)$approx[V(net)$approx == true.model])/length(V(net))) - net$init.converg.util
+    )
+  }
+  if(outcome=="fraction_converge"){
+    return(
+      # the fraction of people believing in the true model minus the fraction believing in the false model
+      2 * sum(V(net)$approx == true.model) / length(V(net)) - 1
+      #(sum(V(net)$approx == true.model)/length(V(net))) - (sum(V(net)$approx != true.model)/length(V(net)))
+    )
+  }
+}
+
 main <- function(parameters,
                  iterations = 10,
+                 out = c("converge", "fraction_converge"),
 #                    burn.in = 135,
-#                    n.seq = 14,
-#                    horizon = 6,
-#                    nyears = 219,
                  burn.in = 51,
                  n.seq = 14,
                  horizon = 6,
@@ -31,6 +45,7 @@ main <- function(parameters,
                  record = FALSE,
                  safeNprint=FALSE) {
   historical.temp <- match.arg(historical.temp)
+  out <- match.arg(out)
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
   stopifnot((burn.in + n.seq * horizon) == nyears)
@@ -217,7 +232,7 @@ main <- function(parameters,
     if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     
     if(record){
-      result <- (length(V(net)$approx[V(net)$approx == true.model])/length(V(net))) - net$init.converg.util
+      result <- measure_outcome(outcome = out, net = net, true.model=true.model)
     }
     
     ########                            ############
@@ -336,14 +351,15 @@ main <- function(parameters,
         if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
         
         if(record){
-          result <- append(result, (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util)
+          result <- append(result, measure_outcome(outcome = out, net = net, true.model=true.model))
         }
       }
     }
     
     if (record == FALSE){
-      # return difference in utility of network convergence
-      result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
+      result <- measure_outcome(outcome = out, net = net, true.model=true.model)
+#       # return difference in utility of network convergence
+#       result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
     }
     
     result_final[[iteration]] <- result

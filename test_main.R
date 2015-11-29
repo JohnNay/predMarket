@@ -14,7 +14,7 @@ WHICH_MODEL <- 'ar1'
 max_p <- 1
 max_q <- 0
 
-future <- FALSE
+future <- TRUE
 
 if (future) {
   burn.in <- 135
@@ -31,6 +31,8 @@ ptm0 <- proc.time()
 x <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk.tak
                          0, # true model: 0 = slow.tsi, 1 = log.co2
                          runif(2, min = 0.0001, max = 0.9999)), # n.edge and n.traders
+          out = "fraction_converge",
+          safeNprint=TRUE,
           iterations = 1,
           burn.in = burn.in,
           n.seq = n.seq,
@@ -44,6 +46,8 @@ cat("First process finished in", paste_with_names(prettyNum(head(ptm1 - ptm0,3),
 y <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk.tak
                          1, # true model: 0 = slow.tsi, 1 = log.co2
                          runif(2, min = 0.0001, max = 0.9999)), # n.edge and n.traders
+          out = "fraction_converge",
+          safeNprint=TRUE,
           iterations = 1,
           burn.in = burn.in,
           n.seq = n.seq,
