@@ -93,7 +93,7 @@ run_experiment <- function(set, input_values,
     )
   }
   save(average_convergence, file = file_path)
-  average_convergence
+  invisible(average_convergence)
 }
 
 
@@ -121,22 +121,21 @@ set[[4]] <- list(n.edg = 0.05, ideo = 0.05)
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-convergence_past <- run_experiment(set = set, input_values = input_values, 
-                                   file_path = "output/average_convergence_past.Rda",
-                                   sample_count = numcores,
-                                   burn.in = 51)
-convergence_future <- run_experiment(set = set, input_values = input_values, 
-                                   file_path = "output/average_convergence.Rda",
-                                   sample_count = numcores,
-                                   burn.in = 135)
+sample_count <- numcores*2
+run_experiment(set = set, input_values = input_values, 
+               file_path = "output/convergence_past.Rda",
+               sample_count = sample_count,
+               burn.in = 51)
+run_experiment(set = set, input_values = input_values, 
+               file_path = "output/convergence_future.Rda",
+               sample_count = sample_count,
+               burn.in = 135)
 
 ##############################################################################
 ## Plots
 ##############################################################################
 if(plot_final){
-  sample_count <- numcores
-  
-  load("output/average_convergence_past.Rda")
+  load("output/convergence_past.Rda")
   library(ggplot2)
   plot_data <- average_convergence
   #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
@@ -153,7 +152,7 @@ if(plot_final){
     scale_color_discrete(name="True Model")
   dev.off()
   
-  load("output/average_convergence.Rda")
+  load("output/convergence_future.Rda")
   library(ggplot2)
   plot_data <- average_convergence
   #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
