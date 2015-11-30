@@ -19,7 +19,7 @@ WHICH_MODEL <- 'ar1'         # "default", "arma11", or "ar1". "ar1" is recommend
 max_p <- 1                   # Maximum order for AR when running auto_arma
 max_q <- 0                   # Maximum order for MA when running auto_arma
 
-plot_final <- FALSE
+plot_final <- TRUE
 
 ##############################################################################
 ## Experiment function
