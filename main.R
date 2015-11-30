@@ -41,9 +41,11 @@ main <- function(parameters,
                  horizon = 6,
                  nyears = 135,
                  load_previous = FALSE,
-                 load_previous_fp = "climatedata.Rda",
+                 load_previous_fp_co2 = "climatedataco2.Rda",
+                 load_previous_fp_tsi = "climatedatatsi.Rda",
                  saving = FALSE,
-                 saving_fp = "",
+                 saving_fp_co2 = "",
+                 saving_fp_tsi = "",
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
@@ -139,9 +141,11 @@ main <- function(parameters,
     net <- DataPrediction(net, scenario = 'rcp85', 
                           true.model = true.model, historical.temp=historical.temp,
                           load_previous = load_previous,
-                          load_previous_fp = load_previous_fp,
+                          load_previous_fp_co2 = load_previous_fp_co2,
+                          load_previous_fp_tsi = load_previous_fp_tsi,
                           saving = saving,
-                          saving_fp = saving_fp)
+                          saving_fp_co2 = saving_fp_co2,
+                          saving_fp_tsi = saving_fp_tsi)
     
     # Visualize network (optional)
     if (visu){

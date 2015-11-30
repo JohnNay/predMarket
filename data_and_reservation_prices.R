@@ -16,16 +16,35 @@ DataPrediction <- function(
                'rcp 8.5', 'rcp8.5', 'rcp85'),
   true.model, 
   load_previous = FALSE,
-  load_previous_fp = "climatedata.Rda",
+  load_previous_fp_co2 = "climatedataco2.Rda",
+  load_previous_fp_tsi = "climatedatatsi.Rda",
   saving = FALSE,
-  saving_fp = "",
+  saving_fp_co2 = "",
+  saving_fp_tsi = "",
   historical.temp # c('past', 'all', 'none')
 ){
   
+  if (true.model == 1){
+    true_covar = 'slow.tsi'
+  } else if (true.model == 2){
+    true_covar = 'log.co2'
+  } else {
+    stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
+  }
+  
   if(load_previous){
-    if(!file.exists(load_previous_fp)){
-      message("No file there so we cannot load one, we will generate data instead.")
-      load_previous <- FALSE
+    if(true_covar == 'slow.tsi'){
+      if(!file.exists(load_previous_fp_tsi)){
+        message("No file there so we cannot load one, we will generate data instead.")
+        load_previous <- FALSE
+      }
+    }
+    
+    if(true_covar == 'log.co2'){
+      if(!file.exists(load_previous_fp_co2)){
+        message("No file there so we cannot load one, we will generate data instead.")
+        load_previous <- FALSE
+      }
     }
   }
   
@@ -39,18 +58,35 @@ DataPrediction <- function(
   horizon   <- g$horizon
   burn.in   <- g$burn.in
   
+  
   if(load_previous){
     if(saving) message("You wanted saving but we wont be since we are loading in an already saved climate data set.")
-    load(load_previous_fp)
-    # file loaded needs to be this:
-    #       climatedata <- list(reserv.tsi = reserv.tsi,
-    #                           reserv.co2 = reserv.co2,
-    #                           mdl = mdl,
-    #                           secu.intervals = secu.intervals)
-    reserv.tsi <- climatedata$reserv.tsi
-    reserv.co2 <- climatedata$reserv.co2
-    mdl <- climatedata$mdl
-    secu.intervals <- climatedata$secu.intervals
+    
+    if(true_covar == 'log.co2'){
+      load(load_previous_fp_co2)
+      # file loaded needs to be this:
+      #       climatedata <- list(reserv.tsi = reserv.tsi,
+      #                           reserv.co2 = reserv.co2,
+      #                           mdl = mdl,
+      #                           secu.intervals = secu.intervals)
+      reserv.tsi <- climatedataco2$reserv.tsi
+      reserv.co2 <- climatedataco2$reserv.co2
+      mdl <- climatedataco2$mdl
+      secu.intervals <- climatedataco2$secu.intervals
+    }
+    
+    if(true_covar == 'slow.tsi'){
+      load(load_previous_fp_tsi)
+      # file loaded needs to be this:
+      #       climatedata <- list(reserv.tsi = reserv.tsi,
+      #                           reserv.co2 = reserv.co2,
+      #                           mdl = mdl,
+      #                           secu.intervals = secu.intervals)
+      reserv.tsi <- climatedatatsi$reserv.tsi
+      reserv.co2 <- climatedatatsi$reserv.co2
+      mdl <- climatedatatsi$mdl
+      secu.intervals <- climatedatatsi$secu.intervals
+    }
   } else {
     scenario <- match.arg(scenario)
     #####
@@ -81,14 +117,6 @@ DataPrediction <- function(
     )
     
     ### Initialize the true models
-    
-    if (true.model == 1){
-      true_covar = 'slow.tsi'
-    } else if (true.model == 2){
-      true_covar = 'log.co2'
-    } else {
-      stop("'true.model' in data_and_reservation_prices() must be either 1 or 2 ")
-    }
     message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
             ", true covars = ", true_covar)
     mdl <- init_model(mdl, n_history = burn.in,
@@ -162,11 +190,21 @@ DataPrediction <- function(
     }
     
     if(saving){
-      climatedata <- list(reserv.tsi = reserv.tsi,
-                          reserv.co2 = reserv.co2,
-                          mdl = mdl,
-                          secu.intervals = secu.intervals)
-      save(climatedata, file = paste0(saving_fp, "climatedata.Rda"))
+      if(true_covar == 'log.co2'){
+        climatedataco2 <- list(reserv.tsi = reserv.tsi,
+                            reserv.co2 = reserv.co2,
+                            mdl = mdl,
+                            secu.intervals = secu.intervals)
+        save(climatedataco2, file = paste0(saving_fp, "climatedataco2.Rda"))
+      }
+      
+      if(true_covar == 'slow.tsi'){
+        climatedatatsi <- list(reserv.tsi = reserv.tsi,
+                               reserv.co2 = reserv.co2,
+                               mdl = mdl,
+                               secu.intervals = secu.intervals)
+        save(climatedatatsi, file = paste0(saving_fp, "climatedatatsi.Rda"))
+      }
     }
   }
   
