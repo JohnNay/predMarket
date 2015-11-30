@@ -40,6 +40,7 @@ DataPrediction <- function(
   burn.in   <- g$burn.in
   
   if(load_previous){
+    if(saving) message("You wanted saving but we wont be since we are loading in an already saved climate data set.")
     load(load_previous_fp)
     # file loaded needs to be this:
     #       climatedata <- list(reserv.tsi = reserv.tsi,

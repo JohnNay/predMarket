@@ -35,11 +35,15 @@ measure_outcome <- function(outcome = c("converge", "fraction_converge"), net, t
 main <- function(parameters,
                  iterations = 10,
                  out = c("converge", "fraction_converge"),
-#                    burn.in = 135,
+                 #                    burn.in = 135,
                  burn.in = 51,
                  n.seq = 14,
                  horizon = 6,
                  nyears = 135,
+                 load_previous = FALSE,
+                 load_previous_fp = "climatedata.Rda",
+                 saving = FALSE,
+                 saving_fp = "",
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
@@ -133,7 +137,11 @@ main <- function(parameters,
     #####
     
     net <- DataPrediction(net, scenario = 'rcp85', 
-                          true.model = true.model, historical.temp=historical.temp)
+                          true.model = true.model, historical.temp=historical.temp,
+                          load_previous = load_previous,
+                          load_previous_fp = load_previous_fp,
+                          saving = saving,
+                          saving_fp = saving_fp)
     
     # Visualize network (optional)
     if (visu){
