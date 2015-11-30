@@ -55,7 +55,7 @@ run_experiment <- function(set, input_values,
              record = TRUE),
         error = function(e) rep(NA, n.seq))
     })
-    cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
+    cat(paste("\n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "\n", outcome.evolution))
     average_convergence <- rbind(average_convergence,
                                  data.frame(convergence = outcome.evolution,
                                             trading_seq = rep(seq(n.seq), nrow(input_set)),
@@ -83,7 +83,7 @@ run_experiment <- function(set, input_values,
              record = TRUE),
         error = function(e) rep(NA, n.seq))
     })
-    cat(paste("/n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "/n", outcome.evolution))
+    cat(paste("\n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "\n", outcome.evolution))
     average_convergence <- rbind(average_convergence,
                                  data.frame(convergence = outcome.evolution, 
                                             trading_seq = rep(seq(n.seq), nrow(input_set)),
