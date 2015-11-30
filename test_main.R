@@ -15,6 +15,7 @@ max_p <- 1
 max_q <- 0
 
 future <- TRUE
+adaptation <- FALSE
 
 if (future) {
   burn.in <- 135
@@ -39,6 +40,7 @@ x <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk
           horizon = horizon,
           nyears = burn.in + n.seq * horizon,
           record = TRUE,
+          adaptation = adaptation,
           # saving and loading climate data
           load_previous = TRUE,
           saving = TRUE
@@ -57,6 +59,7 @@ y <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk
           horizon = horizon,
           nyears = burn.in + n.seq * horizon,
           record = TRUE,
+          adaptation = adaptation,
           # saving and loading climate data
           load_previous = TRUE,
           saving = TRUE

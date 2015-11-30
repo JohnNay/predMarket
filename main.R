@@ -40,12 +40,12 @@ main <- function(parameters,
                  n.seq = 14,
                  horizon = 6,
                  nyears = 135,
+                 adaptation = TRUE,
                  load_previous = FALSE,
                  load_previous_fp_co2 = "climatedataco2.Rda",
                  load_previous_fp_tsi = "climatedatatsi.Rda",
                  saving = FALSE,
-                 saving_fp_co2 = "",
-                 saving_fp_tsi = "",
+                 saving_fp = "",
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
@@ -144,8 +144,7 @@ main <- function(parameters,
                           load_previous_fp_co2 = load_previous_fp_co2,
                           load_previous_fp_tsi = load_previous_fp_tsi,
                           saving = saving,
-                          saving_fp_co2 = saving_fp_co2,
-                          saving_fp_tsi = saving_fp_tsi)
+                          saving_fp = saving_fp)
     
     # Visualize network (optional)
     if (visu){
@@ -239,7 +238,8 @@ main <- function(parameters,
     #####
     ## Adapt approximate model
     #####
-    net <- Adapt(g = net)
+    if(adaptation)
+      net <- Adapt(g = net)
     
     if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     
@@ -358,7 +358,8 @@ main <- function(parameters,
         #####
         ## Adapt approximate model
         #####
-        net <- Adapt(g = net)
+        if(adaptation)
+          net <- Adapt(g = net)
         
         if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
         

@@ -19,8 +19,7 @@ DataPrediction <- function(
   load_previous_fp_co2 = "climatedataco2.Rda",
   load_previous_fp_tsi = "climatedatatsi.Rda",
   saving = FALSE,
-  saving_fp_co2 = "",
-  saving_fp_tsi = "",
+  saving_fp = "",
   historical.temp # c('past', 'all', 'none')
 ){
   
