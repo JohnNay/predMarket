@@ -134,7 +134,7 @@ DataPrediction <- function(
       if (length(bp) != length(reserv.co2[today,])) 
         warning("Length mismatch: length(bp) = ", length(bp), ", 
                 length(reserv.co2[today,]) = ", length(reserv.co2[today,]))
-      reserv.co2[today,]
+      reserv.co2[today,] <- bp
     }
   }
   
