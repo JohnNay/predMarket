@@ -90,7 +90,9 @@ if(!future){
                  rank = TRUE, method = "src") 
   }
   save(src, file = "output/src.Rda")
-  #plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+  pdf("output/sa_past.pdf", width=8, height=8)
+  plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+  dev.off()
 }
 
 future <- TRUE
@@ -134,7 +136,9 @@ if(future){
                         rank = TRUE, method = "src")
   }
   save(src_future, file = "output/src_future.Rda")
- # plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
+  pdf("output/sa_future.pdf", width=8, height=8)
+  plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
+  dev.off()
 }
 
 # ##############################################################################
