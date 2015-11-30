@@ -90,9 +90,10 @@ if(!future){
                  rank = TRUE, method = "src") 
   }
   save(src, file = "output/src.Rda")
-  plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+  #plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
 }
 
+future <- TRUE
 
 if(future){
   main2 <- function(parameters,
@@ -133,7 +134,7 @@ if(future){
                         rank = TRUE, method = "src")
   }
   save(src_future, file = "output/src_future.Rda")
-  plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
+ # plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
 }
 
 # ##############################################################################
