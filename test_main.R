@@ -123,5 +123,5 @@ mean.false <- append(mean.false, mean(V(x[[length(x)]])$money[V(x[[length(x)]])$
 
 }
 
-money.data2 <- data.frame(id,true.model,mean.true, mean.false)
+money.data <- data.frame(id,true.model,mean.true, mean.false)
 
