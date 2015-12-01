@@ -49,6 +49,7 @@ main <- function(parameters,
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
+                 full_history = FALSE,
                  safeNprint=FALSE) {
   historical.temp <- match.arg(historical.temp)
   out <- match.arg(out)
@@ -81,6 +82,8 @@ main <- function(parameters,
   
   # Making this a list rather than a vector, because if record==TRUE, each result is itself a vector > length 1
   result_final <- as.list(rep(NA, iterations))
+  
+  
   
   for(iteration in seq(iterations)){
     #####
@@ -151,6 +154,15 @@ main <- function(parameters,
       net <- Colored(net)
       igraph::plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     }
+    
+    
+    # net.list the element of which are net at a certain time period
+    
+    if (full_history){
+      net.list <- list()
+    }
+    
+      
     #############################################
     #############################################
     #########           RUN             #########
@@ -160,6 +172,7 @@ main <- function(parameters,
     ########                      ############
     ######   First trading sequence   ########
     ########                      ############
+    
     from <- net$burn.in + 1 # the period at which the model starts
     to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
     # are realized. The -1 accounts for the fact that no trade occurs in the last
@@ -172,6 +185,14 @@ main <- function(parameters,
     message("sequence 1")
     for (t in from:to){
       message(paste0("period ",t))
+      
+      
+      # net.list the element of which are net at a certain time period
+      
+      if (full_history){
+        net.list[[length(net.list)+1]] <- net
+      }
+      
       #####
       ## Traders chose their buy and sell orders
       #####
@@ -225,6 +246,10 @@ main <- function(parameters,
     
     net <- Payoffs(g=net, ct = to +1)
     
+    if (full_history){
+      net.list[[length(net.list)+1]] <- net
+    }
+    
     ### Safeguards & prints
     if(safeNprint){
       message(paste0("n.traders is ",n.traders))
@@ -266,6 +291,11 @@ main <- function(parameters,
         # periods. Securities are just realized and payoffs distributed.
         for (t in from:to){
           message(paste0("period",t))
+          
+          if (full_history){
+            net.list[[length(net.list)+1]] <- net
+          }
+          
           #####
           ## Traders chose their buy and sell orders
           #####
@@ -331,6 +361,10 @@ main <- function(parameters,
         
         net <- Payoffs(g=net, ct = to + 1)
         
+        if (full_history){
+          net.list[[length(net.list)+1]] <- net
+        }
+
         ### Safeguards & prints
         if(safeNprint){
           print("Change in V(net)$money from payoff")
@@ -378,10 +412,12 @@ main <- function(parameters,
     result_final[[iteration]] <- result
   }
   
-  if (record==FALSE){
+  if (record==FALSE & full_history == FALSE){
     return(mean(sapply(result_final, function(x) x)))
-  } else {
+  } else if (record==TRUE & full_history == FALSE){
     return(colMeans(do.call(rbind, result_final)))
     #return(colMeans(sapply(result_final, function(x) x)))
+  } else {
+  return(net.list)
   }
 }
