@@ -15,6 +15,7 @@ max_p <- 1
 max_q <- 0
 
 future <- TRUE
+adaptation <- FALSE
 
 if (future) {
   burn.in <- 135
@@ -38,7 +39,11 @@ x <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk
           n.seq = n.seq,
           horizon = horizon,
           nyears = burn.in + n.seq * horizon,
-          record = TRUE
+          record = TRUE,
+          adaptation = adaptation,
+          # saving and loading climate data
+          load_previous = TRUE,
+          saving = TRUE
 )
 ptm1 <- proc.time()
 cat("First process finished in", paste_with_names(prettyNum(head(ptm1 - ptm0,3), big.mark=',')), 'seconds')
@@ -53,7 +58,11 @@ y <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk
           n.seq = n.seq,
           horizon = horizon,
           nyears = burn.in + n.seq * horizon,
-          record = TRUE
+          record = TRUE,
+          adaptation = adaptation,
+          # saving and loading climate data
+          load_previous = TRUE,
+          saving = TRUE
 )
 ptm2 <- proc.time()
 cat("Second process finished in", paste_with_names(prettyNum(head(ptm2 - ptm1,3), big.mark=',')), 'seconds')

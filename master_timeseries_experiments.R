@@ -19,7 +19,7 @@ WHICH_MODEL <- 'ar1'         # "default", "arma11", or "ar1". "ar1" is recommend
 max_p <- 1                   # Maximum order for AR when running auto_arma
 max_q <- 0                   # Maximum order for MA when running auto_arma
 
-plot_final <- FALSE
+plot_final <- TRUE
 
 ##############################################################################
 ## Experiment function
@@ -47,6 +47,7 @@ run_experiment <- function(set, input_values,
     outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
       tryCatch(
         main(parameters = as.numeric(input_set[i, ]), 
+             out = "fraction_converge",
              burn.in = burn.in,
              n.seq = n.seq,
              horizon = horizon,
@@ -75,6 +76,7 @@ run_experiment <- function(set, input_values,
     outcome.evolution <- foreach::`%dopar%`(foreach::foreach(i=seq(nrow(input_set)), .combine='c'), {
       tryCatch(
         main(parameters = as.numeric(input_set[i, ]), 
+             out = "fraction_converge",
              burn.in = burn.in,
              n.seq = n.seq,
              horizon = horizon,
@@ -121,7 +123,7 @@ set[[4]] <- list(n.edg = 0.05, ideo = 0.05)
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-sample_count <- numcores*2
+sample_count <- numcores
 run_experiment(set = set, input_values = input_values, 
                file_path = "output/convergence_past.Rda",
                sample_count = sample_count,

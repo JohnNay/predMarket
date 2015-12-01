@@ -35,11 +35,17 @@ measure_outcome <- function(outcome = c("converge", "fraction_converge"), net, t
 main <- function(parameters,
                  iterations = 10,
                  out = c("converge", "fraction_converge"),
-#                    burn.in = 135,
+                 #                    burn.in = 135,
                  burn.in = 51,
                  n.seq = 14,
                  horizon = 6,
                  nyears = 135,
+                 adaptation = TRUE,
+                 load_previous = FALSE,
+                 load_previous_fp_co2 = "climatedataco2.Rda",
+                 load_previous_fp_tsi = "climatedatatsi.Rda",
+                 saving = FALSE,
+                 saving_fp = "",
                  historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
@@ -133,7 +139,12 @@ main <- function(parameters,
     #####
     
     net <- DataPrediction(net, scenario = 'rcp85', 
-                          true.model = true.model, historical.temp=historical.temp)
+                          true.model = true.model, historical.temp=historical.temp,
+                          load_previous = load_previous,
+                          load_previous_fp_co2 = load_previous_fp_co2,
+                          load_previous_fp_tsi = load_previous_fp_tsi,
+                          saving = saving,
+                          saving_fp = saving_fp)
     
     # Visualize network (optional)
     if (visu){
@@ -227,7 +238,8 @@ main <- function(parameters,
     #####
     ## Adapt approximate model
     #####
-    net <- Adapt(g = net)
+    if(adaptation)
+      net <- Adapt(g = net)
     
     if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     
@@ -346,7 +358,8 @@ main <- function(parameters,
         #####
         ## Adapt approximate model
         #####
-        net <- Adapt(g = net)
+        if(adaptation)
+          net <- Adapt(g = net)
         
         if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
         
