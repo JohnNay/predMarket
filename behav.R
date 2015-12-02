@@ -14,18 +14,16 @@ Behav <- function (
 
   n.secu    <- length((V(g)$secu)[[1]])
   n.traders <- length(V(g))
-  n.approx  <- g$n.approx
+  #n.approx  <- g$n.approx
     
   #######
   ## Traders pick at random a security that they will try to BUY once on the market
   #######
-  
   V(g)$buy.which <- sample(n.secu, n.traders, replace = TRUE)
   
   #######
-  ## Traders set a PRICE to place a BUY order (must be lower than traders's money stock)
+  ## Traders set a PRICE to place a BUY order (must be lower OR equal the traders's money stock)
   #######
-  
   for (i in 1:n.traders){
     if (V(g)$approx[i] == 1){
         V(g)$buy.price[i] <-min(
@@ -45,13 +43,11 @@ Behav <- function (
   #######
   ## Traders pick at random a security they have a positive amount of to place a SELL offer 
   #######
-  
   for (i in 1:n.traders){
     # if trader owns no securities
-    if (length(which(V(g)$secu[[i]]>0) == 0))   V(g)$sell.which[i] <- 0
+    if(all(V(g)$secu[[i]]==0))  V(g)$sell.which[i] <- 0
     # if trader owns at least one security
-    if (length(which(V(g)$secu[[i]]>0)) > 0){
-      V(g)$sell.which[i] <- sample(which(V(g)$secu[[i]] >=1),1)}
+    if (length(which(V(g)$secu[[i]]>0)) > 0) V(g)$sell.which[i] <- sample(which(V(g)$secu[[i]] >=1),1)
     # Safeguard
     if(V(g)$secu[[i]][V(g)$sell.which[i]]<1) {
       stop("a seller is trying to sell a security she does not own any
@@ -107,7 +103,7 @@ BehavPerfect <- function (
   
   n.secu    <- length((V(g)$secu)[[1]])
   n.traders <- length(V(g))
-  n.approx  <- g$n.approx
+  #n.approx  <- g$n.approx
   
   #######
   ## Traders pick at random a security that they will try to BUY once on the market

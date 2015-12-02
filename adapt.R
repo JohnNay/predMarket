@@ -1,6 +1,5 @@
 Adapt <- function( g                  
 ){
-  
   ######
   ## Useful variables
   ######
@@ -14,7 +13,6 @@ Adapt <- function( g
   ######
   
   # Draw random order of the traders
-  
   turns <- sample(1:n.traders, n.traders, replace = FALSE)
   
   ### Adapt approximate model 
