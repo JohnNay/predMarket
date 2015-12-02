@@ -77,7 +77,7 @@ if(!debug){
   
   future <- TRUE
   adaptation <- FALSE
-  load_previous <- FALSE
+  load_previous <- TRUE
   saving <- TRUE
   
   if (future) {
