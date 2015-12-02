@@ -77,6 +77,8 @@ if(!debug){
   
   future <- TRUE
   adaptation <- FALSE
+  load_previous <- TRUE
+  saving <- TRUE
   
   if (future) {
     burn.in <- 135
@@ -115,8 +117,8 @@ if(!debug){
               full_history = TRUE,
               adaptation = adaptation,
               # saving and loading climate data
-              load_previous = TRUE,
-              saving = TRUE,
+              load_previous = load_previous,
+              saving = saving,
               perfect = TRUE
     )
     
@@ -139,8 +141,8 @@ if(!debug){
               full_history = TRUE,
               adaptation = adaptation,
               # saving and loading climate data
-              load_previous = TRUE,
-              saving = TRUE,
+              load_previous = load_previous,
+              saving = saving,
               perfect = TRUE
     )
     
