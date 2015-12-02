@@ -19,8 +19,7 @@ DataPrediction <- function(
   load_previous_fp_co2 = "climatedataco2.Rda",
   load_previous_fp_tsi = "climatedatatsi.Rda",
   saving = FALSE,
-  saving_fp = "",
-  historical.temp # c('past', 'all', 'none')
+  saving_fp = ""
 ){
   
   if (true.model == 1){
@@ -108,12 +107,6 @@ DataPrediction <- function(
     #   } else history_start <- time.span # This must be compatible with the number of available 
     #   # historical data points
     future_length = max(0, n.periods - burn.in)
-    
-    sim.start <- switch(historical.temp,
-                        'none' = 0,
-                        'past' = burn.in,
-                        'all' = nrow(climate_data)
-    )
     
     ### Initialize the true models
     message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,

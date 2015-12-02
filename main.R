@@ -46,12 +46,10 @@ main <- function(parameters,
                  load_previous_fp_tsi = "climatedatatsi.Rda",
                  saving = FALSE,
                  saving_fp = "",
-                 historical.temp = c('past', 'all', 'none'),
                  visu = FALSE,
                  record = FALSE,
                  full_history = FALSE,
                  safeNprint=FALSE) {
-  historical.temp <- match.arg(historical.temp)
   out <- match.arg(out)
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
@@ -142,7 +140,7 @@ main <- function(parameters,
     #####
     
     net <- DataPrediction(net, scenario = 'rcp85', 
-                          true.model = true.model, historical.temp=historical.temp,
+                          true.model = true.model,
                           load_previous = load_previous,
                           load_previous_fp_co2 = load_previous_fp_co2,
                           load_previous_fp_tsi = load_previous_fp_tsi,
