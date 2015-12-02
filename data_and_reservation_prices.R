@@ -69,6 +69,7 @@ DataPrediction <- function(
       #                           secu.intervals = secu.intervals)
       reserv.tsi <- climatedataco2$reserv.tsi
       reserv.co2 <- climatedataco2$reserv.co2
+      reserv.best <- climatedataco2$reserv.best
       mdl <- climatedataco2$mdl
       secu.intervals <- climatedataco2$secu.intervals
     }
@@ -82,6 +83,7 @@ DataPrediction <- function(
       #                           secu.intervals = secu.intervals)
       reserv.tsi <- climatedatatsi$reserv.tsi
       reserv.co2 <- climatedatatsi$reserv.co2
+      reserv.best <- climatedatatsi$reserv.best
       mdl <- climatedatatsi$mdl
       secu.intervals <- climatedatatsi$secu.intervals
     }
@@ -196,6 +198,7 @@ DataPrediction <- function(
       if(true_covar == 'log.co2'){
         climatedataco2 <- list(reserv.tsi = reserv.tsi,
                             reserv.co2 = reserv.co2,
+                            reserv.best = reserv.best,
                             mdl = mdl,
                             secu.intervals = secu.intervals)
         save(climatedataco2, file = paste0(saving_fp, "climatedataco2.Rda"))
@@ -204,6 +207,7 @@ DataPrediction <- function(
       if(true_covar == 'slow.tsi'){
         climatedatatsi <- list(reserv.tsi = reserv.tsi,
                                reserv.co2 = reserv.co2,
+                               reserv.best = reserv.best,
                                mdl = mdl,
                                secu.intervals = secu.intervals)
         save(climatedatatsi, file = paste0(saving_fp, "climatedatatsi.Rda"))

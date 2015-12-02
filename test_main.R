@@ -91,7 +91,7 @@ if(!debug){
   
   ptm0 <- proc.time()
   
-  iteration <- 3
+  iteration <- 1
   
   id <- c()
   true.model <- c()
@@ -115,9 +115,33 @@ if(!debug){
               full_history = TRUE,
               adaptation = adaptation,
               # saving and loading climate data
-              load_previous = FALSE,
+              load_previous = TRUE,
               saving = TRUE,
-              perfect = TRUE,
+              perfect = TRUE
+    )
+    
+    id <- append(id,iteration)
+    true.model <- append(true.model, x[[length(x)]]$true.model)
+    mean.true <- append(mean.true, mean(V(x[[length(x)]])$money[V(x[[length(x)]])$approx == x[[length(x)]]$true.model]))
+    mean.false <- append(mean.false, mean(V(x[[length(x)]])$money[V(x[[length(x)]])$approx != x[[length(x)]]$true.model]))
+    
+    x <- main(parameters = c(runif(3, min = 0.0001, max = 0.9999), # seg, ideo, risk.tak
+                             0, # true model: 0 = slow.tsi, 1 = log.co2
+                             runif(2, min = 0.0001, max = 0.9999)), # n.edge and n.traders
+              out = "fraction_converge",
+              safeNprint=FALSE,
+              iterations = 1,
+              burn.in = burn.in,
+              n.seq = n.seq,
+              horizon = horizon,
+              nyears = burn.in + n.seq * horizon,
+              record = TRUE,
+              full_history = TRUE,
+              adaptation = adaptation,
+              # saving and loading climate data
+              load_previous = TRUE,
+              saving = TRUE,
+              perfect = TRUE
     )
     
     id <- append(id,iteration)
@@ -129,4 +153,4 @@ if(!debug){
   
   money.data <- data.frame(id,true.model,mean.true, mean.false)
 
-
+}
