@@ -124,7 +124,7 @@ Interact <- function (
         
         #Safeguard
         if (V(g)$buy.order[buyer] != 1){
-          stop("Some seller is going to sell a security to a agent who does not buy")
+          stop("Some seller is going to sell a security to an agent who does not buy")
         } 
         
         # pay for the security

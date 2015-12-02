@@ -29,13 +29,13 @@ Behav <- function (
   for (i in 1:n.traders){
     if (V(g)$approx[i] == 1){
         V(g)$buy.price[i] <-min(
-                            g$reserv.tsi[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i]),
+                            g$reserv.tsi[ct,V(g)$buy.which[i]]*(1-V(g)$risk.tak[i]),
                             V(g)$money[i]      
         )
     }
     if (V(g)$approx[i] == 2){
         V(g)$buy.price[i] <-min(
-                            g$reserv.co2[ct,V(g)$buy.which[i]]*(1+V(g)$risk.tak[i]),
+                            g$reserv.co2[ct,V(g)$buy.which[i]]*(1-V(g)$risk.tak[i]),
                             V(g)$money[i]      
       )
     }
