@@ -125,6 +125,10 @@ DataPrediction <- function(
     reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
     reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
     
+    ### Initialize best reservation prices
+    
+    reserv.best = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
+    
     ### generate temperature intervals
     
     secu.intervals <- seq(min(mdl@future$t.anom), max(mdl@future$t.anom), 
@@ -178,6 +182,12 @@ DataPrediction <- function(
           warning("Length mismatch: length(bp) = ", length(bp), ", 
                 length(reserv.co2[today,]) = ", length(reserv.co2[today,]))
         reserv.co2[today,] <- bp
+        
+        ### Record "best" reservation price
+        best <- findInterval(mdl@future$t.anom[today,secu.interval])
+        bp <- rep[0.1 / (n.secu-1)]
+        bp[best] <- 0.9
+        reserv.best[today,] <- bp
       }
     }
     
@@ -205,6 +215,7 @@ DataPrediction <- function(
   #####
   g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
   g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
+  g <- set.graph.attribute(g,"reserv.best",reserv.best)
   if (FALSE) {
     if (anyNA(mdl@future$t.anom[burn.in:n.periods]))
       browser()

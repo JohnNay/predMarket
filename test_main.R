@@ -115,8 +115,9 @@ if(!debug){
               full_history = TRUE,
               adaptation = adaptation,
               # saving and loading climate data
-              load_previous = TRUE,
-              saving = TRUE
+              load_previous = FALSE,
+              saving = TRUE,
+              perfect = TRUE,
     )
     
     id <- append(id,iteration)
@@ -127,5 +128,5 @@ if(!debug){
   }
   
   money.data <- data.frame(id,true.model,mean.true, mean.false)
-}
+
 

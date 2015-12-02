@@ -49,6 +49,7 @@ main <- function(parameters,
                  visu = FALSE,
                  record = FALSE,
                  full_history = FALSE,
+                 perfect = FALSE,
                  safeNprint=FALSE) {
   out <- match.arg(out)
   # TODO: set nyears to adapt to whether there is future or not.
@@ -196,7 +197,12 @@ main <- function(parameters,
       #####
       
       ### BEHAVE
-      net <- Behav(net, ct = t)
+      if (perfect){
+      net <- BehavPerfect(net, ct = t)
+      }
+      else {
+       net <- Behav(net, ct = t)
+      }
       
       #####
       ## Traders exchange on the market
@@ -297,7 +303,13 @@ main <- function(parameters,
           #####
           ## Traders chose their buy and sell orders
           #####
-          net <- Behav(net, ct = t)
+          
+          if (perfect){
+            net <- BehavPerfect(net, ct = t)
+          }
+          else {
+            net <- Behav(net, ct = t)
+          }
           
           #####
           ## Traders exchange on the market
