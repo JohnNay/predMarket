@@ -91,7 +91,7 @@ if(!debug){
   
   ptm0 <- proc.time()
   
-  iteration <- 3
+  iteration <- 1
   
   id <- c()
   true.model <- c()
@@ -115,7 +115,7 @@ if(!debug){
               full_history = TRUE,
               adaptation = adaptation,
               # saving and loading climate data
-              load_previous = FALSE,
+              load_previous = TRUE,
               saving = TRUE,
               perfect = TRUE
     )
