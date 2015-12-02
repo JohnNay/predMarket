@@ -187,7 +187,7 @@ DataPrediction <- function(
         
         ### Record "best" reservation price
         best <- findInterval(
-          mdl@future$t.anom[today + trader_horizon],secu.interval) + 1
+          mdl@future$t.anom[today + trader_horizon],secu.intervals) + 1
         bp <- rep(0, n.secu)
         bp[best] <- 1
         reserv.best[today,] <- bp
