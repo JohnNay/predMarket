@@ -19,8 +19,7 @@ DataPrediction <- function(
   load_previous_fp_co2 = "climatedataco2.Rda",
   load_previous_fp_tsi = "climatedatatsi.Rda",
   saving = FALSE,
-  saving_fp = "",
-  historical.temp # c('past', 'all', 'none')
+  saving_fp = ""
 ){
   
   if (true.model == 1){
@@ -70,6 +69,7 @@ DataPrediction <- function(
       #                           secu.intervals = secu.intervals)
       reserv.tsi <- climatedataco2$reserv.tsi
       reserv.co2 <- climatedataco2$reserv.co2
+      reserv.best <- climatedataco2$reserv.best
       mdl <- climatedataco2$mdl
       secu.intervals <- climatedataco2$secu.intervals
     }
@@ -83,6 +83,7 @@ DataPrediction <- function(
       #                           secu.intervals = secu.intervals)
       reserv.tsi <- climatedatatsi$reserv.tsi
       reserv.co2 <- climatedatatsi$reserv.co2
+      reserv.best <- climatedatatsi$reserv.best
       mdl <- climatedatatsi$mdl
       secu.intervals <- climatedatatsi$secu.intervals
     }
@@ -109,12 +110,6 @@ DataPrediction <- function(
     #   # historical data points
     future_length = max(0, n.periods - burn.in)
     
-    sim.start <- switch(historical.temp,
-                        'none' = 0,
-                        'past' = burn.in,
-                        'all' = nrow(climate_data)
-    )
-    
     ### Initialize the true models
     message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
             ", true covars = ", true_covar)
@@ -131,6 +126,10 @@ DataPrediction <- function(
     
     reserv.tsi = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
     reserv.co2 = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
+    
+    ### Initialize best reservation prices
+    
+    reserv.best = data.frame(matrix(NA, nrow = n.periods, ncol = n.secu))
     
     ### generate temperature intervals
     
@@ -185,6 +184,13 @@ DataPrediction <- function(
           warning("Length mismatch: length(bp) = ", length(bp), ", 
                 length(reserv.co2[today,]) = ", length(reserv.co2[today,]))
         reserv.co2[today,] <- bp
+        
+        ### Record "best" reservation price
+        best <- findInterval(
+          mdl@future$t.anom[today + trader_horizon],secu.intervals) + 1
+        bp <- rep(0, n.secu)
+        bp[best] <- 1
+        reserv.best[today,] <- bp
       }
     }
     
@@ -192,6 +198,7 @@ DataPrediction <- function(
       if(true_covar == 'log.co2'){
         climatedataco2 <- list(reserv.tsi = reserv.tsi,
                             reserv.co2 = reserv.co2,
+                            reserv.best = reserv.best,
                             mdl = mdl,
                             secu.intervals = secu.intervals)
         save(climatedataco2, file = paste0(saving_fp, "climatedataco2.Rda"))
@@ -200,6 +207,7 @@ DataPrediction <- function(
       if(true_covar == 'slow.tsi'){
         climatedatatsi <- list(reserv.tsi = reserv.tsi,
                                reserv.co2 = reserv.co2,
+                               reserv.best = reserv.best,
                                mdl = mdl,
                                secu.intervals = secu.intervals)
         save(climatedatatsi, file = paste0(saving_fp, "climatedatatsi.Rda"))
@@ -212,6 +220,7 @@ DataPrediction <- function(
   #####
   g <- set.graph.attribute(g,"reserv.tsi",reserv.tsi)
   g <- set.graph.attribute(g,"reserv.co2",reserv.co2)
+  g <- set.graph.attribute(g,"reserv.best",reserv.best)
   if (FALSE) {
     if (anyNA(mdl@future$t.anom[burn.in:n.periods]))
       browser()

@@ -11,9 +11,15 @@ library(stringr)
 # This is so rstan:::rstan_load_time will get updated for the purpose of loading the stan model.
 if ('package:rstan' %in% search())
   detach('package:rstan', unload=TRUE)
-library(rstan)
 
-rstan_options(auto_write = TRUE)
+if (require(rstan)) {
+  RSTAN_LOADED <- TRUE
+  rstan_options(auto_write = TRUE)
+} else {
+  warning("rstan was not loaded when sourcing climate_model.R")
+  RSTAN_LOADED <- FALSE
+}
+
 
 TRACE_CLIMATE_MODEL <- FALSE
 PARALLEL_STAN <- FALSE
@@ -292,6 +298,9 @@ fit_model <- function(scaled_data, covariate, prior.coefs,
                       n_sample = 800, n_chains = 4,
                       filter_results = TRUE,
                       threshold = 0.25) {
+  if (! RSTAN_LOADED) {
+    stop("rstan was not loaded.")
+  }
   scaled_data <- extract_covar(scaled_data, covariate)
   this.year <- max(scaled_data$year)
   if (WHICH_MODEL == 'arma11') {

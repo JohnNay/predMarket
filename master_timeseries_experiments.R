@@ -33,10 +33,10 @@ run_experiment <- function(set, input_values,
   for(j in set){
     input_values$n.edg <- list(random_function = "qunif",
                                ARGS = list(min = j$n.edg, max = j$n.edg))
-    input_values$ideo <- list(random_function = "qunif",
-                              ARGS = list(min = j$ideo, max = j$ideo))
+    input_values$seg <- list(random_function = "qunif",
+                              ARGS = list(min = j$seg, max = j$seg))
     
-    # TRUE model is Human-induced
+    # TRUE model is log co2
     input_values$true.model <- list(random_function = "qbinom",
                                     ARGS = list(size = 1, prob = 1))
     input_set <- create_set(input_values = input_values, 
@@ -65,7 +65,7 @@ run_experiment <- function(set, input_values,
                                             stringsAsFactors = FALSE)
     )
     
-    # TRUE model is Sun Spots
+    # TRUE model is slow TSI
     input_values$true.model <- list(random_function = "qbinom",
                                     ARGS = list(size = 1, prob = 0))
     input_set <- create_set(input_values = input_values, 
@@ -110,20 +110,20 @@ input_values$true.model <- list(random_function = "qbinom",
 input_values$n.edg <- list(random_function = "qunif",
                            ARGS = list(min = 0.0001, max = 0.9999))
 input_values$n.traders <- list(random_function = "qunif",
-                               ARGS = list(min = 0.0001, max = 0.19999))
+                               ARGS = list(min = 0.0001, max = 0.9999))
 
 set <- list()
-set[[1]] <- list(n.edg = 0.95, ideo = 0.95)
-set[[2]] <- list(n.edg = 0.95, ideo = 0.05)
-set[[3]] <- list(n.edg = 0.05, ideo = 0.95)
-set[[4]] <- list(n.edg = 0.05, ideo = 0.05)
+set[[1]] <- list(n.edg = 0.95, seg = 0.95)
+set[[2]] <- list(n.edg = 0.95, seg = 0.05)
+set[[3]] <- list(n.edg = 0.05, seg = 0.95)
+set[[4]] <- list(n.edg = 0.05, seg = 0.05)
 
 
 ##############################################################################
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-sample_count <- numcores
+sample_count <- numcores*2
 run_experiment(set = set, input_values = input_values, 
                file_path = "output/convergence_past.Rda",
                sample_count = sample_count,
@@ -143,7 +143,7 @@ if(plot_final){
   #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
   # n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-         labels = c("n.edge = 105, ideo = 0.05", "n.edge = 105, ideo = 0.95", "n.edge = 195, ideo = 0.05", "n.edge = 195, ideo = 0.95"))
+         labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_past.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
     geom_point() + geom_smooth() +
@@ -160,7 +160,7 @@ if(plot_final){
   #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
   # n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                          labels = c("n.edge = 105, ideo = 0.05", "n.edge = 105, ideo = 0.95", "n.edge = 195, ideo = 0.05", "n.edge = 195, ideo = 0.95"))
+                          labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_future.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
     geom_point() + geom_smooth() +

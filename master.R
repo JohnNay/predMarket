@@ -27,7 +27,7 @@ input_values$true.model <- list(random_function = "qbinom",
 input_values$n.edg <- list(random_function = "qunif",
                            ARGS = list(min = 0.0001, max = 0.9999))
 input_values$n.traders <- list(random_function = "qunif",
-                               ARGS = list(min = 0.0001, max = 0.19999))
+                               ARGS = list(min = 0.0001, max = 0.9999))
 
 if(estimate_replicates){
   ##############################################################################
@@ -48,7 +48,9 @@ if(estimate_replicates){
 ## Main sens analysis
 ##############################################################################
 
-future <- FALSE
+future <- TRUE
+sample_count <- 120
+cores <- 30
 
 # Standardized Regression Coefficient
 if(!future){
@@ -73,20 +75,20 @@ if(!future){
                  previous_pc_sa = list(src),
                  out = "converg", 
                  iterations = 5,
-                 sample_count = 120,
+                 sample_count = sample_count,
                  nboot = 1000, 
                  parallel = TRUE,
-                 cores = 30,
+                 cores = cores,
                  rank = TRUE, method = "src")
   } else{
     src <- pc_sa(abm = main2, 
                  input_values = input_values,
                  out = "converg", 
                  iterations = 5,
-                 sample_count = 120,
+                 sample_count = sample_count,
                  nboot = 1000, 
                  parallel = TRUE,
-                 cores = 30,
+                 cores = cores,
                  rank = TRUE, method = "src") 
   }
   save(src, file = "output/src.Rda")
@@ -94,8 +96,6 @@ if(!future){
   plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
   dev.off()
 }
-
-future <- TRUE
 
 if(future){
   main2 <- function(parameters,
@@ -109,7 +109,7 @@ if(future){
          burn.in = burn.in,
          n.seq = n.seq,
          horizon = horizon,
-         nyears = burn.in + n.seq * horizon)# 219,)
+         nyears = burn.in + n.seq * horizon)
   }
   
   if(file.exists("output/src_future.Rda")){
@@ -119,20 +119,20 @@ if(future){
                         previous_pc_sa = list(src_future),
                         out = "converg", 
                         iterations = 5,
-                        sample_count = 120,
+                        sample_count = sample_count,
                         nboot = 1000, 
                         parallel = TRUE,
-                        cores = 30,
+                        cores = cores,
                         rank = TRUE, method = "src")
   } else {
     src_future <- pc_sa(abm = main2, 
                         input_values = input_values,
                         out = "converg", 
                         iterations = 5,
-                        sample_count = 120,
+                        sample_count = sample_count,
                         nboot = 1000, 
                         parallel = TRUE,
-                        cores = 30,
+                        cores = cores,
                         rank = TRUE, method = "src")
   }
   save(src_future, file = "output/src_future.Rda")
