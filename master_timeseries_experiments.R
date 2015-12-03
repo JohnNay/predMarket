@@ -146,14 +146,16 @@ if(plot_final){
          labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_past.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
-    geom_point() + geom_smooth() +
+    geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Past Scenario (burn.in = 51 years)") +
     xlab("Trading Sequences") + 
     ylab(paste0("Trader Model Convergence (n = ", 
                 length(complete.cases(plot_data$convergence)), ")")) + 
+    ylim(-1,1) +
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-    scale_color_discrete(name="True Model")
+    #scale_color_discrete(name="True Model") +
+    scale_color_brewer(palette="Dark2", name="True Model")
   dev.off()
   
   load("output/convergence_future.Rda")
@@ -165,13 +167,15 @@ if(plot_final){
                           labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_future.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
-    geom_point() + geom_smooth() +
+    geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Future Scenario (burn.in = 135 years)") +
     xlab("Trading Sequences") + 
     ylab(paste0("Trader Model Convergence (n = ", 
                 length(complete.cases(plot_data$convergence)), ")")) + 
+    ylim(-1,1) +
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-    scale_color_discrete(name="True Model")
+    #scale_color_discrete(name="True Model") +
+    scale_color_brewer(palette="Dark2", name="True Model")
   dev.off()
 }
