@@ -123,7 +123,7 @@ set[[4]] <- list(n.edg = 0.05, seg = 0.05)
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-sample_count <- numcores*2 # numcores*7 takes 8.5 hours to run for past
+sample_count <- numcores # numcores*7 takes 8.5 hours to run for past
 # run_experiment(set = set, input_values = input_values, 
 #                file_path = "output/convergence_past.Rda",
 #                sample_count = sample_count,
