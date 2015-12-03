@@ -3,6 +3,11 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 # lines of code work without error, ensuring that the working of the model is not 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code
+
+args <- commandArgs(trailingOnly = TRUE)
+cores <- as.integer(args[1])
+message(paste("Number of cores", cores))
+
 source("main.R")
 # devtools::install_github("JohnNay/eat", 
 #                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
@@ -48,9 +53,8 @@ if(estimate_replicates){
 ## Main sens analysis
 ##############################################################################
 
-future <- TRUE
+future <- FALSE
 sample_count <- 120
-cores <- 30
 
 # Standardized Regression Coefficient
 if(!future){
@@ -96,6 +100,8 @@ if(!future){
   plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
   dev.off()
 }
+
+future <- TRUE
 
 if(future){
   main2 <- function(parameters,
