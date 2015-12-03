@@ -17,9 +17,10 @@ max_q <- 0
 debug <- FALSE
 
 if(!debug){
-  future <- TRUE
+  future <- FALSE
   adaptation <- TRUE
   full_history <- FALSE
+  load_previous  <- FALSE
   
   if (future) {
     burn.in <- 135
@@ -47,7 +48,7 @@ if(!debug){
             full_history = full_history,
             adaptation = adaptation,
             # saving and loading climate data
-            load_previous = TRUE,
+            load_previous = load_previous ,
             saving = TRUE
   )
   ptm1 <- proc.time()
@@ -67,7 +68,7 @@ if(!debug){
             full_history = full_history,
             adaptation = adaptation,
             # saving and loading climate data
-            load_previous = TRUE,
+            load_previous = load_previous ,
             saving = TRUE
   )
   ptm2 <- proc.time()
