@@ -14,11 +14,11 @@ WHICH_MODEL <- 'ar1'
 max_p <- 1
 max_q <- 0
 
-debug <- TRUE
+debug <- FALSE
 
 if(!debug){
   future <- TRUE
-  adaptation <- FALSE
+  adaptation <- TRUE
   
   if (future) {
     burn.in <- 135
