@@ -19,6 +19,7 @@ debug <- FALSE
 if(!debug){
   future <- TRUE
   adaptation <- TRUE
+  full_history <- FALSE
   
   if (future) {
     burn.in <- 135
@@ -43,7 +44,7 @@ if(!debug){
             horizon = horizon,
             nyears = burn.in + n.seq * horizon,
             record = TRUE,
-            full_history = TRUE,
+            full_history = full_history,
             adaptation = adaptation,
             # saving and loading climate data
             load_previous = TRUE,
@@ -63,6 +64,7 @@ if(!debug){
             horizon = horizon,
             nyears = burn.in + n.seq * horizon,
             record = TRUE,
+            full_history = full_history,
             adaptation = adaptation,
             # saving and loading climate data
             load_previous = TRUE,
@@ -79,6 +81,7 @@ if(!debug){
   adaptation <- FALSE
   load_previous <- TRUE
   saving <- TRUE
+  full_history <- TRUE
   
   if (future) {
     burn.in <- 135
@@ -114,7 +117,7 @@ if(!debug){
               horizon = horizon,
               nyears = burn.in + n.seq * horizon,
               record = TRUE,
-              full_history = TRUE,
+              full_history = full_history,
               adaptation = adaptation,
               # saving and loading climate data
               load_previous = load_previous,
@@ -138,7 +141,7 @@ if(!debug){
               horizon = horizon,
               nyears = burn.in + n.seq * horizon,
               record = TRUE,
-              full_history = TRUE,
+              full_history = full_history,
               adaptation = adaptation,
               # saving and loading climate data
               load_previous = load_previous,
