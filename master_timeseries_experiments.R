@@ -123,11 +123,11 @@ set[[4]] <- list(n.edg = 0.05, seg = 0.05)
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-sample_count <- numcores*7
-run_experiment(set = set, input_values = input_values, 
-               file_path = "output/convergence_past.Rda",
-               sample_count = sample_count,
-               burn.in = 51)
+sample_count <- numcores*2 # numcores*7 takes 8.5 hours to run for past
+# run_experiment(set = set, input_values = input_values, 
+#                file_path = "output/convergence_past.Rda",
+#                sample_count = sample_count,
+#                burn.in = 51)
 run_experiment(set = set, input_values = input_values, 
                file_path = "output/convergence_future.Rda",
                sample_count = sample_count,
@@ -149,7 +149,9 @@ if(plot_final){
     geom_point() + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Past Scenario (burn.in = 51 years)") +
-    xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+    xlab("Trading Sequences") + 
+    ylab(paste0("Trader Model Convergence (n = ", 
+                length(complete.cases(plot_data$convergence)), ")")) + 
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
     scale_color_discrete(name="True Model")
   dev.off()
@@ -166,7 +168,9 @@ if(plot_final){
     geom_point() + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Future Scenario (burn.in = 135 years)") +
-    xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+    xlab("Trading Sequences") + 
+    ylab(paste0("Trader Model Convergence (n = ", 
+                length(complete.cases(plot_data$convergence)), ")")) + 
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
     scale_color_discrete(name="True Model")
   dev.off()
