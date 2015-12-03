@@ -19,17 +19,26 @@ WHICH_MODEL <- 'ar1'         # "default", "arma11", or "ar1". "ar1" is recommend
 max_p <- 1                   # Maximum order for AR when running auto_arma
 max_q <- 0                   # Maximum order for MA when running auto_arma
 
-plot_final <- TRUE
+plot_final <- FALSE
 
 ##############################################################################
 ## Experiment function
 ##############################################################################
 run_experiment <- function(set, input_values, 
                            file_path = "output/average_convergence_past.Rda",
+                           previous_results = NULL,
                            sample_count = 30,
                            burn.in = 51, n.seq = 14, horizon = 6){
   nyears <- burn.in + n.seq * horizon
-  average_convergence <- data.frame(stringsAsFactors = FALSE)
+  
+  if(is.null(previous_results)){
+    average_convergence <- data.frame(stringsAsFactors = FALSE)
+  } else {
+    load(previous_results) # needs to be a char vec specifying a path to a 
+    # df called "average_convergence" created by this function before
+    stopifnot(exists("average_convergence"))
+  }
+  
   for(j in set){
     input_values$n.edg <- list(random_function = "qunif",
                                ARGS = list(min = j$n.edg, max = j$n.edg))
@@ -123,15 +132,23 @@ set[[4]] <- list(n.edg = 0.05, seg = 0.05)
 ## Run experiment
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
-sample_count <- numcores*7
-run_experiment(set = set, input_values = input_values, 
-               file_path = "output/convergence_past.Rda",
-               sample_count = sample_count,
-               burn.in = 51)
-run_experiment(set = set, input_values = input_values, 
-               file_path = "output/convergence_future.Rda",
-               sample_count = sample_count,
-               burn.in = 135)
+sample_count <- numcores*6 # numcores*7 takes 8.5 hours to run for past
+past <- FALSE
+future <- TRUE
+if(past){
+  run_experiment(set = set, input_values = input_values, 
+                 file_path = "output/convergence_past.Rda",
+                 sample_count = sample_count,
+                 burn.in = 51)
+}
+if(future){
+  run_experiment(set = set, input_values = input_values, 
+                 file_path = "output/convergence_future.Rda",
+                 # Add to previous results?
+                 previous_results = "output/convergence_future.Rda",
+                 sample_count = sample_count,
+                 burn.in = 135)
+}
 
 ##############################################################################
 ## Plots
@@ -146,12 +163,16 @@ if(plot_final){
          labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_past.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
-    geom_point() + geom_smooth() +
+    geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Past Scenario (burn.in = 51 years)") +
-    xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+    xlab("Trading Sequences") + 
+    ylab(paste0("Trader Model Convergence (n = ", 
+                length(complete.cases(plot_data$convergence)), ")")) + 
+    ylim(-1,1) +
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-    scale_color_discrete(name="True Model")
+    #scale_color_discrete(name="True Model") +
+    scale_color_brewer(palette="Dark2", name="True Model")
   dev.off()
   
   load("output/convergence_future.Rda")
@@ -163,11 +184,15 @@ if(plot_final){
                           labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
   pdf("output/timeseries_future.pdf", width=8, height=18)
   ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
-    geom_point() + geom_smooth() +
+    geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
     ggplot2::facet_wrap(~set, ncol = 1) +
     ggtitle("Convergence Over Trading Sequences, Future Scenario (burn.in = 135 years)") +
-    xlab("Trading Sequences") + ylab(paste0("Trader Model Convergence (n = ", sample_count, ")")) + 
+    xlab("Trading Sequences") + 
+    ylab(paste0("Trader Model Convergence (n = ", 
+                length(complete.cases(plot_data$convergence)), ")")) + 
+    ylim(-1,1) +
     theme_bw() + theme(legend.justification=c(1,0), legend.position=c(1,0)) + 
-    scale_color_discrete(name="True Model")
+    #scale_color_discrete(name="True Model") +
+    scale_color_brewer(palette="Dark2", name="True Model")
   dev.off()
 }
