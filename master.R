@@ -99,8 +99,8 @@ if(past){
   }
   save(src, file = "output/src.Rda")
   if (plotting){
-    pdf("output/sa_past.pdf", width=8, height=8)
-    plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
+    pdf("output/sa_past.pdf", width=10, height=10)
+    plot(src, outcome_var = paste0("Convergence of Beliefs in Past Scenario \n (R^2= ", round(src@r_squared, 2), " , n=",  length(src@sims),")"))
     dev.off()
   }
 }
@@ -146,8 +146,8 @@ if(future){
   }
   save(src_future, file = "output/src_future.Rda")
   if (plotting){
-    pdf("output/sa_future.pdf", width=8, height=8)
-    plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
+    pdf("output/sa_future.pdf", width=10, height=10)
+    plot(src_future, outcome_var = paste0("Convergence of Beliefs in Future Scenario \n (R^2= ", round(src_future@r_squared, 2), " , n=",  length(src_future@sims),")"))
     dev.off()
   }
 }
