@@ -20,7 +20,7 @@ if(!debug){
   future <- FALSE
   adaptation <- TRUE
   full_history <- FALSE
-  load_previous  <- FALSE
+  load_previous  <- TRUE
   
   if (future) {
     burn.in <- 135
@@ -47,8 +47,9 @@ if(!debug){
             record = TRUE,
             full_history = full_history,
             adaptation = adaptation,
+            visu = TRUE,
             # saving and loading climate data
-            load_previous = load_previous ,
+            load_previous = load_previous,
             saving = TRUE
   )
   ptm1 <- proc.time()
@@ -67,8 +68,9 @@ if(!debug){
             record = TRUE,
             full_history = full_history,
             adaptation = adaptation,
+            visu = TRUE,
             # saving and loading climate data
-            load_previous = load_previous ,
+            load_previous = load_previous,
             saving = TRUE
   )
   ptm2 <- proc.time()
