@@ -25,6 +25,8 @@ p <- ggplot(data=plot_data, aes(x= trading_seq * 6 + 2014, y=(convergence + 1) *
 
 print(p)
 
-pdf("output/jg_timeseries_future.pdf", width=8, height=18)
-print(p)
-dev.off()
+if (FALSE) {
+  pdf("output/jg_timeseries_future.pdf", width=8, height=18)
+  print(p)
+  dev.off()
+}
