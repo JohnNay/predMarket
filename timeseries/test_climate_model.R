@@ -1,7 +1,7 @@
 #
 #
 #
-# rm(list = ls())
+rm(list = ls())
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -10,7 +10,7 @@ source('prepare_data.R')
 source('climate_model.R')
 
 TRACE_CLIMATE_MODEL <- TRUE
-PARALLEL_STAN <- FALSE
+PARALLEL_STAN <- TRUE
 WHICH_MODEL <- 'ar1'
 
 theme_set(theme_bw(base_size=20))
@@ -20,10 +20,16 @@ data <- prepare_climate_data('rcp 4.5')
 climate_data <- data$data
 future_data <- data$future
 
-today <- which(climate_data$year == 1999)
+if (FALSE) {
+  today <- which(climate_data$year == 1999)
+  n_future <- 100
+} else {
+  today <- nrow(climate_data)
+  n_future <- 2100 - max(climate_data$year)
+}
 
 mdl.co2 <- new('climate_model', climate = climate_data)
-mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = 100, true_covar = 'log.co2', future_covars = future_data)
+mdl.co2 <- init_model(mdl.co2, n_history = today, n_future = n_future, true_covar = 'log.co2', future_covars = future_data)
 
 future.co2.co2 <- update_model(mdl.co2, n_today = today + 50, n_horizon = 30, trader_covar = 'log.co2')
 
