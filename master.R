@@ -50,14 +50,15 @@ if(estimate_replicates){
 }
 
 ##############################################################################
-## Main sens analysis
+## Main sens analysis # Standardized Regression Coefficient
 ##############################################################################
 
-future <- FALSE
+future <- TRUE
+past <- TRUE
+plotting <- FALSE
 sample_count <- 120
 
-# Standardized Regression Coefficient
-if(!future){
+if(past){
   main2 <- function(parameters,
                     iterations = 10,
                     burn.in = 51,
@@ -65,6 +66,7 @@ if(!future){
                     horizon = 6,
                     out){
     main(parameters = parameters,
+         out = out,
          iterations = iterations,
          burn.in = burn.in,
          n.seq = n.seq,
@@ -77,7 +79,7 @@ if(!future){
     src <- pc_sa(abm = main2, 
                  input_values = input_values,
                  previous_pc_sa = list(src),
-                 out = "converg", 
+                 out = "converge", 
                  iterations = 5,
                  sample_count = sample_count,
                  nboot = 1000, 
@@ -87,7 +89,7 @@ if(!future){
   } else{
     src <- pc_sa(abm = main2, 
                  input_values = input_values,
-                 out = "converg", 
+                 out = "converge", 
                  iterations = 5,
                  sample_count = sample_count,
                  nboot = 1000, 
@@ -96,12 +98,12 @@ if(!future){
                  rank = TRUE, method = "src") 
   }
   save(src, file = "output/src.Rda")
-  pdf("output/sa_past.pdf", width=8, height=8)
-  plot(src, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src@r_squared, 2), ")"))
-  dev.off()
+  if (plotting){
+    pdf("output/sa_past.pdf", width=10, height=10)
+    plot(src, outcome_var = paste0("Convergence of Beliefs in Past Scenario \n (R^2= ", round(src@r_squared, 2), " , n=",  length(src@sims),")"))
+    dev.off()
+  }
 }
-
-future <- TRUE
 
 if(future){
   main2 <- function(parameters,
@@ -112,6 +114,7 @@ if(future){
                     out){
     main(parameters = parameters,
          iterations = iterations,
+         out = out,
          burn.in = burn.in,
          n.seq = n.seq,
          horizon = horizon,
@@ -123,7 +126,7 @@ if(future){
     src_future <- pc_sa(abm = main2, 
                         input_values = input_values,
                         previous_pc_sa = list(src_future),
-                        out = "converg", 
+                        out = "converge", 
                         iterations = 5,
                         sample_count = sample_count,
                         nboot = 1000, 
@@ -133,7 +136,7 @@ if(future){
   } else {
     src_future <- pc_sa(abm = main2, 
                         input_values = input_values,
-                        out = "converg", 
+                        out = "converge", 
                         iterations = 5,
                         sample_count = sample_count,
                         nboot = 1000, 
@@ -142,9 +145,11 @@ if(future){
                         rank = TRUE, method = "src")
   }
   save(src_future, file = "output/src_future.Rda")
-  pdf("output/sa_future.pdf", width=8, height=8)
-  plot(src_future, outcome_var = paste0("Convergence of Beliefs \n (R^2= ", round(src_future@r_squared, 2), ")"))
-  dev.off()
+  if (plotting){
+    pdf("output/sa_future.pdf", width=10, height=10)
+    plot(src_future, outcome_var = paste0("Convergence of Beliefs in Future Scenario \n (R^2= ", round(src_future@r_squared, 2), " , n=",  length(src_future@sims),")"))
+    dev.off()
+  }
 }
 
 # ##############################################################################
