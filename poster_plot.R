@@ -14,8 +14,8 @@ plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0
 
 
 p <- ggplot(data=plot_data, aes(x= trading_seq * 6 + 2014, y=(convergence + 1) * 50, color = true_mod)) +
-  geom_point(position = position_jitter(w = 0.05, h = 0), alpha = 0.1) + geom_smooth(size=1, fill=NA) +
-  scale_color_brewer(palette="Set1", name="True Model", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI")) +
+  geom_point(position = position_jitter(w = 0.07, h = 0), alpha = 0.1) + geom_smooth(size=1, fill=NA) +
+  scale_color_brewer(palette="Set1", name="True driver of future climate", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI")) +
   facet_wrap(~set, ncol = 1) +
   labs(x = "Year", y = paste0("% Traders Believing True Model (n = ",
               prettyNum(length(complete.cases(plot_data$convergence)), big.mark = ','), ")"),
