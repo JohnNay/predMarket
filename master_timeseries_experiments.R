@@ -10,7 +10,7 @@ library(eat)
 ## Set up parameters for climate_model to control level of tracing to screen
 ##############################################################################
 
-SHOW_CLIMATE_PLOTS <- TRUE  # Plot graph of temperature after each year?
+SHOW_CLIMATE_PLOTS <- FALSE  # Plot graph of temperature after each year?
 TRACE_CLIMATE_MODEL <- FALSE # Show diagnostic traces for stan runs?
 STAN_REFRESH <-  0           # Frequency to show stan chain progress. 0 for silent
 PARALLEL_STAN <- FALSE       # Run chains in parallel?
@@ -28,7 +28,8 @@ run_experiment <- function(set, input_values,
                            file_path = "output/average_convergence_past.Rda",
                            previous_results = NULL,
                            sample_count = 30,
-                           burn.in = 51, n.seq = 14, horizon = 6){
+                           burn.in = 51, n.seq = 14, horizon = 6,
+                           true_history = TRUE){
   nyears <- burn.in + n.seq * horizon
   
   if(is.null(previous_results)){
@@ -62,7 +63,8 @@ run_experiment <- function(set, input_values,
              horizon = horizon,
              nyears =  nyears,
              iterations = 1,
-             record = TRUE),
+             record = TRUE,
+             trueHistory = true_history),
         error = function(e) rep(NA, n.seq))
     })
     cat(paste("\n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "\n", outcome.evolution))
