@@ -10,7 +10,7 @@ library(eat)
 ## Set up parameters for climate_model to control level of tracing to screen
 ##############################################################################
 
-SHOW_CLIMATE_PLOTS <- TRUE  # Plot graph of temperature after each year?
+SHOW_CLIMATE_PLOTS <- FALSE  # Plot graph of temperature after each year?
 TRACE_CLIMATE_MODEL <- FALSE # Show diagnostic traces for stan runs?
 STAN_REFRESH <-  0           # Frequency to show stan chain progress. 0 for silent
 PARALLEL_STAN <- FALSE       # Run chains in parallel?
@@ -145,7 +145,7 @@ if(future){
   run_experiment(set = set, input_values = input_values, 
                  file_path = "output/convergence_future.Rda",
                  # Add to previous results?
-                 previous_results = "output/convergence_future.Rda",
+                 # previous_results = "output/convergence_future.Rda",
                  sample_count = sample_count,
                  burn.in = 135)
 }
