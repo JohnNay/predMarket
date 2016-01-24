@@ -6,6 +6,7 @@ rm(list=ls()) # make sure to always run this line of code and see that the next 
 
 args <- commandArgs(trailingOnly = TRUE)
 cores <- as.integer(args[1])
+plotting <- as.logical(args[2])
 message(paste("Number of cores", cores))
 
 source("main.R")
@@ -54,8 +55,7 @@ if(estimate_replicates){
 ##############################################################################
 
 future <- TRUE
-past <- TRUE
-plotting <- FALSE
+past <- FALSE
 sample_count <- 120
 
 if(past){
