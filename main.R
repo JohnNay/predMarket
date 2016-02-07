@@ -50,7 +50,8 @@ main <- function(parameters,
                  record = FALSE,
                  full_history = FALSE,
                  perfect = FALSE,
-                 safeNprint=FALSE) {
+                 safeNprint=FALSE,
+                 trueHistory = TRUE) {
   out <- match.arg(out)
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
@@ -146,7 +147,8 @@ main <- function(parameters,
                           load_previous_fp_co2 = load_previous_fp_co2,
                           load_previous_fp_tsi = load_previous_fp_tsi,
                           saving = saving,
-                          saving_fp = saving_fp)
+                          saving_fp = saving_fp,
+                          init_with_obs_record = trueHistory)
     
     # Visualize network (optional)
     if (visu){

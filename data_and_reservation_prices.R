@@ -19,7 +19,8 @@ DataPrediction <- function(
   load_previous_fp_co2 = "climatedataco2.Rda",
   load_previous_fp_tsi = "climatedatatsi.Rda",
   saving = FALSE,
-  saving_fp = ""
+  saving_fp = "",
+  init_with_obs_record = TRUE
 ){
   
   if (true.model == 1){
@@ -111,10 +112,18 @@ DataPrediction <- function(
     future_length = max(0, n.periods - burn.in)
     
     ### Initialize the true models
-    message("Initializing Model: n_history = ", burn.in, ", n_future = ", future_length,
+    if (init_with_obs_record) {
+      n_history_init <- nrow(mdl@climate)
+      n_future_init <- (burn.in + future_length) - n_history_init
+    } else {
+      n_history_init <- burn.in
+      n_future_init <- future_length
+    }
+    
+    message("Initializing Model: n_history = ", n_history_init, ", n_future = ", n_future_init,
             ", true covars = ", true_covar)
-    mdl <- init_model(mdl, n_history = burn.in,
-                      n_future = future_length, true_covar = true_covar,
+    mdl <- init_model(mdl, n_history = n_history_init,
+                      n_future = n_future_init, true_covar = true_covar,
                       future_covars = future_data,
                       max_p = max_p, max_q = max_q)
     
