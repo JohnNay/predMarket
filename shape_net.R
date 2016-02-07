@@ -39,12 +39,12 @@ ShapeNet <- function(
   }
 
   n_edges <- lapply(V(g), function(v) length(incident(g,v))) %>% unlist()
-  message("min edges = ", min(n_edges), ", max edges = ", max(n_edges))
+  # message("min edges = ", min(n_edges), ", max edges = ", max(n_edges))
   singletons <- V(g)[n_edges < min_edg]
-  message(length(singletons), " singletons")
+  # message(length(singletons), " singletons")
   for (v in singletons) {
     needed <- min_edg - incident(g, v)
-    message("Needed = ", needed, ", min_edg = ", min_edg, ", incident = ", incident(g,v))
+    # message("Needed = ", needed, ", min_edg = ", min_edg, ", incident = ", incident(g,v))
     others <- V(g)[-v]
     homoph <- (get.vertex.attribute(g, "approx", v) == get.vertex.attribute(g, "approx", others)) %>%
       as.numeric()
