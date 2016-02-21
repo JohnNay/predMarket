@@ -14,7 +14,7 @@ WHICH_MODEL <- 'ar1'
 max_p <- 1
 max_q <- 0
 
-debug <- FALSE
+debug <- TRUE
 
 if(!debug){
   future <- FALSE
