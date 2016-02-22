@@ -11,7 +11,7 @@ ss <- correct_bias(src_future@result[[7]])
 ss <- ss %>% mutate(var = ordered(var, levels = c('ideo','risk.tak','n.traders',
                                                   'n.edg', 'seg', 'true.model'),
                                   labels = c('Ideology', "Risk tolerance",
-                                             '# Traders', '# Edges', 'Segmentation',
+                                             '# Traders', '# Edges per trader', 'Segmentation',
                                              "True model")))
 
 outcome_var <- paste0("Convergence of Beliefs in Future Scenario \n (R^2= ", 
