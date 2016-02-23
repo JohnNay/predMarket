@@ -1,0 +1,205 @@
+---
+title: "Simulated Climate Prediction Markets and Convergence of Predictive Models"
+author: " "
+date: "Feb 23, 2016"
+output: 
+  pdf_document:
+    keep_tex: true
+bibliography: library.bib
+---
+
+```{r fig_ref, echo=FALSE}
+figRef <- local({
+  tag <- numeric()
+  created <- logical()
+  used <- logical()
+  function(label, caption, prefix="Fig.", sep=".",
+      prefix.highlight="**") {
+    i <- which(names(tag) == label)
+    if(length(i) == 0){
+      i <- length(tag) + 1
+      tag <<- c(tag, i)
+      names(tag)[length(tag)] <<- label
+      used <<- c(used, FALSE)
+      names(used)[length(used)] <<- label
+      created <<- c(created, FALSE)
+      names(created)[length(created)] <<- label
+    }
+    if(!missing(caption)){
+      created[label] <<- TRUE
+      paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight, " ", caption)
+    } else {
+      used[label] <<- TRUE
+      paste(prefix, tag[label])
+    }
+  }
+})
+# adapted from a function on this page: http://galahad.well.ox.ac.uk/repro/
+rinline <- function(code){
+  sprintf('`r %s`', code)
+}
+``` 
+
+```{r, caption_setting, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+knit_hooks$set(htmlcap = function(before, options, envir) {
+  if(!before) {
+    paste('<p class="caption">',options$htmlcap,"</p>",sep="")
+    }
+    })
+# small margins
+knit_hooks$set(small_mar = function(before, options, envir) {
+    if (before) par(mar = rep(0.0001, 4))  # smaller margins all around
+})
+# opts_chunk$set(dev="tiff", 
+#                dev.args=list(compression="lzw", type="cairo"),
+#                dpi=300)
+```
+
+```{r tab_ref, echo=FALSE}
+tabRef <- local({
+    tag <- numeric()
+    created <- logical()
+    used <- logical()
+    function(label, caption, prefix = "Table", 
+        sep = ".", prefix.highlight = "**") {
+        i <- which(names(tag) == label)
+        if (length(i) == 0) {
+            i <- length(tag) + 1
+            tag <<- c(tag, i)
+            names(tag)[length(tag)] <<- label
+            used <<- c(used, FALSE)
+            names(used)[length(used)] <<- label
+            created <<- c(created, FALSE)
+            names(created)[length(created)] <<- label
+        }
+        if (!missing(caption)) {
+            created[label] <<- TRUE
+            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight, 
+                " ", caption)
+        } else {
+            used[label] <<- TRUE
+            paste(prefix, tag[label])
+        }
+    }
+})
+```
+
+```{r multi_plot, echo=FALSE}
+multi_plot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+library(ggplot2)
+library(pander)
+```
+
+# Abstract
+
+We present an agent-based model of a climate prediction market in which traders adapt their belief about the climate based on the monetary performance of their neighboring traders in a social network. We analyze the model to determine how a variety of factors affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the earth's climate. We find that only the imposed ``true model'' itself significantly affects the convergence of beliefs. If the true model from which the temperature data is generated is auto-regressive, with no human-induced effects, participation in the prediction market, on average, does not cause convergence of traders' beliefs. On other hand, if anthropogenic climate change is real, traders' beliefs are more likely than not to converge toward the correct climate model due to participation in the market.
+
+# 1. Introduction
+
+The previous two decades saw a strong polarization of the climate change debate. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, the average belief about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily, indicating that the question is becoming increasingly politicized and potentially disconnected from scientific evidence. This is troubling given the costs of a misinformed climate policy. If anthropocentric climate change is a myth but is taken to be true, a tremendous amount of public resources will be wasted on adaptation and mitigation efforts. On the other hand, if climate change is human induced but not recognized as so, the costs of inaction would be huge. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
+	
+Attempts to foster such consensus face many social and psychological challenges. Recently, people have argued that such challenges could be met by setting up climate prediction markets [@Hsu2011,@Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been discussed for decades [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998,Hanson2012] and to perform well in terms of prediction accuracy in experiments [@Hanson2006,@Healy2010], agent-based models (ABM) [@Klingert2012c,@Jumadinova2011a], and in the real-world [@Wolfers2006].
+
+[@Tseng2010a] study an ABM of a continuous double auction model with various types of market strategies (including two variants of the zero-intelligence agents). They compare the behavior of their simulation with data from a prediction market for the outcome of political elections. They find that despite their simplicity, zero-intelligence agents capture some salient features of real market data. [@Klingert2012c] reach similar conclusions with respect to experimental data from  [@Hanson2006]. In their simulation, [@Klingert2012c] compare continuous double auctions with logarithmic market scoring rules and find that the latter generally outperform continuous double auctions in terms of prediction accuracy. In some variants of the two last models, agents' strategies feature learning, but these are rather basic and unrelated to a formal predictive model. 
+
+[@Jumadinova2011a] conducted research more similar to our project, as they explicitly include information about uncertain events in their model. The paper studies a continuous double auction model in which agents update their beliefs about the uncertain events based on information on the event. New beliefs are modeled as a weighted sum of the last period's beliefs and market prices. The agent's information set changes every period. The better the information set, the more likely the agent is to put higher weights on last period's prices when revising their beliefs. Not much structure is imposed on the information set and the way it is used to generate the weights in the update function. Therefore, the model does not allow for investigating the convergence of predictive models. [@Ontanon2009] study the effect of deliberation on a simulated prediction market. They assume that agents use Case-Based Reasoning [@Aamodt1994] to debate about  uncertain outcomes with their neighbors in a social network.  Although the model could in theory be used to assess convergence of predictive models by looking at the arguments agents adopt after the deliberation, this is not done by the authors. Also, the way beliefs are formed and revised through argumentation is rather abstract and might not be ideal to study climate prediction markets.
+
+However, to the best of our knowledge, the idea that prediction markets can generate consensus *on the factors* affecting  uncertain events has never been quantitatively explored. ABMs of prediction markets have been studied [@Klingert2012c,@Tseng2010a,@Jumadinova2011a], some of which feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, and therefore these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
+
+From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. And perhaps the most important potential social benefit of prediction markets given the comparable predictive power of statistical models, which are less expensive than setting up and maintaining prediction markets [@goel_prediction_2010]. Effective climate policy not only requires an accurate consensus on future climate *outcomes*. It also requires an accurate consensus on the causal *mechanisms* influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented. Our model is designed to investigate whether, and under what conditions, prediction markets can foster such convergence in predictive models.
+
+# 2. Model Design
+
+
+# 3. Results
+
+The sensitivity analysis is based on a Latin Hypercube Sampling of ... parameter sets from the following distributions [@beachkofski_improved_2002,@carnell_lhs_2012]. 
+
+
+  * ideo $\sim Unif(0,1)$
+	* market.complet $\sim Unif(0,1000)$ (mapped into integer)
+	* n.edge $\sim Unif(100,200)$ (mapped into integer)
+	* n.traders $\sim Unif(50,250)$ (mapped into integer)
+	* risk.tak  $\sim Unif(0,1)$
+	* seg $\sim Unif(0,1)$
+	* true.model $\sim Binom(0.5)$
+
+We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008,@pujol_sensitivity:_2014,@saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
+
+Our sensitivity analysis, illustrated by ...,  
+
+```{r, one, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=tabRef("one", "dfd")}
+
+```
+
+ `r tabRef("one")` 
+
+`r figRef("data_explore")` 
+
+```{r, data_explore, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("data_explore", " "), fig.width=10, fig.height=5}
+
+#multi_plot(p1, p2, cols = 2)
+```
+
+
+# 4. Discussion
+
+
+
+# Acknowledgements
+
+We would like to thank Yevgeniy Vorobeychik for feedback on this project.
+
+# References
+
+```{r, finalize, eval=TRUE, echo=FALSE}
+# Print out warnings if we did not use all the figures.
+if(!all(environment(figRef)$created)){
+    missingFig <- which(!environment(figRef)$created)
+    warning("Figure(s) ", paste(missingFig, sep=", "), " with label(s) '", 
+      paste(names(environment(figRef)$created)[missingFig], sep="', '"),
+      "' are referenced in the text but have never been created.")
+}
+if(!all(environment(figRef)$used)){
+    missingRef <- which(!environment(figRef)$used)
+    warning("Figure(s) ", paste(missingRef, sep=", "), " with label(s) '", 
+      paste(names(environment(figRef)$used)[missingRef], sep="', '"),
+      "' are present in the document but are never referred to in the text.")
+}
+```
