@@ -9,12 +9,16 @@ load("output/convergence_future.Rda")
 plot_data <- average_convergence
 # plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
 #  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
-plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"),
-                        labels = c("105 edges, segmentation = 0.05", "105 edges, segmentation = 0.95", "195 edges, segmentation = 0.05", "195 edges, segmentation = 0.95"))
+plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
+                        labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.05"), 
+                                   paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.95"), 
+                                   paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.05"), 
+                                   paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.95")))
 
+sequence.years <- 6
 
-p <- ggplot(data=plot_data, aes(x= trading_seq * 6 + 2014, y=(convergence + 1) * 50, color = true_mod)) +
-  geom_point(position = position_jitter(w = 0.07, h = 0), alpha = 0.1) + geom_smooth(size=1, fill=NA) +
+p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + 2014, y=(convergence + 1) * 50, color = true_mod)) +
+  geom_point(position = position_jitter(w = 0.07 * sequence.years, h = 0), alpha = 0.1) + geom_smooth(size=1, fill=NA) +
   scale_color_brewer(palette="Set1", name="True driver of future climate", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI")) +
   facet_wrap(~set, ncol = 1) +
   labs(x = "Year", y = paste0("% Traders Believing True Model (n = ",

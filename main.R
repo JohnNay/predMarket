@@ -70,12 +70,12 @@ main <- function(parameters,
   ideo <- parameters[2] # continuous value in (0,1)
   risk.tak <- parameters[3] # continuous value in (0,1)
   true.model <- parameters[4] + 1 # the true model, 1 for slow.tsi, 2 for log.co2
-  if (TRUE) {
+  if (FALSE) {
     n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
     n.traders <- round(parameters[6]*100) + 50 # integer in (50, 250)
   } else {
     n.traders <- round(parameters[6]*200) + 50 # integer in (50, 250)
-    n.edg <- (round(parameters[5]*8) + 2) * n.traders # integer in (2 to 10 per trader)
+    n.edg <- round((parameters[5]*8 + 2) * n.traders) # integer in (2 to 10 per trader)
   }
   
   cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,

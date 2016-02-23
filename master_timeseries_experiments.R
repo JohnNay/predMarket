@@ -161,7 +161,10 @@ if(plot_final){
     #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
     # n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
     plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                            labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
+                            labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, seg = 0.05"), 
+                                       paste0(round(8 * 0.05 + 2, 1), " edges/trader, seg = 0.95"), 
+                                       paste0(round(8 * 0.95 + 2, 1), " edges/trader, seg = 0.05"), 
+                                       paste0(round(8 * 0.95 + 2, 1), " edges/trader, seg = 0.95")))
     pdf("output/timeseries_past.pdf", width=8, height=18)
     ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
       geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
@@ -184,7 +187,10 @@ if(plot_final){
     #plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
     # n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
     plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                            labels = c("n.edge = 105, seg = 0.05", "n.edge = 105, seg = 0.95", "n.edge = 195, seg = 0.05", "n.edge = 195, seg = 0.95"))
+                            labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, seg = 0.05"), 
+                                       paste0(round(8 * 0.05 + 2, 1), " edges/trader, seg = 0.95"), 
+                                       paste0(round(8 * 0.95 + 2, 1), " edges/trader, seg = 0.05"), 
+                                       paste0(round(8 * 0.95 + 2, 1), " edges/trader, seg = 0.95")))
     pdf("output/timeseries_future.pdf", width=8, height=18)
     ggplot(data=plot_data, aes(x= trading_seq, y=convergence, color = true_mod)) +
       geom_point(position = position_jitter(w = 0.07, h = 0)) + geom_smooth() +
@@ -199,4 +205,4 @@ if(plot_final){
       scale_color_brewer(palette="Dark2", name="True Model")
     dev.off()
   }
-  ]
+}
