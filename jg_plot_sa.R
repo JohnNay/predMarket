@@ -13,7 +13,7 @@ ss <- correct_bias(src_future@result[[7]])
 ss <- ss %>% mutate(var = ordered(var, levels = c('ideo','risk.tak','n.traders',
                                                   'n.edg', 'seg', 'true.model'),
                                   labels = c('Ideology', "Risk tolerance",
-                                             '# Traders', '# Edges', 'Segmentation',
+                                             '# Traders', '# Edges/Trader', 'Segmentation',
                                              "True model")))
 
 title <- bquote(atop(plain("Estimated Effects on Convergence of Beliefs"),plain("in Future Scenario ") ~
