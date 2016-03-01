@@ -59,8 +59,8 @@ if(estimate_replicates){
 ##############################################################################
 
 future <- TRUE
-past <- TRUE
-sample_count <- 120
+past <- FALSE
+sample_count <- 150
 
 if(past){
   main2 <- function(parameters,
