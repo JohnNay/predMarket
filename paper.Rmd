@@ -1,45 +1,16 @@
 ---
-title: "Convergence of Forecasting Models in Climate Prediction Markets: An Agent-Based Simulation"
+title: "Put Your Money Where Your Mouth Is: Prediction Markets and Climate Change"
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 2, 2016"
+date: "March 3, 2016"
 output: 
   pdf_document:
     keep_tex: true
 bibliography: library.bib
 ---
-
 ```{r fig_ref, echo=FALSE}
-figRef <- local({
-  tag <- numeric()
-  created <- logical()
-  used <- logical()
-  function(label, caption, prefix="Fig.", sep=".",
-      prefix.highlight="**") {
-    i <- which(names(tag) == label)
-    if(length(i) == 0){
-      i <- length(tag) + 1
-      tag <<- c(tag, i)
-      names(tag)[length(tag)] <<- label
-      used <<- c(used, FALSE)
-      names(used)[length(used)] <<- label
-      created <<- c(created, FALSE)
-      names(created)[length(created)] <<- label
-    }
-    if(!missing(caption)){
-      created[label] <<- TRUE
-      paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight, " ", caption)
-    } else {
-      used[label] <<- TRUE
-      paste(prefix, tag[label])
-    }
-  }
-})
-# adapted from a function on this page: http://galahad.well.ox.ac.uk/repro/
-rinline <- function(code){
-  sprintf('`r %s`', code)
-}
+source("utils/fig_ref.R") # tabRef and figRef functions
+source("utils/multi_plot.R")
 ``` 
-
 ```{r, caption_setting, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(knitr)
 knit_hooks$set(htmlcap = function(before, options, envir) {
@@ -55,73 +26,8 @@ knit_hooks$set(small_mar = function(before, options, envir) {
 #                dev.args=list(compression="lzw", type="cairo"),
 #                dpi=300)
 ```
-
-```{r tab_ref, echo=FALSE}
-tabRef <- local({
-    tag <- numeric()
-    created <- logical()
-    used <- logical()
-    function(label, caption, prefix = "Table", 
-        sep = ".", prefix.highlight = "**") {
-        i <- which(names(tag) == label)
-        if (length(i) == 0) {
-            i <- length(tag) + 1
-            tag <<- c(tag, i)
-            names(tag)[length(tag)] <<- label
-            used <<- c(used, FALSE)
-            names(used)[length(used)] <<- label
-            created <<- c(created, FALSE)
-            names(created)[length(created)] <<- label
-        }
-        if (!missing(caption)) {
-            created[label] <<- TRUE
-            paste0(prefix.highlight, prefix, " ", i, sep, prefix.highlight, 
-                " ", caption)
-        } else {
-            used[label] <<- TRUE
-            paste(prefix, tag[label])
-        }
-    }
-})
-```
-
 ```{r multi_plot, echo=FALSE}
-multi_plot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
-
+source("utils/multi_plot.R")
 library(ggplot2)
 theme_set(theme_classic())
 library(pander)
@@ -129,33 +35,37 @@ library(pander)
 
 # Abstract
 
-We present an agent-based simulation of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct simulation experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
+We present a simulation of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
 
 # 1. Introduction
 
 The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
-Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], agent-based models (ABM) [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs.
+Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], simulation models [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs.
 
 # 2. Related Work
 
-@Tseng2010a study an ABM of a continuous double auction market with various types of market strategies (including two variants of the zero-intelligence agent). They compare the behavior of their simulation with data from a prediction market for the outcome of political elections. They find that despite their simplicity, zero-intelligence agents capture some salient features of real market data. @Klingert2012c reach similar conclusions with respect to experimental data from @Hanson2006. In their simulation, @Klingert2012c compare continuous double auctions with logarithmic market scoring rules and find that the latter generally outperform continuous double auctions in terms of prediction accuracy. In some variants of the two last models, agents' strategies feature learning, but these are rather basic and unrelated to a formal predictive model.
+@Tseng2010a create an agent-based model (ABM) of a continuous double auction market with various types of market strategies, including two variants of the zero-intelligence agent. They compare the behavior of their simulation with data from a prediction market for the outcome of political elections. They find that despite their simplicity, zero-intelligence agents capture some salient features of real market data. @Klingert2012c reach similar conclusions with respect to experimental data from @Hanson2006. In their simulation, @Klingert2012c compare continuous double auctions with logarithmic market scoring rules and find that the latter generally outperform continuous double auctions in terms of prediction accuracy. In some variants of the two last models, agents' strategies feature learning, but these are rather basic and unrelated to a formal predictive model.
 
-@Jumadinova2011a conducted research more similar to ours, as they explicitly include information about uncertain events in their model. @Jumadinova2011a study a continuous double auction model in which agents update their beliefs about the uncertain events based on information on the event. New beliefs are modeled as a weighted sum of the last period's beliefs and market prices. The agents' information set changes every period. The better the information set, the more likely the agent is to put higher weights on last period's prices when revising their beliefs. Not much structure is imposed on the information set and the way it is used to generate the weights in the update function. Therefore, the model does not allow for investigating the convergence of predictive models. @Ontanon2009 study the effect of deliberation on a simulated prediction market. They assume that agents use Case-Based Reasoning [@Aamodt1994] to reason and debate about uncertain outcomes with their neighbors in a social network.  Although the model could in theory be used to assess convergence of predictive models by looking at the arguments agents adopt after the deliberation, this is not done by the authors. Also, the way beliefs are formed and revised through argumentation is abstract and not ideal for studying climate prediction markets.
+@Jumadinova2011a conducted research more similar to ours, as they explicitly include information about uncertain events in their model. @Jumadinova2011a study a continuous double auction model in which agents update their beliefs about the uncertain events based on information on the event. New beliefs are modeled as a weighted sum of the last period's beliefs and market prices. The agents' information set changes every period. The better the information set, the more likely the agent is to put higher weight on last period's prices when revising their beliefs. Little structure is imposed on the information set and the way it is used to generate the weights in the update function. Therefore, the model does not allow for investigating the convergence of predictive models. @Ontanon2009 study the effect of deliberation on a simulated prediction market. They assume that agents use Case-Based Reasoning [@Aamodt1994] to reason and debate about uncertain outcomes with their neighbors in a social network. Although the model could in theory be used to assess convergence of predictive models by looking at the arguments agents adopt after the deliberation, this is not done by the authors. Also, the way beliefs are formed and revised through argumentation is too abstract for studying climate prediction markets, where beliefs should be based on statistical time series models.
 
-To the best of our knowledge, the idea that prediction markets can generate consensus *on the factors* affecting  uncertain events has never been quantitatively explored. ABMs of prediction markets have been studied [@Klingert2012c; @Tseng2010a; @Jumadinova2011a], some of which feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, and therefore these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
+To the best of our knowledge, the idea that prediction markets can generate consensus *on the factors* affecting uncertain events has never been quantitatively explored. ABMs of prediction markets have been studied [@Klingert2012c; @Tseng2010a; @Jumadinova2011a], some of which feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, and therefore these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
 
-From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. This is perhaps the most important social benefit of prediction markets given the comparable predictive power of statistical models, which are less expensive than setting up and maintaining prediction markets [@goel_prediction_2010]. Effective climate policy not only requires an accurate consensus on future climate *outcomes*. It also requires an accurate consensus on the causal *mechanisms* influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented. Our model is designed to investigate whether prediction markets can foster such convergence in predictive models.
+From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. This is perhaps the most important social benefit of prediction markets given the comparable predictive power of statistical supervised learning models, which can provide information at a much lower cost than creating and maintaining a prediction market [@goel_prediction_2010]. Effective climate policy not only requires an accurate consensus on future climate *outcomes*. It also requires an accurate consensus on the causal *mechanisms* influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented.
 
 # 2. Model Design
 
 ## Temperature Models
 
-JG - describe the temperature time series models here.
+We start with the historical temperature record and project future climates under two alternative theories: 
+
+Temperature proportional to log(CO2) or Total Solar Irradiance (conventional science vs. popular alternative among doubters). Add AR(1) noise (best ARMA noise model for historical record).
+
+JG - describe the temperature time series models here. Add the plots of the time series diverging thats on middle of poster. Add citations for the models to library.bib.
 
 ## Climate Beliefs
 
-Traders use one of the two models to forecast future temperature anomalies. These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
+Traders use one of the two models (temperature depends on CO2 or TSI) to forecast future temperature anomalies. These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
 
 Thus, both when **true.model** = 0 and **true.model** = 1, approximately half of the traders use the true data-generating model to make predictions. However, traders using the true model do not necessarily make perfectly accurate predictions. Although these traders believe in the correct *functional form* of the model, they still need to calibrate it based on limited noisy data. Therefore, the values they use as the parameters of the model will typically still be different from the exact parameters of the data-generating process.
 
@@ -163,7 +73,7 @@ Thus, both when **true.model** = 0 and **true.model** = 1, approximately half of
 
 Traders are initially endowed with a single unit Experimental Currency Unit (ECU). Traders use their model to forecast the distribution of future temperatures and determine their reservation price for different securities. Securities pay 1 ECU  if the actual temperature at some time $t^*$ falls between a certain range. Traders are risk-neutral expected utility maximizers. Therefore, their reservation price for a security $\tilde{s}$ is simply their assessment of the probability that the temperature at time $t^*$ falls in the range covered by $\tilde{s}$.
  		
-Based on their reservation price, traders behave as "zero-intelligence" agents [@Gode1993], that is, they sell at a random price above their reservation, and buy at a random price below their reservation. The distribution from which buy and sell prices are drawn is determined by the traders risk attitude, characterized by parameter $risk.tak_i$. These trading strategies are simple but have been shown to provide accurate approximations of behavior in prediction markets [@Klingert2012c], and in financial markets more broadly. 
+Based on their reservation price, traders behave as "zero-intelligence" agents [@Gode1993], that is, they sell at a random price above their reservation, and buy at a random price below their reservation. The distribution from which buy and sell prices are drawn is determined by the traders risk attitude, characterized by parameter $risk.tak_i$. These trading strategies are simple but have been shown to provide accurate approximations of behavior in prediction markets [@Klingert2012c], and in financial markets more broadly.
 
 Our model features a particular version of CDA through which traders exchange securities. Continuous-double auctions (CDAs) or some variants thereof are common market mechanisms, i.e. procedures to match buy and sell orders. CDA are notably used on large stock markets [@Tseng2010a].
  
@@ -173,7 +83,13 @@ Traders are part of a social network where each agent forms two links at random,
  
 An example of such social network is depicted in Figure X. We assume that the initial network is segregated, that is, traders who believe in model 2 (1) are more likely to be linked with other traders who believe in 2 (1). The degree of segregation is determined by parameter **seg**. Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds -- the edges are fixed.
 
-## Time
+## Model Dynamics
+
+Bet on temperature six years in future.
+During six-year period, traders buy and sell futures.
+Every year: Bayesian updating of traders personal predictions for future temperature based on current year’s temperature.
+At end of six-year period, winners collect money.
+Traders revise beliefs about climate models, based on ideology and beliefs of top earners in their social network.
 
 The time periods, $t$, are grouped in trading *sequences*. In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$. In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security. 
  	
@@ -223,7 +139,13 @@ The model depends on the following parameters, which we vary in simulation exper
 
 # 3. Results
 
-The sensitivity analysis is based on a Latin Hypercube Sampling of parameter sets from the following distributions [@beachkofski_improved_2002,@carnell_lhs_2012]. 
+## Historical Data
+
+As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward log(CO2) model.
+
+## Future Scenarios
+
+The sensitivity analysis is based on a Latin Hypercube Sampling of parameter sets from the following distributions [@beachkofski_improved_2002; @carnell_lhs_2012]. 
 
 * ideo $\sim Unif(0,1)$
 * market.complet $\sim Unif(0,1000)$ (mapped into integer)
@@ -235,9 +157,9 @@ The sensitivity analysis is based on a Latin Hypercube Sampling of parameter set
 
 We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
 
-Our sensitivity analysis, `r figRef("sa")`, shows that
+Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, and the segmentation of the social network significantly affect convergence. Segmented social networks can create an "echo-chamber" effect.
 
-```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated Effects on Convergence of Beliefs in Future Scenario "), fig.width=4, fig.height=4.5}
+```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated effects of model parameters on convergence of beliefs in future scenario."), fig.width=3.8, fig.height=4.5}
 # library(eat)
 # load("output/src_future.Rda")
 # plot(src_future, outcome_var = "Convergence") + theme_classic() + theme(text=element_text(family='Palatino'))
@@ -247,7 +169,7 @@ sa_plot() + theme(text=element_text(family='Palatino'))
 #multi_plot(p1, p2, cols = 2)
 ```
 
-```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Time"), fig.width=5, fig.height=10}
+```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Time"), fig.width=5, fig.height=9}
 source("utils/time_plot.R")
 time_plot() + theme(text=element_text(family='Palatino'))
 ```
