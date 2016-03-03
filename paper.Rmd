@@ -1,7 +1,7 @@
 ---
-title: "Climate Prediction Markets and the Convergence of Forecasting Models: An Agent-Based Simulation"
-author: " "
-date: "Feb 29, 2016"
+title: "Convergence of Forecasting Models in Climate Prediction Markets: An Agent-Based Simulation"
+author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
+date: "March 2, 2016"
 output: 
   pdf_document:
     keep_tex: true
@@ -123,16 +123,17 @@ multi_plot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 library(ggplot2)
+theme_set(theme_classic())
 library(pander)
 ```
 
 # Abstract
 
-We present an agent-based simulation model of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct simulation experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
+We present an agent-based simulation of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct simulation experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
 
 # 1. Introduction
 
-The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, the average belief about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
+The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
 Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], agent-based models (ABM) [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs.
 
@@ -154,21 +155,21 @@ JG - describe the temperature time series models here.
 
 ## Climate Beliefs
 
-Traders use one of the two models to forecast future temperatures. These models are interpreted as the trader's beliefs about the true climate process, i.e. the driving factors of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
+Traders use one of the two models to forecast future temperature anomalies. These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
 
-Thus, both when **true.model** = 0 and **true.model** = 1,  some traders use the true data-generating model to make predictions. However, this does not mean that traders using the true model make perfectly accurate predictions. Although these traders believe in the correct *functional form* of the model, they still need to calibrate it based on limited noisy data. Therefore, the values they use as the parameters of the model will typically still be different from the exact parameters of the data-generating process.
+Thus, both when **true.model** = 0 and **true.model** = 1, approximately half of the traders use the true data-generating model to make predictions. However, traders using the true model do not necessarily make perfectly accurate predictions. Although these traders believe in the correct *functional form* of the model, they still need to calibrate it based on limited noisy data. Therefore, the values they use as the parameters of the model will typically still be different from the exact parameters of the data-generating process.
 
 ## Traders and Market
 
 Traders are initially endowed with a single unit Experimental Currency Unit (ECU). Traders use their model to forecast the distribution of future temperatures and determine their reservation price for different securities. Securities pay 1 ECU  if the actual temperature at some time $t^*$ falls between a certain range. Traders are risk-neutral expected utility maximizers. Therefore, their reservation price for a security $\tilde{s}$ is simply their assessment of the probability that the temperature at time $t^*$ falls in the range covered by $\tilde{s}$.
  		
-Based on their reservation price, traders behave as "zero-intelligence" agents [@Gode1993], that is, they sell at a random price above their reservation, and buy at a random price below their reservation. The distribution from which buy and sell prices are drawn is determined by the traders risk attitude, characterized by parameter $risk.tak_i$. These strategies are simple but have been shown to provide accurate approximations of behavior in prediction markets (see for instance @Klingert2012c), and in financial markets more broadly. 
+Based on their reservation price, traders behave as "zero-intelligence" agents [@Gode1993], that is, they sell at a random price above their reservation, and buy at a random price below their reservation. The distribution from which buy and sell prices are drawn is determined by the traders risk attitude, characterized by parameter $risk.tak_i$. These trading strategies are simple but have been shown to provide accurate approximations of behavior in prediction markets [@Klingert2012c], and in financial markets more broadly. 
 
-Continuous-double auctions (CDAs) or some variants thereof are common market mechanisms, i.e. procedures to match buy and sell orders. CDA are notably used on large stock markets [@Tseng2010a]. Our model features a particular version of CDA through which traders exchange securities. 
+Our model features a particular version of CDA through which traders exchange securities. Continuous-double auctions (CDAs) or some variants thereof are common market mechanisms, i.e. procedures to match buy and sell orders. CDA are notably used on large stock markets [@Tseng2010a].
  
 ## Social Network
 
-Traders are part of a social network. Jonathan - add in changes made to social network. Every time a security is realized, each trader $i$ looks at the performance of their neighbors in the network. If one of $i$'s neighbors, say $j$, is richer than $i$, $i$ interprets this has an indication that $j$ has a better approximate model. Then $i$ considers adopting $j$'s approximate model. Traders start with the same initial amount of money, so differences in money among traders can only come from  traders' interactions through the market. For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is characterized by parameter $ideo_i$.
+Traders are part of a social network where each agent forms two links at random, and then forms links randomly. This ensures that each agent is connected to at least two other agents. Every time a security is realized, each trader $i$ looks at the performance of their neighbors in the network. If one of $i$'s neighbors, say $j$, is richer than $i$, $i$ interprets this has an indication that $j$ has a better approximate model. Then $i$ considers adopting $j$'s approximate model. Traders start with the same initial amount of money, so differences in money among traders can only come from  traders' interactions through the market. For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is characterized by parameter $ideo_i$.
  
 An example of such social network is depicted in Figure X. We assume that the initial network is segregated, that is, traders who believe in model 2 (1) are more likely to be linked with other traders who believe in 2 (1). The degree of segregation is determined by parameter **seg**. Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds -- the edges are fixed.
 
@@ -200,7 +201,7 @@ At $t^*$, when the sequence ends, there is only one security $s^*$ associated wi
 1. traders receive 1 ECU per unit of $s^*$ they own, and
 2.  consider adapting their neighbors' approximate model as described above.
  	
-# Model Parameters
+## Model Parameters
  	
 The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. 
 
@@ -234,20 +235,28 @@ The sensitivity analysis is based on a Latin Hypercube Sampling of parameter set
 
 We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
 
-Our sensitivity analysis, Fig X.  
+Our sensitivity analysis, `r figRef("sa")`, shows that
 
-```{r, one, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=tabRef("one", "dfd")}
+```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated Effects on Convergence of Beliefs in Future Scenario "), fig.width=4, fig.height=4.5}
+# library(eat)
+# load("output/src_future.Rda")
+# plot(src_future, outcome_var = "Convergence") + theme_classic() + theme(text=element_text(family='Palatino'))
+
+source("utils/sa_plot.R")
+sa_plot() + theme(text=element_text(family='Palatino'))
+#multi_plot(p1, p2, cols = 2)
+```
+
+```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Time"), fig.width=5, fig.height=10}
+source("utils/time_plot.R")
+time_plot() + theme(text=element_text(family='Palatino'))
+```
+
+```{r sa2, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=tabRef("sa2", "")}
 
 ```
 
  `r tabRef("one")` 
-
-`r figRef("data_explore")` 
-
-```{r, data_explore, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("data_explore", " "), fig.width=10, fig.height=5}
-
-#multi_plot(p1, p2, cols = 2)
-```
 
 
 # 4. Discussion
