@@ -1,7 +1,7 @@
 ---
-title: "Climate Prediction Markets and the Convergence of Forecasting Models: An Agent-Based Simulation"
-author: " "
-date: "March 1, 2016"
+title: "Convergence of Forecasting Models in Climate Prediction Markets: An Agent-Based Simulation"
+author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
+date: "March 2, 2016"
 output: 
   pdf_document:
     keep_tex: true
@@ -123,16 +123,17 @@ multi_plot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 library(ggplot2)
+theme_set(theme_classic())
 library(pander)
 ```
 
 # Abstract
 
-We present an agent-based simulation model of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct simulation experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
+We present an agent-based simulation of a climate prediction market. Traders adapt their beliefs about the future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct simulation experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
 
 # 1. Introduction
 
-The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, the average belief about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
+The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
 Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], agent-based models (ABM) [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs.
 
@@ -236,13 +237,20 @@ We use the model to simulate 10,000 outcomes based on the input paramter sets an
 
 Our sensitivity analysis, `r figRef("sa")`, shows that
 
-```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Sensitivty analysis"), fig.width=5, fig.height=5}
-library(eat)
-load("output/src_future.Rda")
-plot(src_future, outcome_var = "Convergence") + theme_classic() 
+```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated Effects on Convergence of Beliefs in Future Scenario "), fig.width=4, fig.height=4.5}
+# library(eat)
+# load("output/src_future.Rda")
+# plot(src_future, outcome_var = "Convergence") + theme_classic() + theme(text=element_text(family='Palatino'))
+
+source("utils/sa_plot.R")
+sa_plot() + theme(text=element_text(family='Palatino'))
 #multi_plot(p1, p2, cols = 2)
 ```
 
+```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Time"), fig.width=5, fig.height=10}
+source("utils/time_plot.R")
+time_plot() + theme(text=element_text(family='Palatino'))
+```
 
 ```{r sa2, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=tabRef("sa2", "")}
 
