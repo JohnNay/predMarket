@@ -22,7 +22,7 @@ test <- FALSE
 estimate_replicates <- FALSE
 
 if(test){
-  main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)))
+  main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)), visu =T)
   main(c(runif(3, min = 0.0001, max = 0.9999), 0, runif(2, min = 0.0001, max = 0.9999)))
 }
 

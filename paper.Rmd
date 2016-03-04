@@ -82,6 +82,8 @@ Our model features a particular version of CDA through which traders exchange se
 ## Social Network
 
 Traders are part of a social network where each agent forms two links at random, and then forms links randomly. This ensures that each agent is connected to at least two other agents. Every time a security is realized, each trader $i$ looks at the performance of their neighbors in the network. If one of $i$'s neighbors, say $j$, is richer than $i$, $i$ interprets this has an indication that $j$ has a better approximate model. Then $i$ considers adopting $j$'s approximate model. Traders start with the same initial amount of money, so differences in money among traders can only come from  traders' interactions through the market. For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is characterized by parameter $ideo_i$.
+
+![Network](output/network.pdf)
  
 An example of such social network is depicted in Figure X. We assume that the initial network is segregated, that is, traders who believe in model 2 (1) are more likely to be linked with other traders who believe in 2 (1). The degree of segregation is determined by parameter **seg**. Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds -- the edges are fixed.
 
