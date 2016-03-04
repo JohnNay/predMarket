@@ -1,7 +1,7 @@
 ---
 title: "Put Your Money Where Your Mouth Is: Prediction Markets and Climate Change"
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 3, 2016"
+date: "March 4, 2016"
 output: 
   pdf_document:
     keep_tex: true
@@ -85,34 +85,28 @@ An example of such social network is depicted in Figure X. We assume that the in
 
 ## Model Dynamics
 
-Bet on temperature six years in future.
-During six-year period, traders buy and sell futures.
-Every year: Bayesian updating of traders personal predictions for future temperature based on current year’s temperature.
-At end of six-year period, winners collect money.
-Traders revise beliefs about climate models, based on ideology and beliefs of top earners in their social network.
+Traders bet on temperature six years in the future. During the six-year period, traders buy and sell futures. Every year, there is Bayesian updating of traders personal predictions for future temperature based on the current year's temperature. At the end of each six-year period, winners collect money and traders revise beliefs about climate models, based on ideology and beliefs of top earners in their social network.
 
-The time periods, $t$, are grouped in trading *sequences*. In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$. In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security. 
- 	
-At each time $t$, traders are assumed to know the past value of the temperature $\hat{T}_{0:t}$ and greenhouse gas emissions  $GHG_{0:t}$. In a sequence finishing at time $t^*$,  traders also have common knowledge of $GHG_{t:t^*}$, the future values of greenhouse gas emissions up to $t^*$. However, at any $t$, traders do not know the value of any future *temperatures*. In particular, in a given sequence, traders do not know the value of $\hat{T}_{t^*}$. Traders can only predict $\hat{T}_{t^*}$ using their approximate model and their knowledge of $\hat{T}_{0:t}$ and  $GHG_{0:t^*}$. Notice that because $GHG_{0:t^*}$ is common knowledge, in each period $t$ every trader $i$ with the same approximate model forms the same pseudo-expectation $\mu_{ti} \equiv E_t( \hat{T}_{t^*} ~|~ \hat{T}_{0:t}, GHG_{0:t^*})$, $i$'s approximate model at $t$.
+Specifically, the time periods, $t$, are grouped in trading *sequences*. In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$. In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security. At each time $t$, traders are assumed to know the past value of the temperature $\hat{T}_{0:t}$ and greenhouse gas emissions  $GHG_{0:t}$. In a sequence finishing at time $t^*$,  traders also have common knowledge of $GHG_{t:t^*}$, the future values of greenhouse gas emissions up to $t^*$. However, at any $t$, traders do not know the value of any future temperatures. In particular, in a given sequence, traders do not know the value of $\hat{T}_{t^*}$. Traders can only predict $\hat{T}_{t^*}$ using their approximate model and their knowledge of $\hat{T}_{0:t}$ and  $GHG_{0:t^*}$. Notice that because $GHG_{0:t^*}$ is common knowledge, in each period $t$ every trader $i$ with the same approximate model forms the same pseudo-expectation $\mu_{ti} \equiv E_t( \hat{T}_{t^*} ~|~ \hat{T}_{0:t}, GHG_{0:t^*})$, $i$'s approximate model at $t$.
  	   
 We assume that the believed probability distribution of $\hat{T}_{t^*}$ for trader $i$  at any time $t$ is $\mu_{ti} + \eta_t$, where the distribution $\eta_t$ is obtained by trader $i$ by bootstrapping the residuals from the regression of her believed true model over the past periods. This explains the use of the term pseudo-expectation. Because $\eta_t$ is not bound to have expected value zero, a traders' effective expected value of $\hat{T}_{t^*}$ may be different from $\mu_{ti}$.       
  	   
- At each time $t$, traders
+ At each time $t$, traders follow this process:
 
-1. recalibrate their approximate model based on the new set of past data available at $t$ (via pooled ordinary least squares),
+1. recalibrate their approximate model based on the new set of past data available at $t$,
 2. compute their belief-density for $\hat{T}_{t^*}$ and use it to determine the expected value they attached to each security,
 3. and trade on the CDA market based on their zero-intelligence decision rule as follows. 
  	+ Every trader $i$ choses at random a security $s_i^B$ she will try to buy.
  	+ Every trader $i$ also chooses at random among the securities she owns a positive amount of (if any) a security $s_i^S$ she will try to sell.
-	+ Traders then decide of their selling $p_i^S$ and buying price $p_i^S$. To do so, they compute the expected value of the securities $s_i^B$ and $s_i^S$. Then they set a selling and a buying price following the zero-intelligence rule described above.
-	+ Traders go to the market one at the time, in a random order.
- 	+ When $i$ comes to the market, she place limit orders in the order book. These orders  specify that $i$ is willing to buy $s_i^B$ at  any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
+	+ Traders then decide of their selling $p_i^S$ and buying price $p_i^S$. To do so, they compute the expected value of the securities $s_i^B$ and $s_i^S$. Then they set a selling and a buying price following the zero-intelligence rule.
+	+ Traders go to the market one at the time, in an order randomly selected each $t$.
+ 	+ When $i$ comes to the market, she places limit orders in the order book. These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
  	+ The market maker then tries to match $i$'s orders with some order which was put in the order book before $i$ came to the market.
  	+ If there are  outstanding sell offers for $s_i^B$ at price $p$ lower than $p_i^B$, then a trade is concluded. Trader $i$ buys one unit from the sellers who sells at the highest price below $p_i^B$, and the sell and buy offers are removed from the order book.
  	+ If there are  outstanding buy offers for $s_i^S$ at price $p$ higher than $p_i^S$, then a trade is concluded. Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the  sell and buy offers are removed from the order book.
  	+ Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
  	
-At $t^*$, when the sequence ends, there is only one security $s^*$ associated with a range of temperatures including the actual $\hat{T}_{t^*}$. Thus,
+At $t^*$, when the sequence ends, there is only one security $s^*$ associated with a range of temperatures including the actual $\hat{T}_{t^*}$. Thus:
 
 1. traders receive 1 ECU per unit of $s^*$ they own, and
 2.  consider adapting their neighbors' approximate model as described above.
@@ -121,17 +115,19 @@ At $t^*$, when the sequence ends, there is only one security $s^*$ associated wi
  	
 The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. 
 
-* Network parameters
+* Network parameters:
     + **n.traders**: the number of traders.
     + **n.edg**: the number of edges in the social network.
-    + **seg**: determines the initial degree of homophily in the network. The higher **seg**, the higher the initial homophily. 
+    + **seg**: the initial degree of homophily in the network. The higher **seg**, the higher the initial homophily. 
  		
- * Market structure parameters
-    + **market.complet** Determines market's completeness, i.e. the number of securities which can be traded. With more securities, the interval of temperatures corresponding to each security is smaller. Traders can then trade on more precise temperature intervals. Higher values of **market.complet** may, however, reduce the number of exchanges. Because traders pick the securities they buy and sell at random, the probability that a match between sellers and buyers is found is lower for higher values of **market.complet**.
+ * Market structure parameters:
+    + **market.complet** the number of securities which can be traded. With more securities, the interval of temperatures corresponding to each security is smaller. Traders can then trade on more precise temperature intervals. Higher values of **market.complet** may, however, reduce the number of exchanges. Because traders pick the securities they buy and sell at random, the probability that a match between sellers and buyers is found is lower for higher values of **market.complet**.
     
 * Behavioral parameters.
-    + **risk.tak** Determines the distribution of risk taking behavior. The higher risk.tak, the more traders	will try to buy (resp. sell) lower (resp. higher) than their reservation price. Formally, at time $t$, trader $i$ picks her buying (resp. selling) prices randomly in the interval  $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it}  * (1 - \texttt{risk.tak}_i)]$ (resp. $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it} * (1  + \texttt{risk.tak}_i)]$), where $\texttt{reserv}_{it}$ is $i$'s reservation price at time $t$ for the security $i$ picked to buy (resp. sell). For each trader $i$, the level of \texttt{risk.tak}$_i$ is drawn uniformly at random from $[0,$\texttt{risk.tak} $]$
+    + **risk.tak** Determines the distribution of risk-taking behavior. The higher risk.tak, the more traders	will try to buy (resp. sell) lower (resp. higher) than their reservation price. Formally, at time $t$, trader $i$ picks her buying (resp. selling) prices randomly in the interval  $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it}  * (1 - \texttt{risk.tak}_i)]$ (resp. $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it} * (1  + \texttt{risk.tak}_i)]$), where $\texttt{reserv}_{it}$ is $i$'s reservation price at time $t$ for the security $i$ picked to buy (resp. sell). For each trader $i$, the level of \texttt{risk.tak}$_i$ is drawn uniformly at random from $[0,$\texttt{risk.tak} $]$
     + **ideo**  Determines the degree of "ideology" of traders. If ideo is high, traders will not revise their approximate models easily, even when faced with strong evidence that their neighbors are doing better than them. For each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. The value of $d_{i}$ is the probability that $i$ adopts one of her neighbors' approximate model if this neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
+    
+IM GOING TO DELETE THESE 3:
 * Timing parameters
     + **burn.in** The number of burn-in periods in which no securities are traded (necessary to allow believed models to be estimated in the first period).
     + **n.seq** Number of trading sequences.
