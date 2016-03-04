@@ -28,7 +28,8 @@ run_experiment <- function(set, input_values,
                            file_path = "output/average_convergence_past.Rda",
                            previous_results = NULL,
                            sample_count = 30,
-                           burn.in = 51, n.seq = 14, horizon = 6){
+                           burn.in = 51, n.seq = 14, horizon = 6,
+                           true_history = FALSE){  
   nyears <- burn.in + n.seq * horizon
   
   if(is.null(previous_results)){
@@ -62,7 +63,8 @@ run_experiment <- function(set, input_values,
              horizon = horizon,
              nyears =  nyears,
              iterations = 1,
-             record = TRUE),
+             record = TRUE,
+             trueHistory = true_history),
         error = function(e) rep(NA, n.seq))
     })
     cat(paste("\n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "\n", outcome.evolution))
@@ -91,7 +93,8 @@ run_experiment <- function(set, input_values,
              horizon = horizon,
              nyears =  nyears,
              iterations = 1,
-             record = TRUE),
+             record = TRUE,
+             trueHistory = true_history),
         error = function(e) rep(NA, n.seq))
     })
     cat(paste("\n", n.seq, "outcome evolutions with parameters", paste(as.character(j), collapse = ", "), "\n", outcome.evolution))
@@ -135,11 +138,13 @@ doParallel::registerDoParallel(cores = numcores)
 sample_count <- numcores*6 # numcores*7 takes 8.5 hours to run for past
 past <- TRUE
 future <- TRUE
+true_past <- TRUE
 if(past){
   run_experiment(set = set, input_values = input_values, 
                  file_path = "output/convergence_past.Rda",
                  sample_count = sample_count,
-                 burn.in = 51)
+                 burn.in = 51,
+                 true_history = FALSE)
 }
 if(future){
   run_experiment(set = set, input_values = input_values, 
@@ -147,7 +152,16 @@ if(future){
                  # Add to previous results?
                  # previous_results = "output/convergence_future.Rda",
                  sample_count = sample_count,
-                 burn.in = 135)
+                 burn.in = 135,
+                 true_history = TRUE)
+}
+if(true_past){
+  run_experiment(set = set, input_values = input_values, 
+                 file_path = "output/jg_convergence_true_past.Rda",
+                 sample_count = sample_count,
+                 burn.in = 51,
+                 true_history = TRUE)
+  
 }
 
 ##############################################################################
