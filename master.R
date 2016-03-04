@@ -60,7 +60,7 @@ if(estimate_replicates){
 
 future <- TRUE
 past <- FALSE
-sample_count <- 100
+sample_count <- 80
 
 if(past){
   main2 <- function(parameters,
