@@ -50,13 +50,13 @@ p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + start, y=(conv
                                                                      .(prettyNum(length(complete.cases(plot_data$convergence)), big.mark = ',')))),
        title = paste0("Convergence Over Trading Sequences\n", 
                       start, "-",  start - 1 + 14 * 6)) + 
-ylim(0,100) +
+  ylim(0,100) +
   theme(legend.justification=c(1,0), legend.position=c(1,0),
         legend.key.width = grid::unit(0.05, 'npc'),
         legend.key = element_rect(color=NA))
-            
-            print(p)
-            
+
+print(p)
+
             if (TRUE) {
               pdf("output/jg_timeseries_true_past_box.pdf", width=8, height=18)
               print(p)
