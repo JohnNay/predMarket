@@ -19,7 +19,7 @@ plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0
 start <- 1880 + 51
 sequence.years <- 6
 
-p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + start, y=(convergence + 1) * 50)) +
+p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + start, y=(convergence + 1) * 50,  color = true_mod)) +
   geom_point(position = position_jitter(w = 0.07 * sequence.years, h = 0), alpha = 0.2) + geom_smooth(size=1, fill=NA) +
   scale_color_brewer(palette="Set1", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI"), guide = "none") +
   ylim(0,100) +
@@ -39,21 +39,21 @@ if (TRUE) {
 }
 
 
-p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + start, y=(convergence + 1) * 50) +
-              geom_boxplot(aes(group = floor(trading_seq * sequence.years + start)), 
-                           position = position_dodge(width = 3), width = 2) + 
-              geom_smooth(size=1, fill=NA) +
-              scale_color_brewer(palette="Set1", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI"), guide = "none") +
-              facet_wrap(~set, ncol = 1) +
-              labs(x = "Year",  
-                   y = bquote(plain("% Traders Believing ") ~ CO[2] ~ Model ~ (n == 
-                                                                                 .(prettyNum(length(complete.cases(plot_data$convergence)), big.mark = ',')))),
-                   title = paste0("Convergence Over Trading Sequences\n", 
-                                  start, "-",  start - 1 + 14 * 6))
-            ylim(0,100) +
-              theme(legend.justification=c(1,0), legend.position=c(1,0),
-                    legend.key.width = grid::unit(0.05, 'npc'),
-                    legend.key = element_rect(color=NA))
+p <- ggplot(data=plot_data, aes(x= trading_seq * sequence.years + start, y=(convergence + 1) * 50,  color = true_mod)) +
+  geom_boxplot(aes(group = floor(trading_seq * sequence.years + start * (true_mod == "SlowTSI"))), 
+               position = position_dodge(width = 3), width = 2) + 
+  geom_smooth(size=1, fill=NA) +
+  scale_color_brewer(palette="Set1", labels = c(LogCo2 = expression(CO[2]), SlowTSI = "TSI"), guide = "none") +
+  facet_wrap(~set, ncol = 1) +
+  labs(x = "Year",  
+       y = bquote(plain("% Traders Believing ") ~ CO[2] ~ Model ~ (n == 
+                                                                     .(prettyNum(length(complete.cases(plot_data$convergence)), big.mark = ',')))),
+       title = paste0("Convergence Over Trading Sequences\n", 
+                      start, "-",  start - 1 + 14 * 6)) + 
+ylim(0,100) +
+  theme(legend.justification=c(1,0), legend.position=c(1,0),
+        legend.key.width = grid::unit(0.05, 'npc'),
+        legend.key = element_rect(color=NA))
             
             print(p)
             
