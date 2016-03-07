@@ -55,7 +55,7 @@ From a public policy perspective, changing the explanatory models of market part
 
 # 2. Model Design
 
-Traders bet on temperature six years in the future. During the six-year period, traders buy and sell futures. Every year, there is Bayesian updating of traders personal predictions for future temperature based on the current year's temperature. At the end of each six-year period, winners collect money and traders revise beliefs about climate models, based on ideology and beliefs of top earners in their social network. In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market, and the social network connecting agents. We conclude with details on model dynamics and an overview of the model parameters.
+Traders bet on global temperature anomalies six years in the future. During the six-year period, traders buy and sell futures. Every year, traders update their models and forecast future temperature based on the current year's temperature. At the end of each six-year period, winners collect money and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network. In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents. We conclude with details on model dynamics and an overview of the model parameters.
 
 ## Temperature Models
 
@@ -129,7 +129,7 @@ The model depends on the following parameters, which we vary in simulation exper
     + **risk.tak** Determines the distribution of risk-taking behavior. The higher risk.tak, the more traders	will try to buy (resp. sell) lower (resp. higher) than their reservation price. Formally, at time $t$, trader $i$ picks her buying (resp. selling) prices randomly in the interval  $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it}  * (1 - \texttt{risk.tak}_i)]$ (resp. $[\texttt{reserv}_{it}, \allowbreak \texttt{reserv}_{it} * (1  + \texttt{risk.tak}_i)]$), where $\texttt{reserv}_{it}$ is $i$'s reservation price at time $t$ for the security $i$ picked to buy (resp. sell). For each trader $i$, the level of \texttt{risk.tak}$_i$ is drawn uniformly at random from $[0,$\texttt{risk.tak} $]$
     + **ideo**  Determines the degree of "ideology" of traders. If ideo is high, traders will not revise their approximate models easily, even when faced with strong evidence that their neighbors are doing better than them. For each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. The value of $d_{i}$ is the probability that $i$ adopts one of her neighbors' approximate model if this neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
     
-IM GOING TO DELETE THESE 3:
+IM GOING TO DELETE THESE 3 bc we set them:
 * Timing parameters
     + **burn.in** The number of burn-in periods in which no securities are traded (necessary to allow believed models to be estimated in the first period).
     + **n.seq** Number of trading sequences.
