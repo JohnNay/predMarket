@@ -186,6 +186,8 @@ multi_plot(p1, p2, cols=2)
 
 Our code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket).
 
+Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on nearer term events (months in advance), but have been shown to have performance superior to statistical models for some event types [@pathak_comparison_2015].
+
 # Acknowledgements
 
 We would like to thank Yevgeniy Vorobeychik for feedback on this project.
