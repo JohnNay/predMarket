@@ -1,8 +1,9 @@
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(methods)
 
-source('utilities/pc_sa.R', chdir = T)
+source('utils/pc_sa.R', chdir = T)
 
 theme_set(theme_bw(base_size = 20))
 

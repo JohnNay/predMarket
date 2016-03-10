@@ -6,7 +6,7 @@ theme_set(theme_bw(base_size = 20))
 
 load("output/jg_convergence_true_past.Rda")
 
-plot_data <- average_convergence
+plot_data <- average_convergence %>% filter(true_mod == 'LogCo2')
 # plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
 #  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
 plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 

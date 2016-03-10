@@ -14,7 +14,7 @@ if (length(args) < 2) {
 message(paste("Number of cores", cores))
 
 source("main.R")
-# devtools::install_github("JohnNay/eat", 
+#devtools::install_github("JohnNay/eat", 
 #                          auth_token = "08d34f040cbe8c95d89477741ceb450a9cfa42c4")
 library(eat)
 
