@@ -1,7 +1,7 @@
 ---
 title: "Put Your Money Where Your Mouth Is: Prediction Markets and Climate Change"
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 10, 2016"
+date: "March 11, 2016"
 output: 
   pdf_document:
     keep_tex: true
@@ -35,7 +35,7 @@ library(pander)
 
 # Abstract
 
-We present a simulation of a climate prediction market. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process affect whether climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate.
+We present a simulation of a climate prediction market as a computational test-bed for market and policy design. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO2 is the primary driver of global temperature and one where sun spots are the primary driver. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO2-driven there is more convergence.
 
 # 1. Introduction
 
@@ -139,7 +139,7 @@ IM GOING TO DELETE THESE 3 bc we set them:
 
 ## Historical Data
 
-As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward log(CO2) model `r figRef("time")`.
+As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward the log(CO2) model (`r figRef("time")`).
 
 ## Future Scenarios
 
@@ -155,7 +155,7 @@ The sensitivity analysis is based on a Latin Hypercube Sampling of parameter set
 
 We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
 
-Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, and the segmentation of the social network significantly affect convergence. Segmented social networks can create an "echo-chamber" effect.
+Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all significantly affect convergence. Segmented social networks can create an "echo-chamber" effect. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO2-driven there is more convergence due to less noise in the relationship between predictor variable (log of CO2 versus TSI) and temperature.
 
 ```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated effects of model parameters on convergence of beliefs in future scenario."), fig.width=3, fig.height=3.5}
 # library(eat)
@@ -167,6 +167,7 @@ sa_plot() + theme(text=element_text(family='Palatino'))
 #multi_plot(p1, p2, cols = 2)
 ```
 
+The sensitivity analysis averages over time (and model replicates) and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and set conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs (`r figRef("time")`).
 
 ```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Convergence over trading sequences."), fig.width=10.5, fig.height=8.5}
 source("utils/time_plot.R")
@@ -184,7 +185,7 @@ multi_plot(p1, p2, cols=2)
 
 # 4. Discussion
 
-Our code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket).
+Our code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design.
 
 Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on nearer term events (months in advance), but have been shown to have performance superior to statistical models for some event types [@pathak_comparison_2015].
 
