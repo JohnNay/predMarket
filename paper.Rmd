@@ -1,7 +1,7 @@
 ---
 title: "Put Your Money Where Your Mouth Is: Prediction Markets and Climate Change"
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 11, 2016"
+date: "March 12, 2016"
 output: 
   pdf_document:
     keep_tex: true
@@ -35,13 +35,13 @@ library(pander)
 
 # Abstract
 
-We present a simulation of a climate prediction market as a computational test-bed for market and policy design. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO2 is the primary driver of global temperature and one where sun spots are the primary driver. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO2-driven there is more convergence.
+We present a simulation model as a computational test-bed for a climate prediction market. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse. Market participation causes traders to converge toward believing the "true" climate model.
 
 # 1. Introduction
 
-The climate change debate has become strongly polarized over the past twenty years. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about anthropogenic climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
+The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If anthropogenic climate change is a myth but is taken to be true, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
-Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], simulation models [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs.
+Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain events has been widely discussed [@Horn2014c]. Prediction markets have been shown to have interesting theoretical properties [@Set1998; @Hanson2012] and to perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010], simulation models [@Klingert2012c; @Jumadinova2011a], and the real-world [@Wolfers2006]. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. The ultimate goal is to initiate a computational design process for effective climate prediction markets.
 
 # 2. Related Work
 
@@ -61,13 +61,13 @@ Traders bet on global temperature anomalies six years in the future. During the 
 
 We start with the historical temperature record and project future climates under two alternative theories: 
 
-Temperature proportional to log(CO2) or Total Solar Irradiance (conventional science vs. popular alternative among doubters). Add AR(1) noise (best ARMA noise model for historical record).
+Temperature proportional to log(CO$_2$) or Total Solar Irradiance (conventional science vs. popular alternative among doubters). Add AR(1) noise (best ARMA noise model for historical record).
 
 JG - describe the temperature time series models here. Add the plots of the time series diverging thats on middle of poster. Add citations for the models to library.bib.
 
 ## Climate Beliefs
 
-Traders use one of the two models (temperature depends on CO2 or TSI) to forecast future temperature anomalies. These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
+Traders use one of the two models (temperature depends on CO$_2$ or TSI) to forecast future temperature anomalies. These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
 
 Thus, both when **true.model** = 0 and **true.model** = 1, approximately half of the traders use the true data-generating model to make predictions. However, traders using the true model do not necessarily make perfectly accurate predictions. Although these traders believe in the correct *functional form* of the model, they still need to calibrate it based on limited noisy data. Therefore, the values they use as the parameters of the model will typically still be different from the exact parameters of the data-generating process.
 
@@ -139,7 +139,7 @@ IM GOING TO DELETE THESE 3 bc we set them:
 
 ## Historical Data
 
-As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward the log(CO2) model (`r figRef("time")`).
+As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward the log(CO$_2$) model (`r figRef("time")`).
 
 ## Future Scenarios
 
@@ -155,7 +155,7 @@ The sensitivity analysis is based on a Latin Hypercube Sampling of parameter set
 
 We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
 
-Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all significantly affect convergence. Segmented social networks can create an "echo-chamber" effect. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO2-driven there is more convergence due to less noise in the relationship between predictor variable (log of CO2 versus TSI) and temperature.
+Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all significantly affect convergence. Segmented social networks can create an "echo-chamber" effect. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO$_2$-driven there is more convergence due to less noise in the relationship between predictor variable (log of CO$_2$ versus TSI) and temperature.
 
 ```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated effects of model parameters on convergence of beliefs in future scenario."), fig.width=3, fig.height=3.5}
 # library(eat)
