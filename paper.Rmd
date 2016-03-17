@@ -1,7 +1,7 @@
 ---
 title: 'Put Your Money Where Your Mouth Is: Prediction Markets and Climate Change'
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 12, 2016"
+date: "March 17, 2016"
 output:
   pdf_document:
     keep_tex: yes
@@ -36,7 +36,7 @@ library(pander)
 
 # Abstract
 
-We present a simulation model as a computational test-bed for a climate prediction market. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the climate data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse. Market participation causes traders to converge toward believing the "true" climate model.
+We present a simulation model as a computational test-bed for a climate prediction market. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the temperature data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse. Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
 
 # 1. Introduction
 
@@ -61,7 +61,7 @@ During the six-year period, traders buy and sell futures.
 Every year, traders update their models and forecast of future temperatures based on newly available data. 
 At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network. 
 In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents. 
-We conclude with details on model dynamics and an overview of the model parameters.
+We conclude with details on model dynamics and an overview of the model parameters we experimentally vary.
 
 ## Temperature Models
 
@@ -113,7 +113,8 @@ For each trader, the willingness to revise her belief is determined by how ideol
 An example of such social network is depicted in Figure X. 
 We assume that the initial network is segregated.
 Traders who initially believe in model 1 (resp. 2) are more likely to be linked with other traders who also believe in 1 (resp. 2). 
-Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds (i.e the edges are fixed).
+This reflects reality where cultural and social groups are correlated with climate change beliefs. 
+Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed.
 
 ## Model Dynamics
 
@@ -130,7 +131,7 @@ In particular, in a given sequence, traders do not know the value of ${T}_{t^*}$
 Traders can only predict ${T}_{t^*}$ using their approximate model and their knowledge of ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$.
 Notice that because ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$ are common knowledge, in each period $t$, any two trader with the same approximate model $m$ forms the same stochastic beliefs about future temperatures $F_{tm}({T}_{t^*} ~|~ {T}_{0:t}, CO2_{0:t^*}, TSI_{0:t^*})$.   
  	   
- At each time $t$, traders :
+ At each time $t$, traders:
 
 1. recalibrate their approximate model based on the new set of temperature data available at $t$,
 2. compute their stochastic beliefs about future temperatures $F_{tm}({T}_{t^*} ~|~ {T}_{0:t}, CO2_{0:t^*}, TSI_{0:t^*})$ and use it to determine the expected value they attached to each security, and
@@ -159,7 +160,7 @@ At $t^*$, traders:
  	
 ## Model Parameters
  	
-The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. 
+The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. We group the parameters into network and individual behavioral factors.
 
 * Network parameters:
     + **n.traders**: the number of traders.
@@ -183,11 +184,11 @@ The model depends on the following parameters, which we vary in simulation exper
 
 ## Historical Data
 
-As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As warming signal begins to show up in 1980s, traders begin to converge toward the log(CO$_2$) model (`r figRef("time")`).
+As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As a warming signal begins to show up in 1980s, traders begin to converge toward the log(CO$_2$) model (`r figRef("time")`).
 
 ## Future Scenarios
 
-The sensitivity analysis is based on a Latin Hypercube Sampling of parameter sets from the following distributions [@beachkofski_improved_2002; @carnell_lhs_2012]. 
+Our primary focus is on simulating the market in future scenarios. This is more relevant for policy design and more interesting theoretically due to the increasing divergence of global temperature values under the two future scenarios. The sensitivity analysis is based on a Latin Hypercube Sampling of parameter sets from the following distributions [@beachkofski_improved_2002; @carnell_lhs_2012]. 
 
 * ideo $\sim Unif(0,1)$
 * market.complet $\sim Unif(0,1000)$ (mapped into integer)
@@ -197,9 +198,9 @@ The sensitivity analysis is based on a Latin Hypercube Sampling of parameter set
 * seg $\sim Unif(0,1)$
 * true.model $\sim Binom(0.5)$
 
-We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, resulting simulated vector, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and partial rank correlation (which we use here), is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
+We use the model to simulate 10,000 outcomes based on the input paramter sets and then conduct a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of belief convergence scores, $y$ [@Marino2008; @pujol_sensitivity:_2014; @saltelli_sensitivity_2009]. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference with the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships. That is every value, $y_s$, in the data set is replace by a number $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, where $y_r$ are the other observed values of $y$ in the data set.
 
-Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all significantly affect convergence. Segmented social networks can create an "echo-chamber" effect. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO$_2$-driven there is more convergence due to less noise in the relationship between predictor variable (log of CO$_2$ versus TSI) and temperature.
+Our sensitivity analysis, `r figRef("sa")`, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all statistically significantly affect convergence. Segmented social networks can create an "echo-chamber" effect. Market participation causes traders to converge toward believing the "true" climate model; however, when the true model is CO$_2$-driven there is more convergence due to less noise in the relationship between predictor variable (log of CO$_2$ versus TSI) and temperature.
 
 ```{r sa, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("sa", "Estimated effects of model parameters on convergence of beliefs in future scenario."), fig.width=3, fig.height=3.5}
 # library(eat)
@@ -213,7 +214,7 @@ sa_plot() + theme(text=element_text(family='Palatino'))
 
 The sensitivity analysis averages over time (and model replicates) and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and set conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs (`r figRef("time")`).
 
-```{r time, eval=FALSE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Convergence over trading sequences."), fig.width=10.5, fig.height=8.5}
+```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Convergence over trading sequences."), fig.width=10.5, fig.height=8.5}
 source("utils/time_plot.R")
 p1 <- history_box() + theme(text=element_text(family='Palatino'))
 p2 <- future_box() + theme(text=element_text(family='Palatino'))
