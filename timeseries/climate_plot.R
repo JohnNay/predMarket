@@ -5,7 +5,7 @@ library(tidyr)
 source('prepare_data.R')
 source('climate_model.R')
 
-TRACE_CLIMATE_MODEL <- TRUE
+TRACE_CLIMATE_MODEL <- FALSE
 PARALLEL_STAN <- TRUE
 WHICH_MODEL <- 'ar1'
 
