@@ -1,7 +1,7 @@
 ---
 title: 'Betting and Belief: Prediction Markets and Attribution of Climate Change'
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "March 21, 2016"
+date: "March 23, 2016"
 output:
   pdf_document:
     keep_tex: yes
@@ -38,13 +38,13 @@ library(pander)
 
 # Abstract
 
-We present a simulation model as a computational test-bed for a climate prediction market. Traders adapt their beliefs about future global temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of market factors and the temperature data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is "true". Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
+We present a simulation model as a computational test-bed for climate prediction markets. Traders adapt their beliefs about future temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of social factors and the temperature data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views. Market participation causes most traders to converge toward believing the "true" climate model in a relatively small number of years, suggesting that a climate market could be useful. (150 word limit)
 
 # 1. Introduction
 
 The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
-Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed [@Horn2014c]. Prediction markets have interesting theoretical properties [@Set1998; @Hanson2012], and perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010] simulation models [@Klingert2012c; @Jumadinova2011a] and the real-world [@Wolfers2006]. Prediction markets have been shown to be effective at identifying which scientific publications are likely to be successfully replicated [@Dreber_2015]. Bloch, Annan and Bowles [-@Bloch_2010] have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what market and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
+Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed [@Horn2014c]. Prediction markets have interesting theoretical properties [@Set1998; @Hanson2012], and perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010] simulation models [@Klingert2012c; @Jumadinova2011a] and the real-world [@Wolfers2006]. Prediction markets have been shown to be effective at identifying which scientific publications are likely to be successfully replicated [@Dreber_2015]. Bloch, Annan and Bowles [-@Bloch_2010] have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
 
 # 2. Related Work
 
@@ -67,9 +67,9 @@ We conclude with details on model dynamics and an overview of the model paramete
 
 ## Temperature Models
 
-For climate time-series, we use the annual anomaly of global mean temperature. For years from 1880--2014 we use the GISTEMP global mean land-sea annual temperature anomalies [@GISTEMP_2016; @Hansen_2010] and for years from 2015 onward, we project future climates under two alternative theories: In both theories, changes in global temperature are proportional to changes in a deterministic forcing plus a stochastic noise term. For simplicity, we choose two alternative expressions for the deterministic climate forcing: one, which corresponds to conventional climate science, takes the natural logarithm of the atmospheric carbon dioxide concentration in parts per million [@Archer_2012, p. 37], and the other, which corresponds to an alternative theory advocated by many who doubt or reject conventional climate science, takes the total solar irradiance (the brightness of sunlight, in Watts per square meter, at the top of the atmosphere) averaged over the 11-year sunspot cycle [@Soon_2005].  Actual scientific models of the earth's climate include many forcings, including carbon dioxide, other greenhouse gases, aerosols, total solar irradiance, and more. In these models, the changing $\ce{CO2}$ concentration is, by a large margin, the strongest forcing [@IPCC_WG1_AR5_2013, p. 14], so for simplicity we take this as the model. Choosing only one forcing term for each of the competing models simplifies comparison because each has the same number of adjustable parameters.
+For climate time-series, we use the annual anomaly of global mean temperature. For years from 1880--2014 we use the GISTEMP global mean land-sea annual temperature anomalies [@GISTEMP_2016; @Hansen_2010] and for years from 2015 onward, we project future climates under two alternative theories: In both theories, changes in global temperature are proportional to changes in a deterministic forcing plus a stochastic noise term. For simplicity, we choose two alternative expressions for the deterministic climate forcing: one, which corresponds to conventional climate science, takes the natural logarithm of the atmospheric carbon dioxide concentration in parts per million [@Archer_2012, p. 37], and the other, which corresponds to an alternative theory advocated by many who doubt or reject conventional climate science, takes the total solar irradiance (the brightness of sunlight, in Watts per square meter, at the top of the atmosphere) averaged over the 11-year sunspot cycle [@Soon_2005].  Most scientific models of the earth's climate include many forcings, including carbon dioxide, other greenhouse gases, aerosols, total solar irradiance, and more. In these models, the changing $\ce{CO2}$ concentration is, by a large margin, the strongest forcing [@IPCC_WG1_AR5_2013, p. 14], so for simplicity we take this as the model. Choosing only one forcing term for each of the competing models simplifies comparison because each has the same number of adjustable parameters.
 
-For $\ce{CO2}$ we used historical emissions through 2005, harmonized with RCP~8.5 representative concentration pathway from 2005 onward [@rcp_database_2009; @Riahi_2011] and for TSI we used the harmonized historical values, with a projection through 2100 from Velasco-Herrera *et al.* [-@Velasco_Herrera_2015].
+For $\ce{CO2}$ we used historical emissions through 2005, harmonized with RCP 8.5 representative concentration pathway from 2005 onward [@rcp_database_2009; @Riahi_2011] and for TSI we used the harmonized historical values, with a projection through 2100 from Velasco-Herrera *et al.* [-@Velasco_Herrera_2015], which seems to be the best TSI model.
 
 Warming coefficients for each model were determined by linear regression of historical temperatures from 1880--2014 against the historical values for each model's forcing term. The noise model was determined by fitting an $\text{ARMA}(p,q)$ model to the residuals from the regression for all combinations of $p, q \in [0,1,2]$ and using the Watanabe-Akaike Information Criterion to select the optimal model [@Vehtari_2015]. The optimal model in both cases was AR(1).
 
@@ -84,12 +84,14 @@ climate_plot() + theme(text=element_text(family='Palatino'))
 
 Traders use one of the two models (temperature depends on CO$_2$ or TSI) to forecast future temperature. 
 These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. 
-They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, model 1 is randomly assigned to half of the traders, while 2 is assigned to the other half of the traders.
+They represent pervasive positions on climate change in the public debate. In order to approximatively match the current configuration of beliefs in climate change in the United States, the CO$_2$ model is randomly assigned to half of the traders, while the TSI model is assigned to the other half of the traders.
 
-Thus, both when **true.model** = 0 and **true.model** = 1, approximately half of the traders use the true data-generating model to make predictions. 
+Thus, both when the true data generating process is CO$_2$ and TSI, approximately half of the traders use the true data-generating model to make predictions. 
 Traders using the true model do not necessarily make perfectly accurate predictions however. 
 Although these traders believe in the correct *functional form* of the model, they still need to calibrate their model based on limited noisy data. 
 Therefore, the values these traders assign to the parameters of the model will typically be different from the exact parameters in the data-generating process.
+
+Jonathan, can you describe the model estimation process here?
 
 ## Traders and Market
 
@@ -99,12 +101,12 @@ Each security pays 1 ECU at the end of the trading sequence if the temperature a
 Traders are risk-neutral expected utility maximizers. 
 Therefore, their reservation price for a security is simply their assessment of the probability that the temperature will fall in the range covered by the security at the end of the sequence.
  		
-Based on their reservation price, traders behave as "zero-intelligence" agents [@Gode1993].
+Based on their reservation price, agents behave as "zero-intelligence" traders [@Gode1993].
 They attempt to sell securities at a random price above their reservation, and to buy securities at a random price below their reservation.
 These trading strategies are simple but provide accurate approximations of behavior in prediction markets [@Klingert2012c], and in financial markets more broadly.
 
 Based on traders' sell and buy orders, traders exchange securities following a continuous-double auctions (CDA) procedure (see Model Dynamics below for more details). 
-CDAs or some variants thereof are common procedures to match buy and sell orders. 
+CDAs or some close variants are common procedures to match buy and sell orders. 
 CDA are notably used on large stock markets [@Tseng2010a].
  
 ## Social Network
@@ -144,7 +146,7 @@ Notice that because ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$ are common kno
 
 1. recalibrate their approximate model based on the new set of temperature data available at $t$,
 2. compute their stochastic beliefs about future temperatures $F_{tm}({T}_{t^*} ~|~ {T}_{0:t}, CO2_{0:t^*}, TSI_{0:t^*})$ and use it to determine the expected value they attached to each security, and
-3. trade on the CDA market based on their zero-intelligence decision rule as follows: 
+3. trade on the CDA market as follows: 
  	+ Every trader $i$ choses at random a security $s_i^B$ she will try to buy.
  	+ Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
 	+ Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
@@ -169,14 +171,17 @@ At $t^*$, traders:
  	
 ## Model Parameters
  	
-The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. We group the parameters into network and individual behavioral factors.
+The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. We group the parameters into climate, network and individual behavioral factors.
+
+* Climate parameters:
+    + **true.model**: temperature data-generating process.
 
 * Network parameters:
     + **n.traders**: the number of traders.
     + **n.edg**: the number of edges in the social network.
     + **seg**: the initial degree of homophily in the network. The higher **seg**, the higher the initial homophily. 
     
-* Behavioral parameters.
+* Behavioral parameters:
     + **risk.tak** : determines the distribution of risk-taking behavior. 
     For each trader $i$, the level of \texttt{risk.tak}$_i$ is drawn uniformly at random from $[0,$\texttt{risk.tak} $]$.
     The higher \texttt{risk.tak}$_i$, the higher (resp. lower) the price $i$ will set for the securities $i$ tries to sell (resp. buy).
@@ -238,6 +243,8 @@ multi_plot(p1, p2, cols=2)
 
 
 # 4. Discussion
+
+We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is "true". Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
 
 All code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design.
 
