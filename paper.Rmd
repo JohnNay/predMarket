@@ -111,32 +111,29 @@ CDA are notably used on large stock markets [@Tseng2010a].
  
 ## Social Network
 
-Traders are part of a social network where each agent forms two links at random, and then forms links randomly. 
-This ensures that each agent is connected to at least two other agents. 
+Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents. 
 Every time securities are realized, each trader looks at the performance of her richest neighbor in the network. 
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
-Therefore, if some trader is poorer that her richest neighbor, the trader interprets this has an signal that her richest neighbor may have a better model of the climate. 
+Therefore, if some trader is poorer that her richest neighbor, the trader interprets this as an signal that her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
-For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is.
+For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
 
 ![Network](output/network.pdf)
  
-An example of such social network is depicted in Figure X. 
-We assume that the initial network is segregated.
-Traders who initially believe in model 1 (resp. 2) are more likely to be linked with other traders who also believe in 1 (resp. 2). 
-This reflects reality where cultural and social groups are correlated with climate change beliefs. 
+An example of a snapshot of a social network is depicted in Figure X. 
+We assume that the initial network is segregated: traders who initially believe in CO$_2$ forcing (resp. TSI) are more likely to be linked with other traders who also believe in CO$_2$ (resp. TSI). 
+This reflects reality where cultural and social groups are highly correlated with climate change beliefs. 
 Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed.
 
 ## Model Dynamics
 
-The time periods $t$ are grouped in trading *sequences*. 
+The time periods $t$ are grouped into trading *sequences*. 
 In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. 
 For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$. 
 In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security. 
 
-
 At each time $t$, traders are assumed to know the past value of the temperature ${T}_{0:t}$, carbon dioxide $CO2_{0:t}$, and total solar irradiance $TSI_{0:t}$. 
-In a sequence finishing at time $t^*$,  traders also have common knowledge of $CO2_{t:t^*}$ and $TSI_{t:t^*}$, the future values of carbon dioxide and total solar irradiance up to $t^*$.
+In a sequence finishing at time $t^*$, traders also have common knowledge of $CO2_{t:t^*}$ and $TSI_{t:t^*}$, the future values of carbon dioxide and total solar irradiance up to $t^*$.
 However, at any $t$, traders do not know the value of any future temperatures. 
 In particular, in a given sequence, traders do not know the value of ${T}_{t^*}$. 
 Traders can only predict ${T}_{t^*}$ using their approximate model and their knowledge of ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$.
@@ -174,7 +171,7 @@ At $t^*$, traders:
 The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. We group the parameters into climate, network and individual behavioral factors.
 
 * Climate parameters:
-    + **true.model**: temperature data-generating process.
+    + **true.model**: temperature data-generating process, CO$_2$ or TSI.
 
 * Network parameters:
     + **n.traders**: the number of traders.
@@ -198,7 +195,7 @@ The model depends on the following parameters, which we vary in simulation exper
 
 ## Historical Data
 
-As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. As a warming signal begins to show up in 1980s, traders begin to converge toward the log(CO$_2$) model (`r figRef("time")`).
+As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. Before 1980 there is no statistically significant warming trend so we would not expect the market to change beliefs before then. As a global warming signal begins to show up in 1980s, traders begin to converge toward the log(CO$_2$) model (`r figRef("time")`). 
 
 ## Future Scenarios
 
@@ -226,7 +223,7 @@ sa_plot() + theme(text=element_text(family='Palatino'))
 #multi_plot(p1, p2, cols = 2)
 ```
 
-The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and set conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs for visualization of the distributions of convergence over time (`r figRef("time")`).
+The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs for visualization of the distributions of convergence over time (`r figRef("time")`).
 
 ```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Convergence over trading sequences."), fig.width=10.5, fig.height=8.5}
 source("utils/time_plot.R")
@@ -246,9 +243,9 @@ multi_plot(p1, p2, cols=2)
 
 We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is "true". Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
 
-All code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design.
+All code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design: our code can be extended to test the effects of various trading strategies, belief models, future climate scenarios, and market designs.
 
-Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on nearer term events (months in advance), but have been shown to have performance superior to statistical models for some event types [@pathak_comparison_2015].
+Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events (months in advance), but have been shown to have performance superior to statistical models for some event types [@pathak_comparison_2015].
 
 # Acknowledgements
 
