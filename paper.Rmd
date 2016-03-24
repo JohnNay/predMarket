@@ -44,7 +44,9 @@ We present a simulation model as a computational test-bed for climate prediction
 
 The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
-Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed [@Horn2014c]. Prediction markets have interesting theoretical properties [@Set1998; @Hanson2012], and perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010] simulation models [@Klingert2012c; @Jumadinova2011a] and the real-world [@Wolfers2006]. Prediction markets have been shown to be effective at identifying which scientific publications are likely to be successfully replicated [@Dreber_2015]. Bloch, Annan and Bowles [-@Bloch_2010] have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
+Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can "put their money where their mouths are" [@Hsu2011; @Vandenbergh2013f]. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed [@Horn2014c]. Prediction markets have interesting theoretical properties [@Set1998; @Hanson2012], and perform well in terms of prediction accuracy and information aggregation in experiments [@Hanson2006; @Healy2010] simulation models [@Klingert2012c; @Jumadinova2011a] and the real-world [@Wolfers2006; @pathak_comparison_2015]. Prediction markets have been shown to be effective at identifying which scientific publications are likely to be successfully replicated [@Dreber_2015].
+
+Bloch, Annan and Bowles [-@Bloch_2010] have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events such as elections months away, so it is difficult to extrapolate empirical findings to the climate case. Furthermore, we are interested in investigating the unobservable beliefs of traders. Therefore, we turn to simulation modeling informed by climate and economic theory. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
 
 # 2. Related Work
 
@@ -223,7 +225,7 @@ sa_plot() + theme(text=element_text(family='Palatino'))
 #multi_plot(p1, p2, cols = 2)
 ```
 
-The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs for visualization of the distributions of convergence over time (`r figRef("time")`).
+The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95% and 5% percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs for visualization of the distributions of convergence over time (`r figRef("time")`). Under most parameterizations, within 15-20 years, the median percent of traders believing in the true model is over 75%.
 
 ```{r time, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=figRef("time", "Convergence over trading sequences."), fig.width=10.5, fig.height=8.5}
 source("utils/time_plot.R")
@@ -232,20 +234,11 @@ p2 <- future_box() + theme(text=element_text(family='Palatino'))
 multi_plot(p1, p2, cols=2)
 ```
 
-```{r sa2, eval=TRUE, echo=FALSE, message=FALSE, htmlcap=tabRef("sa2", "")}
-
-```
-
- `r tabRef("one")` 
-
-
 # 4. Discussion
 
 We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is "true". Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
 
-All code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design: our code can be extended to test the effects of various trading strategies, belief models, future climate scenarios, and market designs.
-
-Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events (months in advance), but have been shown to have performance superior to statistical models for some event types [@pathak_comparison_2015].
+All code for the model is available at [johnjnay.com/predictMarket](http://johnjnay.com/predictMarket). This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
 
 # Acknowledgements
 
