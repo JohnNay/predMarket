@@ -116,7 +116,7 @@ CDA are notably used on large stock markets [@Tseng2010a].
 Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents. 
 Every time securities are realized, each trader looks at the performance of her richest neighbor in the network. 
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
-Therefore, if some trader is poorer that her richest neighbor, the trader interprets this as an signal that her richest neighbor may have a better model of the climate.
+Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
 For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
 
@@ -144,7 +144,7 @@ Notice that because ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$ are common kno
  At each time $t$, traders:
 
 1. recalibrate their approximate model based on the new set of temperature data available at $t$,
-2. compute their stochastic beliefs about future temperatures $F_{tm}({T}_{t^*} ~|~ {T}_{0:t}, CO2_{0:t^*}, TSI_{0:t^*})$ and use it to determine the expected value they attached to each security, and
+2. compute their stochastic beliefs about future temperatures $F_{tm}({T}_{t^*} ~|~ {T}_{0:t}, CO2_{0:t^*}, TSI_{0:t^*})$ and use it to determine the expected value they attach to each security, and
 3. trade on the CDA market as follows: 
  	+ Every trader $i$ choses at random a security $s_i^B$ she will try to buy.
  	+ Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
@@ -157,7 +157,7 @@ Notice that because ${T}_{0:t}$, $CO2_{0:t^*}$, and $TSI_{0:t^*}$ are common kno
    These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
  	+ The market maker then tries to match $i$'s orders with some order which was put in the book before $i$ came to the market.
  	+ If there are  outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
-   Trader $i$ buys one unit of $s_i^B$ from the sellers who sells at the highest price below $p_i^B$, and the sell and buy offers are removed from the order book.
+   Trader $i$ buys one unit of $s_i^B$ from the sellers who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
  	+ If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded. 
    Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the sell and buy offers are removed from the order book.
  	+ Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
@@ -166,7 +166,7 @@ At $t^*$, when the sequence ends, there is only one security $s^*$ associated wi
 At $t^*$, traders:
 
 1.  receive 1 ECU per unit of $s^*$ they own, and
-2.  consider adapting their neighbors' approximate model as described above.
+2.  consider adapting their neighbors' approximate model as described in Social Network.
  	
 ## Model Parameters
  	
@@ -191,7 +191,7 @@ The model depends on the following parameters, which we vary in simulation exper
     For each trader $i$, the level of \texttt{ideo}$_i$ is drawn uniformly at random from $[0,$\texttt{ideo} $]$.
     If ideo is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
     Formally, for each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. 
-    The value of $d_{i}$ is the probability that $i$ adopts one of her neighbors' approximate model if this neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
+    The value of $d_{i}$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
 
 # 3. Results
 
