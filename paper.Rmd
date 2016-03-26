@@ -3,10 +3,11 @@ title: 'Betting and Belief: Prediction Markets and Attribution of Climate Change
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
 date: "March 23, 2016"
 output:
+  word_document: default
   pdf_document:
-    keep_tex: yes
     includes:
       in_header: header.tex
+    keep_tex: yes
   html_document: default
 bibliography: library.bib
 ---
@@ -40,7 +41,7 @@ library(pander)
 
 We present a simulation model as a computational test-bed for climate prediction markets. Traders adapt their beliefs about future temperatures based on the monetary performance of their neighboring traders in a social network. We conduct experiments with the model to determine how a variety of social factors and the temperature data-generating process may affect the extent to which climate prediction markets foster a convergence of market participants' beliefs regarding a true model of the global climate. We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views. Market participation causes most traders to converge toward believing the "true" climate model in a relatively small number of years, suggesting that a climate market could be useful. (150 word limit)
 
-# 1. Introduction
+# Introduction
 
 The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public [@Vandenbergh2013f]. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
@@ -48,7 +49,7 @@ Attempts to foster such consensus face many social and psychological challenges,
 
 Bloch, Annan and Bowles [-@Bloch_2010] have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events such as elections months away, so it is difficult to extrapolate empirical findings to the climate case. Furthermore, we are interested in investigating the unobservable beliefs of traders. Therefore, we turn to simulation modeling informed by climate and economic theory. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
 
-# 2. Related Work
+# Related Work
 
 @Tseng2010a create an agent-based model (ABM) of a continuous double auction market with multiple market strategies, including two variants of the zero-intelligence agent. They compare the behavior of their simulation with data from a prediction market for the outcome of political elections. They find that despite their simplicity, zero-intelligence agents capture some salient features of real market data. @Klingert2012c reach similar conclusions with respect to experimental data from @Hanson2006. In their simulation, @Klingert2012c compare continuous double auctions with logarithmic market scoring rules and find that the latter generally outperform continuous double auctions in terms of prediction accuracy. In some variants of the two last models, agents' strategies feature learning, but these are rather basic and unrelated to a formal predictive model.
 
@@ -58,7 +59,7 @@ To the best of our knowledge, the idea that prediction markets can generate cons
 
 From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. This is perhaps the most important social benefit of prediction markets given the comparable predictive power of statistical supervised learning models, which can provide information at a much lower cost than creating and maintaining a market [@goel_prediction_2010]. Effective climate policy not only requires an accurate consensus on future climate *outcomes*. It also requires an accurate consensus on the causal *mechanisms* influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented.
 
-# 2. Model Design
+# Model Design
 
 Traders bet on global temperature anomalies six years in the future. 
 During the six-year period, traders buy and sell futures. 
@@ -193,7 +194,7 @@ The model depends on the following parameters, which we vary in simulation exper
     Formally, for each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. 
     The value of $d_{i}$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
 
-# 3. Results
+# Results
 
 ## Historical Data
 
@@ -234,7 +235,7 @@ p2 <- future_box() + theme(text=element_text(family='Palatino'))
 multi_plot(p1, p2, cols=2)
 ```
 
-# 4. Discussion
+# Discussion
 
 We simulate two alternative climate futures: one where the natural log of CO$_2$ is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is "true". Market participation causes traders to converge toward believing the "true" climate model under a variety of model parameterizations in a relatively small number of years, suggesting that a climate prediction market could be useful regardless of which climate change beliefs ultimately turn out to be the best model of temperature change.
 
