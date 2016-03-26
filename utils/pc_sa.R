@@ -96,13 +96,13 @@ correct_bias <- function(x) {
 
 setMethod("plot", "pcSA",
           function(x, outcome_var = "Outcome", 
-                   xlab = "Variable", ylab = "Partial Rank Correlation Coefficient"){
+                   xlab = "Variable", ylab = "Partial rank correlation coefficient"){
             x <- x@result
             ss <- correct_bias(x[[7]]) # $SRRC, $SRC, $PRCC, $PCC
             
             ggplot2::ggplot(ss, ggplot2::aes(x = var, y = x_corr)) + ggplot2::geom_point() +
               ggplot2::xlab(xlab) + ggplot2::ylab(ylab) +
-              ggplot2::ggtitle(paste("Estimated Effects on", outcome_var)) +
+              ggplot2::ggtitle(paste("Estimated effects on", outcome_var)) +
               ggplot2::geom_errorbar(ggplot2::aes(ymax = max_ci, ymin = min_ci), width=0.25) +
               ggplot2::geom_hline(yintercept = 0) +
               ggplot2::ylim(c(-1,1)) +
