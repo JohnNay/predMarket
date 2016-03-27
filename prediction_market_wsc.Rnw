@@ -59,6 +59,7 @@ theme_set(theme_classic())
 %*  The Document.
 %*
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 %***************************************************************************
 % AUTHOR: AUTHOR NAMES GO HERE
@@ -107,7 +108,7 @@ Despite overwhelming scientific evidence, a large fraction of the American publi
 
 The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public \shortcite{Vandenbergh2013f}. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of an accurate consensus on the issue is manifest.
 
-Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can ``put their money where their mouths are'' \shortcite{Hsu2011,Vandenbergh2013f}. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed \shortcite{Horn2014c}. Prediction markets have interesting theoretical properties \shortcite{Set1998,Hanson2012}, and perform well in terms of prediction accuracy and information aggregation in experiments \shortcite{Hanson2006,Healy2010} simulation models \shortcite{Klingert2012c,Jumadinova2011a} and the real-world \shortcite{Wolfers2006,pathak_comparison_2015,Dreber_2015}.
+Attempts to foster such consensus face many social and psychological challenges, some of which could be adressed by creating climate prediction markets where participants can ``put their money where their mouths are'' \shortcite{Hsu2011,Vandenbergh2013f}. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed \shortcite{Horn2014c}. Prediction markets have interesting theoretical properties \shortcite{Set1998,Hanson2012}, and perform well in terms of prediction accuracy and information aggregation in experiments \shortcite{Hanson2006,Healy2010} simulation models \shortcite{Klingert2012c,Jumadinova2011a} and the real-world \shortcite{Wolfers2006,pathak_comparison_2015,Dreber_2015}. However, to the best of our knowledge, the idea that prediction markets can generate consensus \emph{on the factors\/} affecting uncertain events has never been explored quantitatively.
 
 Bloch, Annan and Bowles \shortciteN{Bloch_2010} have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events such as elections months away, so it is difficult to extrapolate empirical findings to the climate case. Furthermore, we are interested in investigating the unobservable beliefs of traders. Therefore, we turn to simulation modeling informed by climate and economic theory. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
 
@@ -115,11 +116,11 @@ From a public policy perspective, changing the explanatory models of market part
 
 \section{RELATED WORK}
 
-To the best of our knowledge, the idea that prediction markets can generate consensus \emph{on the factors\/} affecting uncertain events has never been explored quantitatively. Agent-based simulations prediction markets have been studied \shortcite{Klingert2012c,Tseng2010a,Jumadinova2011a}, including some that feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, so these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
+Agent-based simulations of prediction markets have been studied \shortcite{Klingert2012c,Tseng2010a,Jumadinova2011a}, including some that feature communication between agents. In these models, however, beliefs about the uncertain outcomes are constructed in rather abstract ways. In particular, beliefs are not based on structural models from which agents could derive causal implications, so these models are not suitable for investigating the convergence of the underlying explanatory models agents employ for prediction.
 
-\shortciteN{Tseng2010a} created an agent-based model (ABM) of a continuous double auction market with multiple market strategies, including two variants of a zero-intelligence agent. They compared the behavior of their simulation with data from a prediction market for the outcome of political elections. They found that despite their simplicity, zero-intelligence agents capture some salient features of real market data. \shortciteN{Klingert2012c} compared the predictive accuracy different kinds of simulated markets (condinuous double auctions and logarithmic market scoring rules) and reached similar conclusions to experimental work by \shortciteN{Hanson2006}. None of these models featured agents learning and updating their beliefs.
+\shortciteN{Tseng2010a} created an agent-based model (ABM) of a continuous double auction market with multiple market strategies, including two variants of a zero-intelligence agent. They compared the behavior of their simulation with data from a prediction market for the outcome of political elections. They found that despite their simplicity, zero-intelligence agents capture some salient features of real market data. \shortciteN{Klingert2012c} compared the predictive accuracy of different kinds of simulated markets (continuous double auctions and logarithmic market scoring rules) and reached similar conclusions to experimental work by \shortciteN{Hanson2006}. None of these models featured agents learning and updating their beliefs.
 
-\shortciteN{Jumadinova2011a} created a continuous double auction model in which agents update their beliefs about uncertain events based on newly-acquired information. The better the information set, the more likely the agent was to put higher weight on last period's prices when revising their beliefs. However, little structure was imposed on the information set and the way it was used to generate the weights for updating beliefs, so that model does not permit studying the convergence of trader beliefs about predictive models. \shortciteN{Ontanon2009} studied the effect of deliberation on a simulated prediction market, in which agents used case-based reasoning \shortcite{Aamodt1994} to debate uncertain outcomes with their neighbors in a social network. This model could in principle be used to assess convergence of predictive models, but this was not done and the process of forming and revising beliefs through argumentation is not well suited to studying stochastic time series, such as those relevant to climate prediction markets.
+\shortciteN{Jumadinova2011a} created a continuous double auction model in which agents update their beliefs about uncertain events based on newly-acquired information. The better the information set, the more likely the agents were to put higher weight on last period's prices when revising their beliefs. However, little structure was imposed on the information set and the way it was used to generate the weights for updating beliefs, so that model does not permit studying the convergence of trader beliefs about predictive models. \shortciteN{Ontanon2009} studied the effect of deliberation on a simulated prediction market, in which agents used case-based reasoning \shortcite{Aamodt1994} to debate uncertain outcomes with their neighbors in a social network. This model could in principle be used to assess convergence of predictive models, but this was not done and the process of forming and revising beliefs through argumentation is not well suited to studying stochastic time series, such as those relevant to climate prediction markets.
 
 \section{MODEL DESIGN}
 
@@ -174,9 +175,9 @@ Traders use their model to forecast the distribution of future temperature and d
 
 Traders are risk-neutral expected utility maximizers. 
 Therefore, their reservation price for a security is simply their assessment of the probability that the temperature will fall in the range covered by the security at the end of the sequence.
-At each time-step (year), the agents use the new year's temperature data to re-estimate the coefficients for the model they believe explains climate change, using using Bayesian linear regression with an $\AR(1)$ noise model, and use the joint posterior probability distribution of regression and noise coefficients to estimate the probability distribution for the  temperature at the end of the current trading sequence. Stan was sufficiently fast that we could perform a full Bayesian analysis at each time step. Traders then use this posterior probability distribution to assign reservation prices for buying and selling securities.
+At each time-step (year), the agents use the new year's temperature data to re-estimate the coefficients for the model they believe explains climate change, using Bayesian linear regression with an $\AR(1)$ noise model. Traders use the joint posterior probability distribution of regression and noise coefficients to estimate the probability distribution for the  temperature at the end of the current trading sequence. Stan was sufficiently fast that we could perform a full Bayesian analysis at each time step. 
 
-   
+Traders then use this posterior probability distribution to assign reservation prices for buying and selling securities. 
 Based on their reservation price, agents behave as ``zero-intelligence'' traders \shortcite{Gode1993}.
 They attempt to sell securities at a random price above their reservation, and to buy securities at a random price below their reservation.
 These trading strategies are simple but provide accurate approximations of behavior in prediction markets \shortcite{Klingert2012c}, and in financial markets more broadly.
@@ -190,7 +191,7 @@ CDA are notably used on large stock markets \shortcite{Tseng2010a}.
 Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents. 
 Every time securities are realized, each trader looks at the performance of her richest neighbor in the network. 
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
-Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal than her richest neighbor may have a better model of the climate.
+Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
 For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
 \begin{figure}[t]
@@ -222,7 +223,7 @@ The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (
      
  At each time $t$, traders:
 \begin{enumerate}
-\item  recalibrate their approximate model based on the new set of temperature data available at $t$,
+\item  recalibrate $m$, their approximate model at time $t$, based on the new set of temperature data available at $t$,
 \label{step:calibrate}
 \item  use the posterior probability distribution from (\ref{step:calibrate}) to 
 assign beliefs about the probability distribution of future temperatures at time $t^*$: 
@@ -233,7 +234,7 @@ and use it to determine the expected value they attach to each security, and
     \item Every trader $i$ choses at random a security $s_i^B$ she will try to buy.
     \item Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
     \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
-  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$. 
+  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect $i$'s approximate model at time $t$). 
   Then traders set $p_i^S$ at random above $E(s_i^S)$ and $p_i^B$ at random below $E(s_i^B)$ (see Model Parameters below for more details).
     \item Traders go to the market one at the time, in an order drawn randomly for each $t$.
     \item When trader $i$ comes to the market, she places limit orders in the order book. 
@@ -252,7 +253,7 @@ At $t^*$, traders:
 
 \begin{enumerate}
   \item  receive 1 ECU per unit of $s^*$ they own, and
-  \item consider adapting their neighbors' approximate model as described in Social Network.
+  \item consider adapting their neighbors' approximate model as described in Social Network above.
 \end{enumerate}
 
 \subsection{Model Parameters}
@@ -278,15 +279,13 @@ The model depends on the following parameters, which we vary in simulation exper
     For each trader $i$, the level of $\texttt{risk.tak}_i$ is drawn uniformly at random from $[0,\texttt{risk.tak}]$.
     The higher $\texttt{risk.tak}_i$, the higher the price $i$ will demand for selling securities, and the lower the price $i$ will offer for buying.
     
-    Formally, let $\texttt{reserv}_{i,t}$ be the reservation price of trader $i$ at time $t$ for some security $s$.
-    Then trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval  
-    $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i,t}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and 
-    $[\texttt{reserv}_{i,t}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
+    Formally, in each period, trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval  
+    $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and 
+    $[\texttt{reserv}_{i}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
     If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
-    Formally, for each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. 
-    The value of $d_{i}$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
+    Formally, for each trader $i$ and each sequence, \texttt{ideo}_i is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
   \end{itemize}
 \end{itemize}
 
@@ -339,7 +338,7 @@ multi_plot(p1, p2, cols=2)
 
 Our sensitivity analysis, Fig.~\ref{fig:sa}, shows that ideology, risk tolerance, the number of traders, the number of edges per trader, the segmentation of the social network, and the true model all statistically significantly affect convergence.  Increasing the number of edges per trader increases the flow of information through the market, which causes traders to converge toward believing the ``true'' climate model.
 
-Segmented social networks reduce convergence by creating an ``echo-chamber'' effect, in which lack of interaction between traders with different views reduces traders' access to information that could persuade them to change their beliefs. This is apparent in Fig.~\ref{fig:time}, where the rate of convergence in highly segmented markets ($\text{\texttt{seg}} = 0.95$) is considerably slower, expecially in the first three trading sequences (18 years), than for markets with low segmentation ($\text{\texttt{seg}} = 0.05$).
+Segmented social networks reduce convergence by creating an ``echo-chamber'' effect, in which lack of interaction between traders with different views reduces traders' access to information that could persuade them to change their beliefs. This is apparent in Fig.~\ref{fig:time}, where the rate of convergence in highly segmented markets ($\text{\texttt{seg}} = 0.95$) is considerably slower, especially in the first three trading sequences (18 years), than for markets with low segmentation ($\text{\texttt{seg}} = 0.05$).
 
 When the true model is \ce{CO2}-driven there is more convergence toward the true model. We believe this is because when models are fit to the historical data, the residuals from the \ce{CO2}-driven model are considerably smaller than those from the TSI-driven model. Thus, projections of future climate change using the TSI model will exhibit significantly larger stochastic noise than the \ce{CO2} models, and this noise makes it more difficult for traders to identify the true model when the true model is TSI.
 
