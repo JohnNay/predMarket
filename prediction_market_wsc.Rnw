@@ -59,7 +59,6 @@ theme_set(theme_classic())
 %*  The Document.
 %*
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 %***************************************************************************
 % AUTHOR: AUTHOR NAMES GO HERE
@@ -285,7 +284,7 @@ The model depends on the following parameters, which we vary in simulation exper
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
     If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
-    Formally, for each trader $i$ and each sequence, \texttt{ideo}_i is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
+    Formally, for each trader $i$ and each sequence, $\texttt{ideo}_i$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
   \end{itemize}
 \end{itemize}
 
