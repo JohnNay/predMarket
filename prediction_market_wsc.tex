@@ -190,7 +190,7 @@ where $T_{\text{model}}(t)$ is the temperature at time $t$, under a given model 
 $F_{\text{model}}(t)$ is the forcing (TSI or $\log\ce{CO2}$) at time $t$,
 $\beta_{\text{model}}$ is the regression coefficient, and
 $\varepsilon$ is an $\ARMA(p,q)$ noise term.
-The coefficient $\beta$ and the parameters of the ARMA noise model were fit to the historical data (1880--2014), as described above. 
+The coefficient $\beta$ and the parameters of the ARMA noise model were fit to the historical data (1880--2014), as described above in Social Network.
 An example realization of future climates for both the $\ln(\ce{CO2})$ and TSI models is shown in Fig.~\ref{fig:climateplot}.
 
 \begin{knitrout}
@@ -240,7 +240,7 @@ CDA are notably used on large stock markets \shortcite{Tseng2010a}.
 Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents. 
 Every time securities are realized, each trader looks at the performance of her richest neighbor in the network. 
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
-Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
+Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal than her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
 For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
 \begin{figure}[t]
@@ -290,7 +290,7 @@ and use it to determine the expected value they attach to each security, and
    These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
     \item The market maker then tries to match $i$'s orders with some order which was put in the book before $i$ came to the market.
     \item If there are  outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
-   Trader $i$ buys one unit of $s_i^B$ from the sellers who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
+   Trader $i$ buys one unit of $s_i^B$ from the seller who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
     \item If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded. 
    Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the sell and buy offers are removed from the order book.
     \item Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
@@ -334,7 +334,7 @@ The model depends on the following parameters, which we vary in simulation exper
     $[\texttt{reserv}_{i,t}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
-    If ideo is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
+    If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
     Formally, for each trader $i$ and each sequence, a parameter $d_{i}$ is drawn from $[0, \texttt{ideo}_i]$. 
     The value of $d_{i}$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
   \end{itemize}
