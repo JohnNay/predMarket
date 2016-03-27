@@ -10,10 +10,10 @@ future_line <- function(){
   # plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
   #  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.95"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.95")))
+                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.95"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.95")))
   
   sequence.years <- 6
   
@@ -39,10 +39,10 @@ future_box <- function(){
   # plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
   #  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.95"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.95")))
+                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.95"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.95")))
   initial_convergence <- plot_data %>% filter(trading_seq == 1) %>% 
     mutate(trading_seq = 1/sequence.years, convergence = 0)
   complete_data <- plot_data %>% bind_rows(initial_convergence)
@@ -79,10 +79,10 @@ history_box <- function(){
   # plot_data$set <- factor(plot_data$set, levels = gtools::mixedsort(unique(plot_data$set)))
   #  n.edg <- round(parameters[5]*100) + 100 # integer in (100, 200)
   plot_data$set <- factor(plot_data$set, levels = c("0.05, 0.05", "0.05, 0.95", "0.95, 0.05", "0.95, 0.95"), 
-                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.05 + 2, 1), " edges/trader, segmentation = 0.95"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.05"), 
-                                     paste0(round(8 * 0.95 + 2, 1), " edges/trader, segmentation = 0.95")))
+                          labels = c(paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.05 + 2, 1), " edges per trader, segmentation = 0.95"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.05"), 
+                                     paste0(round(8 * 0.95 + 2, 1), " edges per trader, segmentation = 0.95")))
   
   initial_convergence <- plot_data %>% filter(trading_seq == 1) %>% 
     mutate(trading_seq = 0, convergence = 0)

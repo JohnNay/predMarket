@@ -2,6 +2,16 @@
 .Rhistory
 .RData
 .DS_Store
+*.log
+*.out
+*.aux
+*.bbl
+*.blg
+*.ilg
+*.bak
+*.synctex.gz
+*.zip
+*-concordance.tex
 mixing_matrix.R
 /timeseries/model_temp_cache
 /timeseries/timeseries_example_cache
