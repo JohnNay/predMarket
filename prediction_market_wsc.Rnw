@@ -359,7 +359,7 @@ Market participation causes traders to converge toward believing the ``true'' cl
 
 The fact that rapid convergence to the true model occurs regardless of which model is actually ``true'' may persuade those who doubt the scientific consensus that the market is ideologically neutral, and that the deck is not stacked to produce a pre-determined result.
 
-All code for the model is available at \href{http://johnjnay.com/predMarket/}{johnjnay.com/predMarket/}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
+All code and data for the model is available at \href{http://johnjnay.com/predMarket/}{johnjnay.com/predMarket/}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
 
 \section*{ACKNOWLEDGEMENTS}
 

@@ -5,7 +5,12 @@ library(tidyr)
 sa_plot <- function(){
   source('utils/pc_sa.R', chdir = T)
   load("output/src_future.Rda")
-  ss <- correct_bias(src_future@result[[7]])
+  
+  load("output/src_future.Rda")
+  result <- sensitivity::pcc(X = src_future@input_set, y = src_future@sims, nboot = 1000, rank = TRUE)
+  ss <- correct_bias(result[[7]])
+  
+  #ss <- correct_bias(src_future@result[[7]])
   ss <- ss %>% mutate(var = ordered(var, levels = c('ideo','risk.tak','n.traders',
                                                     'n.edg', 'seg', 'true.model'),
                                     labels = c('Ideology', "Risk tolerance",
@@ -18,7 +23,7 @@ sa_plot <- function(){
     geom_hline(yintercept = 0, size = 1, color = 'dark gray') +
     geom_point(size = 2) +
     geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25, size = 1) +
-    labs(x = NULL, y = "Standardized rank regression coefficient",
+    labs(x = NULL, y = "Partial Rank Correlation Coefficient",
          title = title) +
     ylim(c(-1,1)) +
     theme(panel.grid.major.x = element_blank(), 
