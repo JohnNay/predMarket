@@ -234,7 +234,7 @@ and use it to determine the expected value they attach to each security, and
     \item Every trader $i$ chooses at random a security $s_i^B$ she will try to buy.
     \item Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
     \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
-  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect $i$'s approximate model at time $t$). 
+  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect to $i$'s approximate model at time $t$). 
   Then traders set $p_i^S$ at random above $E(s_i^S)$ and $p_i^B$ at random below $E(s_i^B)$ (see Model Parameters below for more details).
     \item Traders go to the market one at the time, in an order drawn randomly for each $t$.
     \item When trader $i$ comes to the market, she places limit orders in the order book. 
