@@ -244,6 +244,7 @@ Traders start with the same initial amount of ECU and differences in ECU can onl
 Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
 For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
+
 \begin{figure}[t]
 \begin{center}
 \includegraphics[width=0.50\textwidth]{output/network.pdf}
@@ -252,9 +253,9 @@ For each trader, the willingness to revise her belief is determined by how ideol
 \end{figure}
 
 An example of a snapshot of a social network is depicted in Fig.~\ref{fig:social_network}. 
-We assume that the initial network is segregated: traders who initially believe in \ce{CO2} forcing (resp. TSI) are more likely to be linked with other traders who also believe in \ce{CO2} (resp. TSI). 
+We assume that the initial network is segregated: traders who initially believe in \ce{CO2} forcing (resp. TSI) are more likely to be linked with other traders who also believe in \ce{CO2} (resp. TSI).
 This reflects reality where cultural and social groups are highly correlated with climate change beliefs. 
-Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed.
+Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed. We vary the degree of initial network segregation in our experiments.
 
 \subsection{Model Dynamics}
 
@@ -268,8 +269,8 @@ In a sequence finishing at time $t^*$, traders also have common knowledge of $\t
 However, at any $t$, traders do not know the value of any future temperatures. 
 Thus, the traders know the forcing terms for the rest of the trading sequence, but do not know the value of ${T}_{t^*}$. 
 Traders can only predict ${T}_{t^*}$ using their approximate model and their knowledge of ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$.
-Notice that because ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$ are common knowledge, in each period $t$, any two trader with the same approximate model $m$ forms the same stochastic beliefs about future temperatures $P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$.
-The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (the trader does not know the true values of the coefficients of the climate model) and aleatory uncertainty (in addition to deterministic warming, the temperature exhibits stochastic noise).
+Notice that because ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$ are common knowledge, in each period $t$, any two traders with the same approximate model $m$ form the same stochastic beliefs about future temperatures $P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$.
+The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (the trader does not know the true values of the coefficients of the climate model) and aleatory uncertainty (in addition to deterministic warming, the temperature exhibits stochastic noise that is directly modeled).
      
  At each time $t$, traders:
 \begin{enumerate}
@@ -284,17 +285,17 @@ and use it to determine the expected value they attach to each security, and
     \item Every trader $i$ chooses at random a security $s_i^B$ she will try to buy.
     \item Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
     \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
-  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect $i$'s approximate model at time $t$). 
+  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect to $i$'s approximate model at time $t$). 
   Then traders set $p_i^S$ at random above $E(s_i^S)$ and $p_i^B$ at random below $E(s_i^B)$ (see Model Parameters below for more details).
     \item Traders go to the market one at the time, in an order drawn randomly for each $t$.
     \item When trader $i$ comes to the market, she places limit orders in the order book. 
    These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
-    \item The market maker then tries to match $i$'s orders with some order which was put in the book before $i$ came to the market.
-    \item If there are  outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
+    \item The market maker attempts to match $i$'s orders with some order which was put in the book before $i$ came to the market.
+    \item If there are outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
    Trader $i$ buys one unit of $s_i^B$ from the seller who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
     \item If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded. 
    Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the sell and buy offers are removed from the order book.
-    \item Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
+    \item When all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
   \end{itemize}
 \end{enumerate}
 
@@ -303,7 +304,7 @@ At $t^*$, traders:
 
 \begin{enumerate}
   \item  receive 1 ECU per unit of $s^*$ they own, and
-  \item consider adapting their neighbors' approximate model as described in Social Network above.
+  \item consider adapting their neighbors' approximate model as described in the behavioral parameters sub-section below.
 \end{enumerate}
 
 \subsection{Model Parameters}
@@ -314,6 +315,7 @@ The model depends on the following parameters, which we vary in simulation exper
   \begin{itemize}
     \item  \texttt{true.model}: temperature data-generating process (\ce{CO2} or TSI).
   \end{itemize}
+  
   \item Network parameters:
   \begin{itemize}
     \item  \texttt{n.traders}: the number of traders.
@@ -332,6 +334,7 @@ The model depends on the following parameters, which we vary in simulation exper
     Formally, in each period, trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval  
     $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and 
     $[\texttt{reserv}_{i}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
+  
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
     If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
@@ -363,18 +366,17 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 The future \ce{CO2} forcing is taken from the RCP~8.5 scenario \shortcite{Riahi_2011} and the future TSI forcing is taken from a prediction of 21\textsuperscript{st} Total Solar Irradiance by \shortciteN{Velasco_Herrera_2015}. Because of the stochastic noise term, the temperature time series were different in each simulation.
 
-We use the model to perform 10 full simulations for each of the 500 input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by a number 
-$f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
-where $y_r$ are the observed values of $y$ in the data set.
+We use the model to perform 10 full simulations for each of the 500 input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
+where $y_r$ are the observed values of $y$ in the data set. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
 
 {\centering \includegraphics[width=\maxwidth]{figure/sa-1} 
 
 }
 
-\caption{Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. \textbf{TODO: John: explain the error bars: one sigma, two sigma, 95\% CI, \dots}}\label{fig:sa}
+\caption[Estimated effects of model parameters on convergence of beliefs in future scenario]{Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\% confidence intervals.}\label{fig:sa}
 \end{figure}
 
 
@@ -405,7 +407,7 @@ When the true model is \ce{CO2}-driven there is more convergence toward the true
 
 The higher the risk tolerance, the greater the range of prices at which a trader will buy and sell securities. This creates greater opportunities for traders to profit if their model is correct and to lose money if it is incorrect. This increased volatility puts more information in play, and we believe this is why greater risk taking enables traders to identify the correct model more quickly. We have observed a similar phenomenon in a very different context, where adding stochastic noise to player decisions in iterated games improves the accuracy with which machine-learning algorithms can identify the players' strategies \shortcite{Nay2015}.
 
-What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This will be a topic for future research.
+What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This will be a topic for future research where we will be increasing the number of traders into the thousands.
 
 The historical sequence in Fig.~\ref{fig:time} shows convergence to the TSI model until the early 1970s, after which traders converge toward the \ce{CO2} model. This is consistent with the fact that greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}.
 
@@ -417,7 +419,7 @@ Market participation causes traders to converge toward believing the ``true'' cl
 
 The fact that rapid convergence to the true model occurs regardless of which model is actually ``true'' may persuade those who doubt the scientific consensus that the market is ideologically neutral, and that the deck is not stacked to produce a pre-determined result.
 
-All code for the model is available at \href{http://johnjnay.com/predictMarket}{\nolinkurl{johnjnay.com/predictMarket}}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
+All code for the model is available at \href{http://johnjnay.com/predMarket/}{johnjnay.com/predMarket/}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
 
 \section*{ACKNOWLEDGEMENTS}
 
@@ -439,7 +441,7 @@ knitr \shortcite{xie_knitr_2014}.
 
 \section*{AUTHOR BIOGRAPHIES}
 
-\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops and applies machine learning and simulation methods to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
+\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
 
 \noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. \\
 \textbf{TODO: Martin, please fill this in.}\\
