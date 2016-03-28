@@ -1,6 +1,0 @@
-Prediction market --
-a data.frame cols: Year, Trader, Trader's Models
-run a bunch of iterations of the model.
-
-A line plot, Year on x-axis and Percent traders who believe in the true model on y-axis. Line that shows percentages and jitter the dots on the 1 and 0 of the y-axis. Do this for 1,000 draws from the parameters. Do this for c02-driven climate. 
-Then re-do it all for the sunspots driven climate. Rbind the sunspots and co2 big data.frames with an indicator for each in the column.

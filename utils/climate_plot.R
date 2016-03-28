@@ -16,7 +16,7 @@ climate_plot <- function(){
     geom_line(size=1) + 
     scale_color_brewer(palette = "Set1", labels = c(CO2 = expression(CO[2]), TSI = "TSI"), 
                        name = "True driver of future climate") + 
-    labs(x = "Year", y = expression(paste("Temperature Anomaly  ", (degree * C)))) +
+    labs(x = "Year", y = expression(paste("Temperature anomaly  ", (degree * C)))) +
     theme(legend.position = c(0.04,0.95), legend.justification = c(0,1), 
           legend.key.width = grid::unit(0.05,'npc'), 
           legend.key = element_rect(color = NA))

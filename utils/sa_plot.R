@@ -18,7 +18,7 @@ sa_plot <- function(){
     geom_hline(yintercept = 0, size = 1, color = 'dark gray') +
     geom_point(size = 2) +
     geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25, size = 1) +
-    labs(x = NULL, y = "Standardized Rank Regression Coefficient",
+    labs(x = NULL, y = "Standardized rank regression coefficient",
          title = title) +
     ylim(c(-1,1)) +
     theme(panel.grid.major.x = element_blank(), 
