@@ -346,7 +346,7 @@ When the true model is \ce{CO2}-driven there is more convergence toward the true
 
 The higher the risk tolerance, the greater the range of prices at which a trader will buy and sell securities. This creates greater opportunities for traders to profit if their model is correct and to lose money if it is incorrect. This increased volatility puts more information in play, and we believe this is why greater risk taking enables traders to identify the correct model more quickly. We have observed a similar phenomenon in a very different context, where adding stochastic noise to player decisions in iterated games improves the accuracy with which machine-learning algorithms can identify the players' strategies \shortcite{Nay2015}.
 
-What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This will be a topic for future research where we will be increasing the number of traders into the thousands.
+What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This is a topic for future research.
 
 The historical sequence in Fig.~\ref{fig:time} shows convergence to the TSI model until the early 1970s, after which traders converge toward the \ce{CO2} model. This is consistent with the fact that greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}.
 
