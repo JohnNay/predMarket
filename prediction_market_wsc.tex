@@ -102,6 +102,7 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
+
 %***************************************************************************
 % AUTHOR: AUTHOR NAMES GO HERE
 % FORMAT AUTHORS NAMES Like: Author1, Author2 and Author3 (last names)
@@ -148,13 +149,13 @@ Despite much scientific evidence, a large fraction of the American public doubts
 
 \section{INTRODUCTION}
 
-The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public \shortcite{Vandenbergh2013f}. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but not recognized as so, the costs of inaction could be devastating. Given that effective climate policies require long-lasting measures to be taken, the importance of a timely and accurate consensus on the issue is manifest.
+The climate change debate has become strongly polarized over the past two decades. Although the scientific consensus on the anthropogenic nature of climate change strongly increased, beliefs about climate change did not evolve much within the public \shortcite{Vandenbergh2013f}. In addition, the divide on anthropogenic climate change between liberals and conservatives has grown steadily as the question is becoming increasingly politicized and potentially disconnected from scientific evidence \shortcite{Kahan_2011}. The costs of misinformed climate policies are high. If climate change is not human-induced but is believed to be so, public resources will be spent on unnecessary efforts. On the other hand, if climate change is human-induced but recognized to be so, the costs of inaction could be devastating. Effective climate policies require acting quickly, so it would be valuable to bring the public to a prompt and accurate consensus on the issue.
 
 Attempts to foster such consensus face many social and psychological challenges, some of which could be addressed by creating climate prediction markets where participants can ``put their money where their mouths are'' \shortcite{Hsu2011,Vandenbergh2013f}. The idea of using prediction markets to efficiently aggregate information about uncertain event outcomes has been widely discussed \shortcite{Horn2014c}. Prediction markets have interesting theoretical properties \shortcite{Set1998,Hanson2012}, and perform well in terms of prediction accuracy and information aggregation in experiments \shortcite{Hanson2006,Healy2010} simulation models \shortcite{Klingert2012c,Jumadinova2011a} and the real-world \shortcite{Wolfers2006,pathak_comparison_2015,Dreber_2015}. However, to the best of our knowledge, the idea that prediction markets can generate consensus \emph{on the factors\/} affecting uncertain events has never been explored quantitatively.
 
-Bloch, Annan and Bowles \shortciteN{Bloch_2010} have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. Existing prediction markets (e.g. hypermind.com, betfair.com, and predictit.org) focus on near term events such as elections months away, so it is difficult to extrapolate empirical findings to the climate case. Furthermore, we are interested in investigating the unobservable beliefs of traders. Therefore, we turn to simulation modeling informed by climate and economic theory. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
+\citeN{Bloch_2010} have proposed using derivatives markets to reduce the scientific uncertainty in estimating the impact of future climate change. Existing prediction markets (e.g. \href{https://hypermind.com/hypermind/app.html}{hypermind}, \href{https://www.betfair.com/exchange/}{betfair}, and \href{https://www.predictit.org/}{PredictIt}) focus on near term events such as elections months away, so it is difficult to extrapolate empirical findings to the climate case. Furthermore, we are interested in investigating the unobservable beliefs of traders. Therefore, we turn to simulation modeling informed by climate and economic theory. We simulate a prediction market where traders exchange securities related to climate outcomes to explore whether, and under what social and climate conditions, prediction markets may be useful for increasing convergence of climate beliefs. Our work can be extended as part of a computational design process for effective climate prediction markets.
 
-From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. This is perhaps the most important social benefit of prediction markets given the comparable predictive power of statistical supervised learning models, which can provide information at a much lower cost than creating and maintaining a market \shortcite{goel_prediction_2010}. Effective climate policy not only requires an accurate consensus on future climate \emph{outcomes\/}. It also requires an accurate consensus on the causal \emph{mechanisms\/} influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented.
+From a public policy perspective, changing the explanatory models of market participants is one of the most important roles that prediction markets might play. This is perhaps the most important social benefit of prediction markets given the predictive power of statistical supervised learning models, which could possibly provide information at a much lower cost than creating and maintaining a market \shortcite{goel_prediction_2010}. Effective climate policy not only requires an accurate consensus on future climate \emph{outcomes\/}. It also requires an accurate consensus on the causal \emph{mechanisms\/} influencing such outcomes. If people agree that temperature will rise, but some believe it will be due to greenhouse gases, while others believe that it will be caused by increased solar activity, inconsistent and ineffective policies may be implemented.
 
 \section{RELATED WORK}
 
@@ -166,7 +167,7 @@ Agent-based simulations of prediction markets have been studied \shortcite{Kling
 
 \section{MODEL DESIGN}
 
-Traders bet on global temperature anomalies six years in the future. 
+In our model, traders bet on global temperature anomalies six years in the future. 
 During the six-year period, traders buy and sell futures. 
 Every year, traders update their models and forecast of future temperatures based on newly available data. 
 At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network. 
@@ -176,13 +177,13 @@ We conclude with details on model dynamics and an overview of the model paramete
 \subsection{Temperature Models}
 \label{sec:temp.models}
 
-For climate time-series, we use the annual anomaly of global mean temperature. For years from 1880--2014 we use the GISTEMP global mean land-sea annual temperature anomalies \shortcite{GISTEMP_2016,Hansen_2010} and for years from 2015 onward, we project future climates under two alternative theories: In both theories, changes in global temperature are proportional to changes in a deterministic forcing plus a stochastic noise term. For simplicity, we choose two alternative expressions for the deterministic climate forcing: one, which corresponds to conventional climate science, takes the natural logarithm of the atmospheric carbon dioxide concentration in parts per million \shortcite{Archer_2012}[p.~37], and the other, which corresponds to an alternative theory advocated by many who doubt or reject conventional climate science, takes the total solar irradiance (the brightness of sunlight, in Watts per square meter, at the top of the atmosphere) averaged over the 11-year sunspot cycle \shortcite{Soon_2005}.  Most scientific models of the earth's climate include many forcings, including carbon dioxide, other greenhouse gases, aerosols, total solar irradiance, and more. In these models, the changing $\ce{CO2}$ concentration is, by a large margin, the strongest forcing \shortcite{IPCC_WG1_AR5_2013}[p.~14], so for simplicity we take this as the model. Choosing only one forcing term for each of the competing models simplifies comparison because each has the same number of adjustable parameters.
+For climate time-series, we use the annual anomaly of global mean temperature. For years from 1880--2014 we use the GISTEMP global mean land-sea annual temperature anomalies \shortcite{GISTEMP_2016,Hansen_2010} and for years from 2015 onward, we project future climates under two alternative theories: In both theories, changes in global temperature are proportional to changes in a deterministic forcing plus a stochastic noise term. For simplicity, we choose two alternative expressions for the deterministic climate forcing: one, which corresponds to conventional climate science, takes the natural logarithm of the atmospheric carbon dioxide concentration in parts per million \shortcite[p.~37]{Archer_2012}, and the other, which corresponds to an alternative theory advocated by many who doubt or reject conventional climate science, takes the total solar irradiance (the brightness of sunlight, in Watts per square meter, at the top of the atmosphere) averaged over the 11-year sunspot cycle \shortcite{Soon_2005}.  Most scientific models of the earth's climate include many forcings, including carbon dioxide, other greenhouse gases, aerosols, total solar irradiance, and more. In these models, the changing $\ce{CO2}$ concentration is, by a large margin, the strongest single forcing \shortcite[p.~14]{IPCC_WG1_AR5_2013}, so for simplicity we consider only \ce{CO2}. Choosing only one forcing term for each of the competing models simplifies comparison because each model has the same number of adjustable parameters.
 
-For $\ce{CO2}$ we used historical emissions through 2005, harmonized with RCP 8.5 representative concentration pathway from 2005 onward \shortcite{rcp_database_2009,Riahi_2011} and for TSI we used the harmonized historical values, with a projection through 2100 from \shortciteN{Velasco_Herrera_2015}, which seems to be the best TSI model.
+For $\ce{CO2}$ we used historical emissions through 2005, harmonized with RCP 8.5 representative concentration pathway from 2005 onward \shortcite{rcp_database_2009,Riahi_2011} and for TSI we used the harmonized historical values, with a projection through 2100 from \shortciteN{Velasco_Herrera_2015}, which is, to our knowledge, the only prediction of TSI for the entire 21\textsuperscript{st} century.
 
-Warming coefficients for each model were determined by linear regression of historical temperatures from 1880--2014 against the historical values for each model's forcing term. The noise model was determined by fitting an $\ARMA(p,q)$ model to the residuals from the regression, using the \href{http://mc-stan.org}{Stan} probabilistic modeling language and the \href{https://cran.r-project.org/web/packages/rstan/}{\texttt{rstan}} package \shortcite{Stan2016,RStan2016}. We identified the optimal model for the auto-correlated noise term by performing the regression analysis for all combinations of $p, q \in [0,1,2]$ and using the Watanabe-Akaike Information Criterion to select the optimal noise model \shortcite{Vehtari_2015}. In both cases (TSI and $\log\ce{CO2}$), the optimal noise model was $\AR(1)$.
+Warming coefficients for each model were determined by linear regression of historical temperatures from 1880--2014 against the historical values for each model's forcing term. The noise model was determined by fitting an $\ARMA(p,q)$ model to the residuals from the regression, using the \href{http://mc-stan.org}{Stan} probabilistic modeling language and the \href{https://cran.r-project.org/web/packages/rstan/}{\texttt{rstan}} package \shortcite{Stan2016,RStan2016}. Stan proved more numerically stable than the \Rstat\ \href{http://CRAN.R-project.org/package=nlme}{\texttt{nlme}} package \shortcite{nlme_2016} for fitting ARMA noise models. We identified the optimal model for the auto-correlated noise term by performing the regression analysis for all combinations of $p, q \in [0,1,2]$ and using the Watanabe-Akaike Information Criterion to select the optimal noise model \shortcite{Vehtari_2015}. In both cases (TSI and $\log\ce{CO2}$), the optimal noise model was $\AR(1)$.
 
-Future climates were generated by applying the warming coefficients to Eq.~\ref{eq:climate}:
+Future climates were generated by applying the future climate forcings to Eq.~\ref{eq:climate}:
 \begin{equation}
 T_{\text{model}}(t) = \beta_{\text{model}} F_{\text{model}}(t) + \varepsilon,
 \label{eq:climate}
@@ -190,7 +191,7 @@ T_{\text{model}}(t) = \beta_{\text{model}} F_{\text{model}}(t) + \varepsilon,
 where $T_{\text{model}}(t)$ is the temperature at time $t$, under a given model of what causes warming,
 $F_{\text{model}}(t)$ is the forcing (TSI or $\log\ce{CO2}$) at time $t$,
 $\beta_{\text{model}}$ is the regression coefficient, and
-$\varepsilon$ is an $\ARMA(p,q)$ noise term.
+$\varepsilon$ is a noise term.
 The coefficient $\beta$ and the parameters of the ARMA noise model were fit to the historical data (1880--2014).
 An example realization of future climates for both the $\ln(\ce{CO2})$ and TSI models is shown in Fig.~\ref{fig:climateplot}.
 
@@ -225,14 +226,14 @@ Traders use their model to forecast the distribution of future temperature and d
 
 Traders are risk-neutral expected utility maximizers. 
 Therefore, their reservation price for a security is simply their assessment of the probability that the temperature will fall in the range covered by the security at the end of the sequence.
-At each time-step (year), the agents use the new year's temperature data to re-estimate the coefficients for the model they believe explains climate change, using Bayesian linear regression with an $\AR(1)$ noise model. Traders use the joint posterior probability distribution of regression and noise coefficients to estimate the probability distribution for the  temperature at the end of the current trading sequence. Stan was sufficiently fast that we could perform a full Bayesian analysis at each time step. 
+At each time-step (year), the agents use the new year's temperature data to re-estimate the coefficients for the model they believe explains climate change, using Bayesian linear regression with an $\AR(1)$ noise model. Traders use the joint posterior probability distribution of regression and noise coefficients to estimate the probability distribution for the  temperature at the end of the current trading sequence. Stan was sufficiently fast that we could perform a full Bayesian analysis at each time step.
 
 Traders then use this posterior probability distribution to assign reservation prices for buying and selling securities. 
 Based on their reservation price, agents behave as ``zero-intelligence'' traders \shortcite{Gode1993}.
 They attempt to sell securities at a random price above their reservation, and to buy securities at a random price below their reservation.
 These trading strategies are simple but provide accurate approximations of behavior in prediction markets \shortcite{Klingert2012c}, and in financial markets more broadly.
 
-Based on traders' sell and buy orders, traders exchange securities following a continuous-double auctions (CDA) procedure (see Model Dynamics below for more details). 
+Based on traders' sell and buy orders, traders exchange securities following a continuous-double auction (CDA) procedure (see Model Dynamics below for more details). 
 CDAs or some close variants are common procedures to match buy and sell orders. 
 CDA are notably used on large stock markets \shortcite{Tseng2010a}.
  
@@ -243,7 +244,8 @@ Every time securities are realized, each trader looks at the performance of her 
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
 Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
 Then, the trader considers adopting the model of her richest neighbor. 
-For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is, which is a parameter we vary in our experiments.
+For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is \shortcite{Kahan_2011}, which is a parameter we vary in our experiments.
+
 \begin{figure}[t]
 \begin{center}
 \includegraphics[width=0.50\textwidth]{output/network.pdf}
@@ -252,9 +254,10 @@ For each trader, the willingness to revise her belief is determined by how ideol
 \end{figure}
 
 An example of a snapshot of a social network is depicted in Fig.~\ref{fig:social_network}. 
-We assume that the initial network is segregated: traders who initially believe in \ce{CO2} forcing (resp. TSI) are more likely to be linked with other traders who also believe in \ce{CO2} (resp. TSI). 
-This reflects reality where cultural and social groups are highly correlated with climate change beliefs. 
-Although traders can change their approximate model over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed.
+A segmentation parameter controls the homophily of the network: the extent to which traders are preferentially linked with other traders who share their initial belief in the cause of climate change (\ce{CO2} or TSI), as opposed to traders with the opposite intial belief. This parameter varies from 0 (no preference for like-minded traders) to 1 (traders are only connected to like-minded traders).
+%This reflects reality where cultural and social groups are highly correlated with climate change beliefs. 
+Although traders can change their beliefs over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed. 
+We vary the segmentation parameter in our experiments.
 
 \subsection{Model Dynamics}
 
@@ -268,8 +271,8 @@ In a sequence finishing at time $t^*$, traders also have common knowledge of $\t
 However, at any $t$, traders do not know the value of any future temperatures. 
 Thus, the traders know the forcing terms for the rest of the trading sequence, but do not know the value of ${T}_{t^*}$. 
 Traders can only predict ${T}_{t^*}$ using their approximate model and their knowledge of ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$.
-Notice that because ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$ are common knowledge, in each period $t$, any two trader with the same approximate model $m$ forms the same stochastic beliefs about future temperatures $P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$.
-The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (the trader does not know the true values of the coefficients of the climate model) and aleatory uncertainty (in addition to deterministic warming, the temperature exhibits stochastic noise).
+Notice that because ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$ are common knowledge, in each period $t$, any two traders with the same approximate model $m$ form the same stochastic beliefs about future temperatures $P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$.
+The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (the trader does not know the true values of the coefficients of the climate model) and aleatory uncertainty (in addition to deterministic warming, the temperature exhibits stochastic noise that is directly modeled).
      
  At each time $t$, traders:
 \begin{enumerate}
@@ -284,17 +287,17 @@ and use it to determine the expected value they attach to each security, and
     \item Every trader $i$ chooses at random a security $s_i^B$ she will try to buy.
     \item Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
     \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
-  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect $i$'s approximate model at time $t$). 
+  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect to $i$'s approximate model at time $t$). 
   Then traders set $p_i^S$ at random above $E(s_i^S)$ and $p_i^B$ at random below $E(s_i^B)$ (see Model Parameters below for more details).
     \item Traders go to the market one at the time, in an order drawn randomly for each $t$.
     \item When trader $i$ comes to the market, she places limit orders in the order book. 
    These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
-    \item The market maker then tries to match $i$'s orders with some order which was put in the book before $i$ came to the market.
-    \item If there are  outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
+    \item The market maker attempts to match $i$'s orders with some order which was put in the book before $i$ came to the market.
+    \item If there are outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
    Trader $i$ buys one unit of $s_i^B$ from the seller who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
     \item If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded. 
    Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the sell and buy offers are removed from the order book.
-    \item Whenever all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
+    \item When all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
   \end{itemize}
 \end{enumerate}
 
@@ -303,7 +306,7 @@ At $t^*$, traders:
 
 \begin{enumerate}
   \item  receive 1 ECU per unit of $s^*$ they own, and
-  \item consider adapting their neighbors' approximate model as described in Social Network above.
+  \item consider adapting their neighbors' approximate model as described in the behavioral parameters sub-section below.
 \end{enumerate}
 
 \subsection{Model Parameters}
@@ -314,12 +317,12 @@ The model depends on the following parameters, which we vary in simulation exper
   \begin{itemize}
     \item  \texttt{true.model}: temperature data-generating process (\ce{CO2} or TSI).
   \end{itemize}
+  
   \item Network parameters:
   \begin{itemize}
     \item  \texttt{n.traders}: the number of traders.
     \item  \texttt{n.edg}: the number of edges in the social network.
-    \item  \texttt{seg}: the initial degree of homophily in the network. 
-    The higher  \texttt{seg}, the higher the initial homophily. 
+    \item  \texttt{seg}: the segmentation parameter for the social network. 
   \end{itemize}
     
   \item Behavioral parameters:
@@ -332,6 +335,7 @@ The model depends on the following parameters, which we vary in simulation exper
     Formally, in each period, trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval  
     $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and 
     $[\texttt{reserv}_{i}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
+  
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
     If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
@@ -343,7 +347,19 @@ The model depends on the following parameters, which we vary in simulation exper
 
 \subsection{Historical Climate}
 
-As a validation that the market is operating correctly, we run the market with actual temperatures 1880 to 2015 and market betting from 1931 to 2014. Before 1980 there is no statistically significant warming trend so we would not expect the market to change beliefs before then. As a global warming signal begins to show up in 1980s, traders begin to converge toward the log(\ce{CO2}) model (Fig.~\ref{fig:time}).
+As a validation that the market is operating correctly, we ran the market using actual historical temperatures from 1880 to 2014, with market betting from 1931 to 2014. Greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}. Consistent with this, our simulated historical trading sequence (Fig.~\ref{fig:time}) shows convergence to belief in the TSI model until the early 1970s, after which traders converge toward believing the \ce{CO2} model. 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
+
+{\centering \includegraphics[width=\maxwidth]{figure/time-1} 
+
+}
+
+\caption[Convergence over trading sequences for different degrees of social-network connection and segmentation]{Convergence over trading sequences for different degrees of social-network connection and segmentation.}\label{fig:time}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Future Scenarios}
 
@@ -363,37 +379,23 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 The future \ce{CO2} forcing is taken from the RCP~8.5 scenario \shortcite{Riahi_2011} and the future TSI forcing is taken from a prediction of 21\textsuperscript{st} Total Solar Irradiance by \shortciteN{Velasco_Herrera_2015}. Because of the stochastic noise term, the temperature time series were different in each simulation.
 
-We use the model to perform 10 full simulations for each of the 500 input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The only difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first ranked-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by a number 
-$f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
-where $y_r$ are the observed values of $y$ in the data set.
+We used the model to perform 10 full simulations for each of the 500 input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
+where $y_r$ are the observed values of $y$ in the data set. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
 
 {\centering \includegraphics[width=\maxwidth]{figure/sa-1} 
 
 }
 
-\caption{Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. \textbf{TODO: John: explain the error bars: one sigma, two sigma, 95\% CI, \dots}}\label{fig:sa}
+\caption[Estimated effects of model parameters on convergence of beliefs in future scenario]{Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\% confidence intervals.}\label{fig:sa}
 \end{figure}
 
 
 \end{knitrout}
 
-The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95\textsuperscript{th} and 5\textsuperscript{th} percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We then collected the time series of convergence across these eight designs for visualization of the distributions of convergence over time (Fig.~\ref{fig:time}). Under most parameterizations, within 15--20 years, the median fraction of traders believing in the true model is over 75\%.
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
-
-{\centering \includegraphics[width=\maxwidth]{figure/time-1} 
-
-}
-
-\caption[Convergence over trading sequences for different degrees of social-network connection and segmentation]{Convergence over trading sequences for different degrees of social-network connection and segmentation.}\label{fig:time}
-\end{figure}
-
-
-\end{knitrout}
+The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95\textsuperscript{th} and 5\textsuperscript{th} percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We collected the time series of belief-convergence across these eight designs to visualize the distributions of convergence over time (Fig.~\ref{fig:time}). Under most parameterizations, the median fraction of traders believing in the true model reaches 75\% in 10--20 years.
 
 \section{DISCUSSION}
 
@@ -405,30 +407,28 @@ When the true model is \ce{CO2}-driven there is more convergence toward the true
 
 The higher the risk tolerance, the greater the range of prices at which a trader will buy and sell securities. This creates greater opportunities for traders to profit if their model is correct and to lose money if it is incorrect. This increased volatility puts more information in play, and we believe this is why greater risk taking enables traders to identify the correct model more quickly. We have observed a similar phenomenon in a very different context, where adding stochastic noise to player decisions in iterated games improves the accuracy with which machine-learning algorithms can identify the players' strategies \shortcite{Nay2015}.
 
-What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This will be a topic for future research.
-
-The historical sequence in Fig.~\ref{fig:time} shows convergence to the TSI model until the early 1970s, after which traders converge toward the \ce{CO2} model. This is consistent with the fact that greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}.
+What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This is a topic for future research.
 
 \section{CONCLUSIONS}
 
-We simulate two alternative climate futures: one where the natural log of \ce{CO2} is the primary driver of global temperature and one where sun spots are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is ``true''.
+We simulate two alternative climate futures: one where \ce{CO2} is the primary driver of global temperature and one where variations in solar intensity are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is ``true''.
 
 Market participation causes traders to converge toward believing the ``true'' climate model under a variety of model parameterizations in a relatively short time: In markets with low segmentation, the number of traders believing the true model rises from 50\% to 75\% in roughly 12 years, and even in highly segmented markets, 75\% convergence is achieved in 18--24 years. This suggests that a climate prediction market could be useful for producing broad agreement about the causes of climate change, and could have persuasive power for people who are not persuaded by the overwhelming consensus among climate researchers that greenhouse gases (and especially \ce{CO2}) are responsible for the majority of observed climate change \shortcite{IPCC_WG1_AR5_2013}. However, market segmentation has a large effect on the speed of convergence, so transparency and effective communication about the performance of traders with different beliefs will be important.
 
 The fact that rapid convergence to the true model occurs regardless of which model is actually ``true'' may persuade those who doubt the scientific consensus that the market is ideologically neutral, and that the deck is not stacked to produce a pre-determined result.
 
-All code for the model is available at \href{http://johnjnay.com/predictMarket}{\nolinkurl{johnjnay.com/predictMarket}}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
+All code and data for the model is available at \href{http://johnjnay.com/predMarket/}{johnjnay.com/predMarket/}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
 
 \section*{ACKNOWLEDGEMENTS}
 
 We thank Yevgeniy Vorobeychik for feedback on this project. 
 We thank Manuel Naumovich Velasco for sharing the data from his Total Solar Irradiance prediction.
-We also thank the authors of \href{http://www.r-project.org}{\textsf{R}} \shortcite{r_core}
-and 
-\href{http://mc-stan.org}{Stan} \shortcite{Stan2016}.
-This manuscript was prepared using 
+%We also thank the authors of \href{http://www.r-project.org}{\textsf{R}} \shortcite{r_core}
+%and 
+%\href{http://mc-stan.org}{Stan} \shortcite{Stan2016}.
+%This manuscript was prepared using 
 %RStudio \shortcite{rstudio} and 
-knitr \shortcite{xie_knitr_2014}.
+%knitr \shortcite{xie_knitr_2014}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -439,10 +439,9 @@ knitr \shortcite{xie_knitr_2014}.
 
 \section*{AUTHOR BIOGRAPHIES}
 
-\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops and applies machine learning and simulation methods to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
+\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
 
-\noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. \\
-\textbf{TODO: Martin, please fill this in.}\\
+\noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performances of market and institutions using tools from economic theory and game theory.
 His email address is \email{martin.van.der.linden@vanderbilt.edu}, and website: \href{https://martinvdlinden.wordpress.com/}{https://martinvdlinden.wordpress.com/}.\\
 
 \noindent {\bf JONATHAN M. GILLIGAN} is Associate Professor of Earth and Environmental Sciences at Vanderbilt University and Associate Director for Research at the Vanderbilt Climate Change Research Network. His research and teaching interests center on integrating natural science, social science, behavioral science, and engineering to study coupled human-natural systems. He holds a  Ph.D. in Physics from Yale University. His email address is \email{jonathan.gilligan@vanderbilt.edu}, and website: \href{https://my.vanderbilt.edu/jonathangilligan/}{https://my.vanderbilt.edu/jonathangilligan/}.

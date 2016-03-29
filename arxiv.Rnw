@@ -1,21 +1,6 @@
-%**************************************************************************
-%*
-%*  Paper: ``INSTRUCTIONS FOR AUTHORS OF LATEX DOCUMENTS''
-%*
-%*  Publication: 2016 Winter Simulation Conference Author Kit
-%*
-%*  Filename: wsc16paper.tex
-%*
-%*  Date: January 31, 2001   Time:  9:45 PM
-%*      BASE of current version: Feb 01, 2010 (primary WSC'10 LaTeX file)
-%*
-%*  Word Processing System: TeXnicCenter and MiKTeX
-%*
-%*
-%*  All files need the following
-\input{wsc16style.tex}     % download from author kit.  Style files for wsc formatting. Don't remove this line - required for generating the final paper!
+%\input{wsc16style.tex}     % download from author kit.  Style files for wsc formatting. Don't remove this line - required for generating the final paper!
 
-\documentclass{wscpaperproc}
+\documentclass{article}
 
 <<knitr_setup, echo=F, results='hide', cache=F>>=
 library(knitr)
@@ -29,19 +14,6 @@ source("utils/multi_plot.R")
 theme_set(theme_classic())
 @
 
-
-%% The next versions of the hyperref command are used if you adopt the
-%% outdated latex-dvips-ps2pdf route in generating your pdf file. In
-%% this case you can use ps or eps files for graphics, but not pdf, jpeg, png etc.
-%% However, the final pdf file should embed all fonts required which means that you have to use file
-%% formats which can embed fonts. Please note that the final PDF file will not be generated on your computer!
-%% If you are using WinEdt or PCTeX, then use the following. If you are using
-%% Y&Y TeX then replace "dvips" with "dvipsone"
-
-%%\usepackage[dvips,colorlinks=true,urlcolor=blue,citecolor=black,%
-%% anchorcolor=black,linkcolor=black]{hyperref}
-%****************************************************************************
-
   \usepackage{latexsym}
   \usepackage{graphicx}
   \usepackage{mathptmx}
@@ -54,50 +26,13 @@ theme_set(theme_classic())
 \newcommand{\ARMA}{\text{ARMA}}
 \newcommand{\AR}{\text{AR}}
 
-%#########################################################
-%*
-%*  The Document.
-%*
 \begin{document}
 
-
-%***************************************************************************
-% AUTHOR: AUTHOR NAMES GO HERE
-% FORMAT AUTHORS NAMES Like: Author1, Author2 and Author3 (last names)
-%
-%  You need to change the author listing below!
-%               Please list ALL authors using last name only, separate by a comma except
-%               for the last author, separate with "and"
-%
-\WSCpagesetup{Nay, Van der Linden, and Gilligan}
-
-% AUTHOR: Enter the title, all letters in upper case
-\title{BETTING AND BELIEF: PREDICTION MARKETS AND ATTRIBUTION OF CLIMATE CHANGE}
-%Betting and Belief: Prediction Markets and Attribution of Climate Change
+\title{Betting and Belief: Prediction Markets and Attribution of Climate Change}
 
 % AUTHOR: Enter the authors of the article, see end of the example document for further examples
-\author{John J. Nay\\ [12pt]
-School of Engineering\\
-Vanderbilt University \\
-PMB 351826 \\
-2301 Vanderbilt Place\\
-Nashville, TN 37235-1826, USA
-% Multiple authors are entered as follows.
-% You may also need to adjust the titlevbox size in the preamble - search for titlevboxsize
-\and
-Martin Van der Linden\\ [12pt]
-Department of Economics\\
-Vanderbilt University\\
-PMB 351819\\
-2301 Vanderbilt PL\\
-Nashville, TN 37235-1819, USA\\
-\and
-Jonathan M. Gilligan\\ [12pt]
-Department of Earth \& Environmental Sciences\\
-Vanderbilt University\\
-PMB 351805\\
-2301 Vanderbilt PL\\
-Nashville, TN 37235-1805, USA
+\author{John J. Nay, Martin Van der Linden,
+Jonathan M. Gilligan
 }
 
 \maketitle
@@ -375,14 +310,5 @@ We thank Manuel Naumovich Velasco for sharing the data from his Total Solar Irra
 \bibliography{prediction_market_wsc}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{AUTHOR BIOGRAPHIES}
-
-\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
-
-\noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performance of markets and institutions using tools from economic theory and game theory.
-His email address is \email{martin.van.der.linden@vanderbilt.edu}, and website: \href{https://martinvdlinden.wordpress.com/}{https://martinvdlinden.wordpress.com/}.\\
-
-\noindent {\bf JONATHAN M. GILLIGAN} is Associate Professor of Earth and Environmental Sciences at Vanderbilt University and Associate Director for Research at the Vanderbilt Climate Change Research Network. His research and teaching interests center on integrating natural science, social science, behavioral science, and engineering to study coupled human-natural systems. He holds a  Ph.D. in Physics from Yale University. His email address is \email{jonathan.gilligan@vanderbilt.edu}, and website: \href{https://my.vanderbilt.edu/jonathangilligan/}{https://my.vanderbilt.edu/jonathangilligan/}.
 
 \end{document}
