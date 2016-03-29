@@ -1,0 +1,276 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Aamodt and Plaza}{Aamodt and
+  Plaza}{1994}]{Aamodt1994}
+Aamodt, A., and E.~Plaza. 1994.
+\newblock ``Case-Based Reasoning: Foundational Issues, Methodological
+  Variations, and System Approaches''.
+\newblock {\em {AI} Communications\/}~7:39--59.
+
+
+\bibitem[\protect\citeauthoryear{Archer}{Archer}{2012}]{Archer_2012}
+Archer, D. 2012.
+\newblock {\em Global Warming: Understanding the Forecast\/}. 2nd ed.
+\newblock Wiley.
+
+
+\bibitem[\protect\citeauthoryear{Beachkofski and Grandhi}{Beachkofski and
+  Grandhi}{2002}]{beachkofski_improved_2002}
+Beachkofski, B., and R.~Grandhi. 2002.
+\newblock ``Improved {D}istributed {H}ypercube {S}ampling''.
+\newblock In {\em 43rd {AIAA}/{ASME}/{ASCE}/{AHS}/{ASC} Structures, Structural
+  Dynamics, and Materials Conference}. American Institute of Aeronautics and
+  Astronautics.
+
+\bibitem[\protect\citeauthoryear{Bloch, Annan, and Bowles}{Bloch
+  et~al.}{2010}]{Bloch_2010}
+Bloch, D., J.~Annan, and J.~Bowles. 2010.
+\newblock ``Cracking the Climate Change Conundrum with Derivatives''.
+\newblock {\em Wilmott Journal\/}~2:271--287.
+
+
+\bibitem[\protect\citeauthoryear{Carnell}{Carnell}{2012}]{carnell_lhs_2012}
+Carnell, R. 2012.
+\newblock ``lhs {L}atin Hypercube Samples''.
+\newblock {R} package, Comprehensive {R} Archive Network.
+
+\bibitem[\protect\citeauthoryear{Carpenter, Gelman, Hoffman, Lee, Goodrich,
+  Betancourt, Brubaker, Guo, Li, and Riddell}{Carpenter
+  et~al.}{2016}]{Stan2016}
+Carpenter, B., A.~Gelman, M.~Hoffman, D.~Lee, B.~Goodrich, M.~Betancourt, M.~A.
+  Brubaker, J.~Guo, P.~Li, and A.~Riddell. 2016.
+\newblock ``Stan: A probabilistic programming language''.
+\newblock {\em Journal of Statistical Software\/}.
+\newblock (in press).
+
+
+\bibitem[\protect\citeauthoryear{Dreber, Pfeiffer, Almenberg, Isaksson, Wilson,
+  Chen, Nosek, and Johannesson}{Dreber et~al.}{2015}]{Dreber_2015}
+Dreber, A., T.~Pfeiffer, J.~Almenberg, S.~Isaksson, B.~Wilson, Y.~Chen, B.~A.
+  Nosek, and M.~Johannesson. 2015.
+\newblock ``Using prediction markets to estimate the reproducibility of
+  scientific research''.
+\newblock {\em Proceedings of the National Academy of
+  Sciences\/}~112:15343--15347.
+
+
+\bibitem[\protect\citeauthoryear{{GISTEMP Team}}{{GISTEMP
+  Team}}{2016}]{GISTEMP_2016}
+{GISTEMP Team} 2016.
+\newblock ``{GISS} Surface Temperature Analysis ({GISTEMP})''.
+\newblock Technical report, NASA Goddard Institute for Space Studies.
+
+\bibitem[\protect\citeauthoryear{Gode and Sunder}{Gode and
+  Sunder}{1993}]{Gode1993}
+Gode, D.~K., and S.~Sunder. 1993.
+\newblock ``Allocative Efficiency of Markets with Zero-Intelligence Traders:
+  Market as a Partial Substitute for Individual Rationality''.
+\newblock {\em Journal of Political Economy\/}~101:119--137.
+
+
+\bibitem[\protect\citeauthoryear{Goel, Reeves, Watts, and Pennock}{Goel
+  et~al.}{2010}]{goel_prediction_2010}
+Goel, S., D.~M. Reeves, D.~J. Watts, and D.~M. Pennock. 2010.
+\newblock ``Prediction Without Markets''.
+\newblock In {\em Proceedings of the 11th {ACM} {Conference} on {Electronic}
+  {Commerce}}, {EC} '10,  357--366.
+\newblock New York, NY, USA: ACM.
+
+\bibitem[\protect\citeauthoryear{Hansen, Ruedy, Sato, and Lo}{Hansen
+  et~al.}{2010}]{Hansen_2010}
+Hansen, J., R.~Ruedy, M.~Sato, and K.~Lo. 2010.
+\newblock ``Global surface temperature change''.
+\newblock {\em Reviews of Geophysics\/}~48:RG4004.
+
+
+\bibitem[\protect\citeauthoryear{Hanson}{Hanson}{2012}]{Hanson2012}
+Hanson, R. 2012.
+\newblock ``Logarithmic Market Scoring Rules for Modular Combinatorial
+  Information Aggregation''.
+\newblock {\em The Journal of Prediction Markets\/}:3--15.
+
+
+\bibitem[\protect\citeauthoryear{Hanson, Oprea, and Porter}{Hanson
+  et~al.}{2006}]{Hanson2006}
+Hanson, R., R.~Oprea, and D.~Porter. 2006.
+\newblock ``Information aggregation and manipulation in an experimental
+  market''.
+\newblock {\em Journal of Economic Behavior \& Organization\/}~60:449--459.
+
+
+\bibitem[\protect\citeauthoryear{Healy, Linardi, Lowery, and Ledyard}{Healy
+  et~al.}{2010}]{Healy2010}
+Healy, P.~J., S.~Linardi, J.~R. Lowery, and J.~O. Ledyard. 2010.
+\newblock ``Prediction Markets: Alternative Mechanisms for Complex Environments
+  with Few Traders''.
+\newblock {\em Management Science\/}~56:1977--1996.
+
+
+\bibitem[\protect\citeauthoryear{Horn, Ivens, Ohneberg, and Brem}{Horn
+  et~al.}{2014}]{Horn2014c}
+Horn, C.~F., B.~S. Ivens, M.~Ohneberg, and A.~Brem. 2014.
+\newblock ``Prediction markets---A literature review 2014''.
+\newblock {\em The Journal of Prediction Markets\/}~8:89--126.
+
+
+\bibitem[\protect\citeauthoryear{Hsu}{Hsu}{2011}]{Hsu2011}
+Hsu, S.-L. 2011.
+\newblock ``A Prediction Market for Climate Outcomes''.
+\newblock {\em University of Colorado Law Review\/}~83:179--256.
+
+
+\bibitem[\protect\citeauthoryear{IPCC}{IPCC}{2013}]{IPCC_WG1_AR5_2013}
+IPCC 2013.
+\newblock {\em Climate Change 2013: The Physical Science Basis}.
+\newblock Cambridge University Press.
+
+
+\bibitem[\protect\citeauthoryear{Jumadinova and Dasgupta}{Jumadinova and
+  Dasgupta}{2011}]{Jumadinova2011a}
+Jumadinova, J., and P.~Dasgupta. 2011.
+\newblock ``A multi-agent system for analyzing the effect of information on
+  prediction markets''.
+\newblock {\em International Journal of Intelligent Systems\/}~26:383--409.
+
+
+\bibitem[\protect\citeauthoryear{Kahan, Jenkins?Smith, and Braman}{Kahan
+  et~al.}{2011}]{Kahan_2011}
+Kahan, D.~M., H.~Jenkins?Smith, and D.~Braman. 2011.
+\newblock ``Cultural cognition of scientific consensus''.
+\newblock {\em Journal of Risk Research\/}~14:147–174.
+
+
+\bibitem[\protect\citeauthoryear{Klingert and Meyer}{Klingert and
+  Meyer}{2012}]{Klingert2012c}
+Klingert, F.~M., and M.~Meyer. 2012.
+\newblock ``Comparing Prediction Market Mechanisms Using An Experiment-Based
+  Multi-Agent Simulation.''.
+\newblock In {\em Proceedings 26th European Conference on Modelling and
+  Simulation}, edited by\ K.~G. Troitzch, M{\"o}hring, and U.~Lotzmann,
+  654--661.
+
+\bibitem[\protect\citeauthoryear{Kolp and Riahi}{Kolp and
+  Riahi}{2009}]{rcp_database_2009}
+Kolp, P., and K.~Riahi. 2009.
+\newblock ``{RCP} Database''.
+\newblock Technical report.
+
+\bibitem[\protect\citeauthoryear{Marino, Hogue, Ray, and Kirschner}{Marino
+  et~al.}{2008}]{Marino2008}
+Marino, S., I.~B. Hogue, C.~J. Ray, and D.~E. Kirschner. 2008.
+\newblock ``A methodology for performing global uncertainty and sensitivity
+  analysis in systems biology''.
+\newblock {\em Journal of Theoretical Biology\/}~254:178--196.
+
+
+\bibitem[\protect\citeauthoryear{Nay and Gilligan}{Nay and
+  Gilligan}{2015}]{Nay2015}
+Nay, J.~J., and J.~M. Gilligan. 2015.
+\newblock ``Data-Driven Dynamic Decision Models''.
+\newblock In {\em Proceedings of the 2015 Winter Simulation Conference}, edited
+  by\ L.~Yilmaz, W.~Chan, I.~Moon, T.~Roeder, C.~Macal, and M.~Rosetti,
+  2752--2763: IEEE Press.
+
+\bibitem[\protect\citeauthoryear{Onta{\~n}{\'o}n and Plaza}{Onta{\~n}{\'o}n and
+  Plaza}{2009}]{Ontanon2009}
+Onta{\~n}{\'o}n, S., and E.~Plaza. 2009.
+\newblock ``Argumentation-Based Information Exchange in Prediction Markets''.
+\newblock In {\em Argumentation in Multi-Agent Systems}, edited by\ I.~Rahwan
+  and P.~Moraitis, Number 5384 in Lecture Notes in Computer Science,  181--196.
+  Springer Berlin Heidelberg.
+
+\bibitem[\protect\citeauthoryear{Pathak, Rothschild, and Dudik}{Pathak
+  et~al.}{2015}]{pathak_comparison_2015}
+Pathak, D., D.~Rothschild, and M.~Dudik. 2015.
+\newblock ``A comparison of forecasting methods: Fundamentals, polling,
+  prediction markets, and experts''.
+\newblock {\em Journal of Prediction Markets\/}~9:1--31.
+
+
+\bibitem[\protect\citeauthoryear{Pinheiro, Bates, DebRoy, Sarkar, and {R Core
+  Team}}{Pinheiro et~al.}{2016}]{nlme_2016}
+Pinheiro, J., D.~Bates, S.~DebRoy, D.~Sarkar, and {R Core Team}. 2016.
+\newblock {\em {nlme}: Linear and Nonlinear Mixed Effects Models}.
+\newblock R package version 3.1-126.
+
+\bibitem[\protect\citeauthoryear{Pujol, Iooss, and Lemaitre}{Pujol
+  et~al.}{2014}]{pujol_sensitivity:_2014}
+Pujol, G., B.~Iooss, and A.~J. Lemaitre. 2014.
+\newblock ``sensitivity: Sensitivity Analysis''.
+\newblock {R} package, Comprehensive {R} Archive Network.
+
+\bibitem[\protect\citeauthoryear{Riahi, Rao, Krey, Cho, Chirkov, Fischer,
+  Kindermann, Nakicenovic, and Rafaj}{Riahi et~al.}{2011}]{Riahi_2011}
+Riahi, K., S.~Rao, V.~Krey, C.~Cho, V.~Chirkov, G.~Fischer, G.~Kindermann,
+  N.~Nakicenovic, and P.~Rafaj. 2011.
+\newblock ``RCP 8.5?A scenario of comparatively high greenhouse gas
+  emissions''.
+\newblock {\em Climatic Change\/}~109:33?57.
+
+
+\bibitem[\protect\citeauthoryear{Saltelli, Chan, and Scott}{Saltelli
+  et~al.}{2009}]{saltelli_sensitivity_2009}
+Saltelli, A., K.~Chan, and E.~M. Scott. 2009.
+\newblock {\em Sensitivity Analysis}.
+\newblock Chichester: Wiley.
+
+
+\bibitem[\protect\citeauthoryear{Set and Selten}{Set and
+  Selten}{1998}]{Set1998}
+Set, R., and R.~Selten. 1998.
+\newblock ``Axiomatic characterization of the quadratic scoring rule''.
+\newblock {\em Experimental Economics\/}~1:43--62.
+
+
+\bibitem[\protect\citeauthoryear{Soon}{Soon}{2005}]{Soon_2005}
+Soon, W. W.-H. 2005.
+\newblock ``Variable solar irradiance as a plausible agent for multidecadal
+  variations in the Arctic-wide surface air temperature record of the past 130
+  years''.
+\newblock {\em Geophysical Research Letters\/}~32:L16712.
+
+
+\bibitem[\protect\citeauthoryear{{Stan Development Team}}{{Stan Development
+  Team}}{2016}]{RStan2016}
+{Stan Development Team} 2016.
+\newblock ``{RS}tan: The {R} interface to {S}tan''.
+\newblock {R} package, Comprehensive {R} Archive Network.
+
+\bibitem[\protect\citeauthoryear{Tseng, Lin, Lin, Wang, and Li}{Tseng
+  et~al.}{2010}]{Tseng2010a}
+Tseng, J.-J., C.-H. Lin, C.-T. Lin, S.-C. Wang, and S.-P. Li. 2010.
+\newblock ``Statistical properties of agent-based models in markets with
+  continuous double auction mechanism''.
+\newblock {\em Physica A: Statistical Mechanics and its
+  Applications\/}~389:1699--1707.
+
+
+\bibitem[\protect\citeauthoryear{Vandenbergh, Raimi, and Gilligan}{Vandenbergh
+  et~al.}{2014}]{Vandenbergh2013f}
+Vandenbergh, M.~P., K.~T. Raimi, and J.~M. Gilligan. 2014.
+\newblock ``Energy and Climate Change: A Climate Prediction Market''.
+\newblock {\em UCLA Law Review\/}~61:1962--2017.
+
+
+\bibitem[\protect\citeauthoryear{Vehtari, Gelman, and Gabry}{Vehtari
+  et~al.}{2015}]{Vehtari_2015}
+Vehtari, A., A.~Gelman, and J.~Gabry. 2015.
+\newblock ``Practical {B}ayesian model evaluation using leave-one-out
+  cross-validation and {WAIC}''.
+\newblock {} arXiv:1507.04544.
+
+\bibitem[\protect\citeauthoryear{Velasco~Herrera, Mendoza, and
+  Velasco~Herrera}{Velasco~Herrera et~al.}{2015}]{Velasco_Herrera_2015}
+Velasco~Herrera, V.~M., B.~Mendoza, and G.~Velasco~Herrera. 2015.
+\newblock ``Reconstruction and prediction of the total solar irradiance: From
+  the Medieval Warm Period to the 21st century''.
+\newblock {\em New Astronomy\/}~34:221?233.
+
+
+\bibitem[\protect\citeauthoryear{Wolfers and Zitzewitz}{Wolfers and
+  Zitzewitz}{2006}]{Wolfers2006}
+Wolfers, J., and E.~Zitzewitz. 2006.
+\newblock ``Prediction markets in theory and practice''.
+\newblock Working Paper 12083, NBER.
+
+\end{thebibliography}
