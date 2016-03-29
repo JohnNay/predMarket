@@ -380,7 +380,7 @@ We thank Manuel Naumovich Velasco for sharing the data from his Total Solar Irra
 
 \noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
 
-\noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performances of market and institutions using tools from economic theory and game theory.
+\noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performance of markets and institutions using tools from economic theory and game theory.
 His email address is \email{martin.van.der.linden@vanderbilt.edu}, and website: \href{https://martinvdlinden.wordpress.com/}{https://martinvdlinden.wordpress.com/}.\\
 
 \noindent {\bf JONATHAN M. GILLIGAN} is Associate Professor of Earth and Environmental Sciences at Vanderbilt University and Associate Director for Research at the Vanderbilt Climate Change Research Network. His research and teaching interests center on integrating natural science, social science, behavioral science, and engineering to study coupled human-natural systems. He holds a  Ph.D. in Physics from Yale University. His email address is \email{jonathan.gilligan@vanderbilt.edu}, and website: \href{https://my.vanderbilt.edu/jonathangilligan/}{https://my.vanderbilt.edu/jonathangilligan/}.
