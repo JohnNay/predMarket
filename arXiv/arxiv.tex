@@ -1,18 +1,59 @@
 %\input{wsc16style.tex}     % download from author kit.  Style files for wsc formatting. Don't remove this line - required for generating the final paper!
 
-\documentclass{article}
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
 
-<<knitr_setup, echo=F, results='hide', cache=F>>=
-library(knitr)
-opts_chunk$set(fig.align = "center")
-@
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
 
-<<setup, echo=F, results='hide', cache=F>>=
-library(ggplot2)
-library(pander)
-source("utils/multi_plot.R")
-theme_set(theme_classic())
-@
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+
+
+
 
   \usepackage[margin=1in]{geometry}
   \usepackage{latexsym}
@@ -27,7 +68,7 @@ theme_set(theme_classic())
 \newcommand{\Rstat}{\textsf{R}}
 \newcommand{\ARMA}{\text{ARMA}}
 \newcommand{\AR}{\text{AR}}
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \title{Betting and Belief: Prediction Markets and Attribution of Climate Change}
@@ -90,10 +131,18 @@ $\varepsilon$ is a noise term.
 The coefficient $\beta$ and the parameters of the ARMA noise model were fit to the historical data (1880--2014).
 An example realization of future climates for both the $\ln(\ce{CO2})$ and TSI models is shown in Fig.~\ref{fig:climateplot}.
 
-<<climateplot, eval=TRUE, echo=FALSE, message=FALSE, fig.cap="Historical measurements of temperature and a realization of possible future temperatures under two alternate models of climate physics.", fig.width=4, fig.height=3>>=
-source("utils/climate_plot.R")
-climate_plot() + theme(text=element_text(family='Palatino'))
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{climateplot-1} 
+
+}
+
+\caption[Historical measurements of temperature and a realization of possible future temperatures under two alternate models of climate physics]{Historical measurements of temperature and a realization of possible future temperatures under two alternate models of climate physics.}\label{fig:climateplot}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Climate Beliefs}
 
@@ -135,7 +184,7 @@ For each trader, the willingness to revise her belief is determined by how ideol
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=0.50\textwidth]{output/network.pdf}
+\includegraphics[width=0.50\textwidth]{network.pdf}
 \caption{An example of the social network among traders. Yellow and blue circles represent traders who believe in the two different models of climate change. Lines indicate social network connections. In a highly segmented network (\texttt{seg} close to 1), most links connect like-minded traders and few connect traders with opposing beliefs.}\label{fig:social_network}%
 \end{center}
 \end{figure}
@@ -235,21 +284,24 @@ The model depends on the following parameters, which we vary in simulation exper
 \subsection{Historical Climate}
 
 As a validation that the market is operating correctly, we ran the market using actual historical temperatures from 1880 to 2014, with market betting from 1931 to 2014. Greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}. Consistent with this, our simulated historical trading sequence (Fig.~\ref{fig:time}) shows convergence to belief in the TSI model until the early 1970s, after which traders converge toward believing the \ce{CO2} model. 
-<<time, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Convergence over trading sequences for different degrees of social-network connection and segmentation.", fig.width=10.5, fig.height=8.5, fig.pos='t'>>=
-source("utils/time_plot.R")
-p1 <- history_box() + theme(text=element_text(family='Palatino'))
-p2 <- future_box() + theme(text=element_text(family='Palatino'))
-multi_plot(p1, p2, cols=2)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
+
+{\centering \includegraphics[width=\maxwidth]{time-1} 
+
+}
+
+\caption[Convergence over trading sequences for different degrees of social-network connection and segmentation]{Convergence over trading sequences for different degrees of social-network connection and segmentation.}\label{fig:time}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Future Scenarios}
 
-<<sa_n, eval=TRUE, echo=FALSE, message=FALSE>>=
-load("output/src_future.Rda")
-n_sims <- nrow(src_future@input_set)
-@
 
-Our primary focus is on simulating the market in future scenarios. This is more relevant for policy design and more interesting theoretically due to the increasing divergence of global temperature values under the two future scenarios. The sensitivity analysis is based on a Latin hypercube sampling of \Sexpr{n_sims} parameter sets from the following distributions \shortcite{beachkofski_improved_2002,carnell_lhs_2012}.
+
+Our primary focus is on simulating the market in future scenarios. This is more relevant for policy design and more interesting theoretically due to the increasing divergence of global temperature values under the two future scenarios. The sensitivity analysis is based on a Latin hypercube sampling of 500 parameter sets from the following distributions \shortcite{beachkofski_improved_2002,carnell_lhs_2012}.
 
 \begin{itemize}
   \item \texttt{ideo} $\sim \text{Uniform}(0,1)$
@@ -263,13 +315,21 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 The future \ce{CO2} forcing is taken from the RCP~8.5 scenario \shortcite{Riahi_2011} and the future TSI forcing is taken from a prediction of 21\textsuperscript{st} Total Solar Irradiance by \shortciteN{Velasco_Herrera_2015}. Because of the stochastic noise term, the temperature time series were different in each simulation.
 
-We used the model to perform 10 full simulations for each of the \Sexpr{n_sims} input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
+We used the model to perform 10 full simulations for each of the 500 input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
 where $y_r$ are the observed values of $y$ in the data set. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
 
-<<sa, eval=TRUE, echo=FALSE, message=FALSE, fig.cap="Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \\ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\\% confidence intervals.", fig.pos='t', fig.width=3, fig.height=3.5>>=
-source("utils/sa_plot.R")
-sa_plot() + theme(text=element_text(family='Palatino'))
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[t]
+
+{\centering \includegraphics[width=\maxwidth]{sa-1} 
+
+}
+
+\caption[Estimated effects of model parameters on convergence of beliefs in future scenario]{Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\% confidence intervals.}\label{fig:sa}
+\end{figure}
+
+
+\end{knitrout}
 
 The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95\textsuperscript{th} and 5\textsuperscript{th} percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We collected the time series of belief-convergence across these eight designs to visualize the distributions of convergence over time (Fig.~\ref{fig:time}). Under most parameterizations, the median fraction of traders believing in the true model reaches 75\% in 10--20 years.
 
