@@ -22,6 +22,12 @@ Despite much scientific evidence, a large fraction of the American public doubts
 
 This repository contains all the code and data for this simulation model.
 
+If you use these scripts, cite this paper:
+
+Nay, John J., Van der Linden, Martin, Gilligan, Jonathan. (2016) "Betting and Belief: Prediction Markets and Attribution of Climate Change." eprint arXiv:1603.08961
+
+The paper can be downloaded here: [http://arxiv.org/abs/1603.08961](http://arxiv.org/abs/1603.08961)
+
 Under most parameterizations, within 15-20 years, the median fraction of traders believing in the true model is over 75%:
 
 ```{r time, eval=TRUE, echo=FALSE, message=FALSE, fig.width=10.5, fig.height=8.5}
