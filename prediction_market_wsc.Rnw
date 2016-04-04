@@ -256,7 +256,7 @@ At $t^*$, traders:
 
 \begin{enumerate}
   \item  receive 1 ECU per unit of $s^*$ they own, and
-  \item consider adapting their neighbors' approximate model as described in the behavioral parameters sub-section below.
+  \item consider adopting their neighbors' approximate model as described in the behavioral parameters sub-section below.
 \end{enumerate}
 
 \subsection{Model Parameters}
