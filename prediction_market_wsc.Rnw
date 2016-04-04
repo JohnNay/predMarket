@@ -316,7 +316,6 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 \begin{itemize}
   \item \texttt{ideo} $\sim \text{Uniform}(0,1)$
-  \item \texttt{market.complet} $\sim \text{Uniform}(0,1000)$ (mapped into integer)
   \item \texttt{n.edge} $\sim \text{Uniform}(100,200)$ (mapped into integer)
   \item \texttt{n.traders} $\sim \text{Uniform}(50,250)$ (mapped into integer)
   \item \texttt{risk.tak}  $\sim \text{Uniform}(0,1)$
