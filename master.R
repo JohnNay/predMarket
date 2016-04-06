@@ -14,8 +14,9 @@ if (length(args) < 2) {
 message(paste("Number of cores", cores))
 
 source("main.R")
-#devtools::install_github("JohnNay/eat")
-library(eat)
+# install.packages("devtools")
+# devtools::install_github("JohnNay/sa")
+library(sa)
 
 test <- FALSE
 estimate_replicates <- FALSE
