@@ -1,8 +1,8 @@
 ---
 title: 'Betting and Belief: Prediction Markets and Attribution of Climate Change'
 author: "John J. Nay, Martin Van der Linden, Jonathan Gilligan"
-date: "April 5, 2016"
-output: slidy_presentation
+date: "April 20, 2016"
+output: beamer_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -41,6 +41,12 @@ knitr::include_graphics("markfigs/predict.png")
 ```{r}
 knitr::include_graphics("markfigs/climateplot-1.png")
 ```
+
+## Trader Beliefs
+
+- Both when true data generating process is CO2 and TSI, at model initialization approximately half of traders use true data-generating model to make predictions. 
+- Traders using true model do not necessarily make perfectly accurate predictions. 
+- Although these traders believe in correct *functional form* of model, they still need to calibrate their model based on limited noisy data. 
 
 ## Social Network
 
