@@ -1,0 +1,304 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:latexdraw="http://latexdraw.sourceforge.net/namespaces/latexdraw"
+    version="1.1" baseProfile="full">
+    <g>
+        <g latexdraw:type="joinedLines" id="id162406778">
+            <polyline points="680.0,280.0 680.0,440.0 860.0,440.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                latexdraw:rotationAngle="0.0"
+                marker-start="url(#arrow0-162406778)" marker-end="url(#arrow1-162406778)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1606885427">
+            <polyline points="680.0,460.0 680.0,620.0 860.0,620.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                latexdraw:rotationAngle="0.0"
+                marker-start="url(#arrow0-1606885427)" marker-end="url(#arrow1-1606885427)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1336902848">
+            <polyline points="680.0,100.0 680.0,260.0 860.0,260.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                latexdraw:rotationAngle="0.0"
+                marker-start="url(#arrow0-1336902848)" marker-end="url(#arrow1-1336902848)"/>
+        </g>
+        <g latexdraw:type="text" id="id1692503089" fill="black" latexdraw:position="bl">
+            <text x="760.0" y="460.0">$t$</text>
+        </g>
+        <g latexdraw:type="text" id="id317980000" fill="black" latexdraw:position="bl">
+            <text x="760.0" y="640.0">$t$</text>
+        </g>
+        <g latexdraw:type="text" id="id1130241519" fill="black" latexdraw:position="bl">
+            <text x="760.0" y="280.0">$t$</text>
+        </g>
+        <g latexdraw:type="text" id="id301741053" fill="black" latexdraw:position="bl">
+            <text x="651.578947368421" y="286.3157894736842">$T$</text>
+        </g>
+        <g latexdraw:type="text" id="id2134265277" fill="black" latexdraw:position="bl">
+            <text x="631.578947368421" y="474.7368421052632">$CO2$</text>
+        </g>
+        <g latexdraw:type="text" id="id1311945652" fill="black" latexdraw:position="bl">
+            <text x="631.578947368421" y="103.15789473684214">$TSI$</text>
+        </g>
+        <g latexdraw:type="dot" id="id294511693" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="760.0 440.0">
+            <path d="M 760.0 435.625 L 760.0 447.6666666666667 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="dot" id="id416047032" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="820.0 440.0">
+            <path d="M 820.0 435.625 L 820.0 447.6666666666667 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="dot" id="id335535265" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="760.0 620.0">
+            <path d="M 760.0 615.625 L 760.0 627.6666666666666 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="dot" id="id1872337408" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="820.0 620.0">
+            <path d="M 820.0 615.625 L 820.0 627.6666666666666 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="dot" id="id1798154215" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="760.0 260.0">
+            <path d="M 760.0 255.625 L 760.0 267.6666666666667 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="dot" id="id1285905586" latexdraw:size="10.0"
+            latexdraw:dotShape="|" latexdraw:position="820.0 260.0">
+            <path d="M 820.0 255.625 L 820.0 267.6666666666667 "
+                stroke-linecap="square" stroke-linejoin="butt"
+                stroke-width="1.25" stroke-miterlimit="10.0"
+                stroke-dashoffset="0.0" stroke="black"/>
+        </g>
+        <g latexdraw:type="text" id="id1644334335" fill="black" latexdraw:position="bl">
+            <text x="820.0" y="460.0">$t^*$</text>
+        </g>
+        <g latexdraw:type="text" id="id209588257" fill="black" latexdraw:position="bl">
+            <text x="820.0" y="640.0">$t^*$</text>
+        </g>
+        <g latexdraw:type="text" id="id1378186948" fill="black" latexdraw:position="bl">
+            <text x="820.0" y="280.0">$t^*$</text>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1667865308">
+            <polyline
+                points="680.0,420.0 700.0,380.0 720.0,400.0 740.0,400.0 740.0,400.0 "
+                stroke-width="2.0" stroke="#0000cc" fill="none" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id791796498">
+            <polyline
+                points="760.0,380.0 760.0,380.0 780.0,400.0 800.0,360.0 820.0,380.0 840.0,360.0 860.0,400.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                stroke-dasharray="8.819444444444445, 5.291666666666667" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id489263770">
+            <polyline
+                points="680.0,560.0 700.0,600.0 720.0,580.0 740.0,540.0 760.0,560.0 780.0,540.0 800.0,580.0 820.0,520.0 820.0,520.0 "
+                stroke-width="2.0" stroke="#cc00ff" fill="none" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1825406388">
+            <polyline points="820.0,520.0 840.0,540.0 860.0,500.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                stroke-dasharray="8.819444444444445, 5.291666666666667" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id545013586">
+            <polyline
+                points="680.0,200.0 700.0,200.0 720.0,220.0 740.0,180.0 760.0,200.0 800.0,160.0 820.0,180.0 "
+                stroke-width="2.0" stroke="#cc9900" fill="none" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id784371941">
+            <polyline points="820.0,180.0 840.0,200.0 860.0,180.0 "
+                stroke-width="2.0" stroke="black" fill="none"
+                stroke-dasharray="8.819444444444445, 5.291666666666667" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="text" id="id1268773020" fill="#ff6600" latexdraw:position="bl">
+            <text x="440.0" y="290.5263157894733"> \Huge $F^{TSI}_{t}$</text>
+        </g>
+        <g latexdraw:type="text" id="id54711612" fill="#cc00cc" latexdraw:position="bl">
+            <text x="435.78947368421086" y="471.5789473684208"> \Huge $F^{CO2}_{t}$</text>
+        </g>
+        <g latexdraw:type="picture" id="id1001706420">
+            <image
+                xlink:href="/Users/martinvanderlinden/Research-Github/prediction_market/presentation/model_description_figures/mono_orange_small.png"
+                x="261.0526315789475" y="116.84210526315792" height="82" width="83"/>
+        </g>
+        <g latexdraw:type="picture" id="id915546718">
+            <image
+                xlink:href="/Users/martinvanderlinden/Research-Github/prediction_market/presentation/model_description_figures/mono_purp_small.png"
+                x="261.0526315789475" y="528.4210526315792" height="90" width="89"/>
+        </g>
+        <g latexdraw:type="picture" id="id24807521">
+            <image
+                xlink:href="/Users/martinvanderlinden/Research-Github/prediction_market/presentation/model_description_figures/mono_orange_small.png"
+                x="261.0526315789475" y="215.7894736842104" height="82" width="83"/>
+        </g>
+        <g latexdraw:type="picture" id="id380752964">
+            <image
+                xlink:href="/Users/martinvanderlinden/Research-Github/prediction_market/presentation/model_description_figures/mono_purp_small.png"
+                x="261.0526315789475" y="416.8421052631579" height="90" width="89"/>
+        </g>
+        <g latexdraw:type="picture" id="id550512065">
+            <image
+                xlink:href="/Users/martinvanderlinden/Research-Github/prediction_market/presentation/model_description_figures/mono_orange_small.png"
+                x="261.57894736842127" y="317.3684210526312" height="82" width="83"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id353045456">
+            <polyline points="740.0,400.0 760.0,380.0 "
+                stroke-width="2.0" stroke="#0000cc" latexdraw:rotationAngle="0.0"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id673366290">
+            <polyline points="640.0,560.0 560.0,480.0 "
+                stroke-width="5.0" stroke="#cc00cc"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-673366290)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1075683450">
+            <polyline points="640.0,348.0 560.0,440.0 "
+                stroke-width="5.0" stroke="#3300cc"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-1075683450)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id579712266">
+            <polyline points="640.0,348.0 560.0,260.0 "
+                stroke-width="5.0" stroke="#3300cc"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-579712266)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id2094470229">
+            <polyline points="640.0,160.0 560.0,240.0 "
+                stroke-width="5.0" stroke="#cc6600"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-2094470229)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id61627849">
+            <polyline points="420.0,453.0 360.0,560.0000000000001 "
+                stroke-width="5.0" stroke="#cc00cc"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-61627849)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1848893496">
+            <polyline
+                points="418.99999999999955,268.0 360.00000000000034,360.00000000000034 "
+                stroke-width="5.0" stroke="#cc6600"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-1848893496)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1173558254">
+            <polyline points="420.0,452.0 360.0,452.0 "
+                stroke-width="5.0" stroke="#cc00cc"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-1173558254)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1285769079">
+            <polyline points="419.0,268.0 359.0,268.0 "
+                stroke-width="5.0" stroke="#cc6600"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-1285769079)"/>
+        </g>
+        <g latexdraw:type="joinedLines" id="id1817704333">
+            <polyline points="420.0,269.0 360.0,160.0 "
+                stroke-width="5.0" stroke="#cc6600"
+                latexdraw:rotationAngle="0.0" marker-end="url(#arrow1-1817704333)"/>
+        </g>
+    </g>
+    <defs>
+        <marker overflow="visible" orient="auto" id="arrow0-162406778">
+            <path
+                d="M 0.0 0.0 L 4.652083333333334 1.6614583333333335 L 4.652083333333334 0.0 L 4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-162406778">
+            <path
+                d="M 0.0 0.0 L -4.652083333333334 1.6614583333333335 L -4.652083333333334 0.0 L -4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow0-1606885427">
+            <path
+                d="M 0.0 0.0 L 4.652083333333334 1.6614583333333335 L 4.652083333333334 0.0 L 4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1606885427">
+            <path
+                d="M 0.0 0.0 L -4.652083333333334 1.6614583333333335 L -4.652083333333334 0.0 L -4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow0-1336902848">
+            <path
+                d="M 0.0 0.0 L 4.652083333333334 1.6614583333333335 L 4.652083333333334 0.0 L 4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1336902848">
+            <path
+                d="M 0.0 0.0 L -4.652083333333334 1.6614583333333335 L -4.652083333333334 0.0 L -4.652083333333334 -1.6614583333333335 z "
+                latexdraw:arrSizeNum="2.0" fill="black"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-673366290">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc00cc"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1075683450">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#3300cc"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-579712266">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#3300cc"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-2094470229">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc6600"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-61627849">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc00cc"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1848893496">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc6600"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1173558254">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc00cc"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1285769079">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc6600"/>
+        </marker>
+        <marker overflow="visible" orient="auto" id="arrow1-1817704333">
+            <path
+                d="M 0.0 0.0 L -3.540833333333333 1.2645833333333334 L -3.540833333333333 0.0 L -3.540833333333333 -1.2645833333333334 z "
+                latexdraw:arrSizeNum="2.0" fill="#cc6600"/>
+        </marker>
+    </defs>
+    <metadata>
+        <latexdraw:metadata>
+            <latexdraw:latexIncludes/>
+            <latexdraw:displayXScale>true</latexdraw:displayXScale>
+            <latexdraw:displayYScale>true</latexdraw:displayYScale>
+            <latexdraw:unit>CM</latexdraw:unit>
+            <latexdraw:zoom>1.0</latexdraw:zoom>
+            <latexdraw:magneticGridStyle>CUSTOMISED</latexdraw:magneticGridStyle>
+            <latexdraw:gridGap>20</latexdraw:gridGap>
+            <latexdraw:magneticGrid>false</latexdraw:magneticGrid>
+            <latexdraw:version>3.3.2</latexdraw:version>
+            <latexdraw:size>
+                <latexdraw:width>1360</latexdraw:width>
+                <latexdraw:height>768</latexdraw:height>
+            </latexdraw:size>
+            <latexdraw:position>
+                <latexdraw:x>0.0</latexdraw:x>
+                <latexdraw:y>-768.0</latexdraw:y>
+            </latexdraw:position>
+        </latexdraw:metadata>
+    </metadata>
+</svg>
