@@ -23,16 +23,16 @@ knitr::include_graphics("markfigs/predict.png")
 
 ## Climate Change and Prediction Markets
 
-- Scientific consensus on anthropogenic nature of climate change strongly increased.
-- BUT, beliefs about climate change did not evolve much within public. Increasingly politicized.
+- Scientific consensus on anthropogenic climate change increased.
+- BUT, beliefs about climate change did not evolve much within public.
 - Prediction markets: participants can "put their money where their mouths are."
-- High prediction accuracy and information aggregation.
+- High prediction accuracy, efficient information aggregation.
 - Do they also change beliefs?
 
 ## Prediction Market Simulation
 
-- Research question: *whether, and under what social and climate conditions, might prediction markets be useful for increasing convergence of climate beliefs?*
-- Prediction markets (hypermind.com, betfair.com, and predictit.org) focus on near term events such as elections months away, so difficult to extrapolate to climate case.
+- *Whether, and under what social and climate conditions, might prediction markets be useful for increasing convergence of climate beliefs?*
+- Prediction markets focus on near term events such as elections months away, so difficult to extrapolate to climate case.
 - Investigating unobservable beliefs of traders. 
 - So, simulation modeling informed by climate and economic theory.
 
@@ -44,9 +44,9 @@ knitr::include_graphics("markfigs/climateplot-1.png")
 
 ## Trader Beliefs
 
-- Both when true data generating process is CO2 and TSI, at model initialization approximately half of traders use true data-generating model to make predictions. 
-- Traders using true model do not necessarily make perfectly accurate predictions. 
-- Although these traders believe in correct *functional form* of model, they still need to calibrate their model based on limited noisy data. 
+- At initialization approximately half of traders use true data-generating model to make predictions. 
+- Traders using true model not necessarily perfectly accurate. 
+- Although correct *functional form* of model, still need to calibrate on limited noisy data. 
 
 ## Social Network
 
@@ -56,9 +56,9 @@ knitr::include_graphics("markfigs/network.png")
 
 ## Model
 
-1. Trader agents estimate forecasting model with data.
+1. Trader agents estimate forecasting model.
 2. Make predictions for climate for 6 yrs from now to assign expected value to temp securities.
-3. Trade on market.
+3. Trade.
 4. Payoffs for owners of security that was correct.
 5. Decide whether to adopt neighbors model based on cumulative earnings.
 
