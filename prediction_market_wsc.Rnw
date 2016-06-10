@@ -351,16 +351,18 @@ What is not clear to us is why increasing the number of traders slows convergenc
 
 We simulate two alternative climate futures: one where \ce{CO2} is the primary driver of global temperature and one where variations in solar intensity are the primary driver. These represent the two most plausible competing views in the public discourse and our analysis is agnostic about which is ``true''.
 
-Market participation causes traders to converge toward believing the ``true'' climate model under a variety of model parameterizations in a relatively short time: In markets with low segmentation, the number of traders believing the true model rises from 50\% to 75\% in roughly 12 years, and even in highly segmented markets, 75\% convergence is achieved in 18--24 years. This suggests that a climate prediction market could be useful for producing broad agreement about the causes of climate change, and could have persuasive power for people who are not persuaded by the overwhelming consensus among climate researchers that greenhouse gases (and especially \ce{CO2}) are responsible for the majority of observed climate change \shortcite{IPCC_WG1_AR5_2013}. However, market segmentation has a large effect on the speed of convergence, so transparency and effective communication about the performance of traders with different beliefs will be important.
+Market participation causes traders to converge toward believing the ``true'' climate model under a variety of model parameterizations in a relatively short time: In markets with low segmentation, the number of traders believing the true model rises from 50\% to 75\% in roughly 12 years, and even in highly segmented markets, 75\% convergence is achieved in 18--24 years. Ideally, we would like to compare belief convergence with and without a prediction market but because the only source of climate belief in our current model is market interactions we cannot make this comparison. However, we do use actual temperatures for our model under historical 20th century conditions and observe convergence to the \ce{CO2} model, while in the real world there is no convergence of beliefs.
+
+Both the historical and future simulation results suggest that a climate prediction market could be useful for producing broad agreement about the causes of climate change, and could have persuasive power for people who are not persuaded by the overwhelming consensus among climate researchers that greenhouse gases (and especially \ce{CO2}) are responsible for the majority of observed climate change \shortcite{IPCC_WG1_AR5_2013}. We also find that market segmentation has a large effect on the speed of convergence, so transparency and effective communication about the performance of traders with different beliefs will be important.
 
 The fact that rapid convergence to the true model occurs regardless of which model is actually ``true'' may persuade those who doubt the scientific consensus that the market is ideologically neutral, and that the deck is not stacked to produce a pre-determined result.
 
-All code and data for the model is available at \href{http://johnjnay.com/predMarket/}{johnjnay.com/predMarket/}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
+All code and data for the model is available at \href{https://github.com/JohnNay/predMarket}{github.com/JohnNay/predMarket}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
 
 \section*{ACKNOWLEDGEMENTS}
 
-We thank Yevgeniy Vorobeychik for feedback on this project. 
-We thank Manuel Naumovich Velasco for sharing the data from his Total Solar Irradiance prediction.
+We thank Yevgeniy Vorobeychik for feedback on this project and Manuel Naumovich Velasco for sharing the data from his Total Solar Irradiance prediction. 
+U.S. National Science Foundation grants EAR-1416964, EAR-1204685, and 1526860 partially supported this research. The funder had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript. All views expressed are the authors' and not the funder's.
 %We also thank the authors of \href{http://www.r-project.org}{\textsf{R}} \shortcite{r_core}
 %and 
 %\href{http://mc-stan.org}{Stan} \shortcite{Stan2016}.
@@ -377,7 +379,7 @@ We thank Manuel Naumovich Velasco for sharing the data from his Total Solar Irra
 
 \section*{AUTHOR BIOGRAPHIES}
 
-\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to better predict behavior in complex systems and improve policy. His research involves collaboration with social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@vanderbilt.edu}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
+\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to forecast dynamic systems and improve law and policy. His research involves collaboration with lawyers, social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@gmail.com}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
 
 \noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performance of markets and institutions using tools from economic theory and game theory.
 His email address is \email{martin.van.der.linden@vanderbilt.edu}, and website: \href{https://martinvdlinden.wordpress.com/}{https://martinvdlinden.wordpress.com/}.\\
