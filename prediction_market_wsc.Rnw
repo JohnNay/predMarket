@@ -132,7 +132,7 @@ During the six-year period, traders buy and sell futures.
 Every year, traders update their models and forecast of future temperatures based on newly available data.
 At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network.
 In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents.
-We conclude with details on model dynamics and an overview of the model parameters we experimentally vary.
+We conclude with details on model dynamics and an overview of the model parameters we experimentally vary. A full Overview, Design concepts and Details (ODD) report on our model can be found on \href{https://github.com/JohnNay/predMarket}{the project website}.
 
 \subsection{Temperature Models}
 \label{sec:temp.models}
@@ -159,7 +159,7 @@ An example realization of future climates for both the $\ln(\ce{CO2})$ and TSI m
 
 <<climateplot, eval=TRUE, echo=FALSE, message=FALSE, fig.cap="Historical measurements of temperature and a realization of possible future temperatures under two alternate models of climate physics.", fig.width=4, fig.height=3>>=
 source("utils/climate_plot.R")
-climate_plot() + theme(text=element_text(family='Palatino'))
+climate_plot()
 @
 
 \subsection{Climate Beliefs}
@@ -304,8 +304,8 @@ The model depends on the following parameters, which we vary in simulation exper
 As a validation that the market is operating correctly, we ran the market using actual historical temperatures from 1880 to 2014, with market betting from 1931 to 2014. Greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}. Consistent with this, our simulated historical trading sequence (Fig.~\ref{fig:time}) shows convergence to belief in the TSI model until the early 1970s, after which traders converge toward believing the \ce{CO2} model.
 <<time, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Convergence over trading sequences for different degrees of social-network connection and segmentation.", fig.width=10.5, fig.height=8.5, fig.pos='t'>>=
 source("utils/time_plot.R")
-p1 <- history_box() + theme(text=element_text(family='Palatino'))
-p2 <- future_box() + theme(text=element_text(family='Palatino'))
+p1 <- history_box()
+p2 <- future_box()
 multi_plot(p1, p2, cols=2)
 @
 
@@ -329,12 +329,11 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 The future \ce{CO2} forcing is taken from the RCP~8.5 scenario \shortcite{Riahi_2011} and the future TSI forcing is taken from a prediction of 21\textsuperscript{st} Total Solar Irradiance by \shortciteN{Velasco_Herrera_2015}. Because of the stochastic noise term, the temperature time series were different in each simulation.
 
-We used the model to perform 10 full simulations for each of the \Sexpr{n_sims} input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$,
-where $y_r$ are the observed values of $y$ in the data set. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
+We used the model to perform 10 full simulations for each of the \Sexpr{n_sims} input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that we first rank-transform that data in order to capture potentially non-linear relationships. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
 
 <<sa, eval=TRUE, echo=FALSE, message=FALSE, fig.cap="Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \\ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\\% confidence intervals.", fig.pos='t', fig.width=3, fig.height=3.5>>=
 source("utils/sa_plot.R")
-sa_plot() + theme(text=element_text(family='Palatino'))
+sa_plot()
 @
 
 The sensitivity analysis averages over time and thus masks time trends. We randomly drew from the above distributions for ideology, risk tolerance, and the number of traders, and conducted an experiment crossing 95\textsuperscript{th} and 5\textsuperscript{th} percentile values for the number of edges per trader and the segmentation of the social network and both values for the true model. We collected the time series of belief-convergence across these eight designs to visualize the distributions of convergence over time (Fig.~\ref{fig:time}). Under most parameterizations, the median fraction of traders believing in the true model reaches 75\% in 10--20 years.
@@ -385,7 +384,7 @@ All views expressed are the authors' and not the funder's.
 
 \section*{AUTHOR BIOGRAPHIES}
 
-\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at Vanderbilt University. He develops machine learning and computer simulation approaches to forecast dynamic systems and improve law and policy. His research involves collaboration with lawyers, social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@gmail.com}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
+\noindent {\bf JOHN J. NAY} is a Ph.D. Candidate at the Vanderbilt University School of Engineering and a Research Fellow at Vanderbilt Law School's Program on Law \& Innovation. He develops machine learning and computer simulation approaches to forecast dynamic systems and improve law and policy. His research involves collaboration with lawyers, social scientists, environmental scientists, and engineers. His email address is \email{john.j.nay@gmail.com}, and website: \href{http://johnjnay.com/}{http://johnjnay.com/}.\\
 
 \noindent {\bf MARTIN VAN DER LINDEN} is a Ph.D. Candidate at Vanderbilt University. He studies the design and performance of markets and institutions using tools from economic theory and game theory.
 His email address is \email{martin.van.der.linden@vanderbilt.edu}, and website: \href{https://martinvdlinden.wordpress.com/}{https://martinvdlinden.wordpress.com/}.\\

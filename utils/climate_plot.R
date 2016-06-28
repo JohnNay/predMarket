@@ -1,5 +1,4 @@
 climate_plot <- function(){
-  library(ggplot2)
   library(dplyr)
   library(tidyr)
   # to generate this data: source("timeseries/climate_plot.R", chdir = TRUE)

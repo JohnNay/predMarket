@@ -100,13 +100,13 @@ setMethod("plot", "pcSA",
             x <- x@result
             ss <- correct_bias(x[[7]]) # $SRRC, $SRC, $PRCC, $PCC
             
-            ggplot2::ggplot(ss, ggplot2::aes(x = var, y = x_corr)) + ggplot2::geom_point() +
-              ggplot2::xlab(xlab) + ggplot2::ylab(ylab) +
-              ggplot2::ggtitle(paste("Estimated effects on", outcome_var)) +
-              ggplot2::geom_errorbar(ggplot2::aes(ymax = max_ci, ymin = min_ci), width=0.25) +
-              ggplot2::geom_hline(yintercept = 0) +
-              ggplot2::ylim(c(-1,1)) +
-              ggplot2::theme_bw()
+            ggplot(ss, aes(x = var, y = x_corr)) + geom_point() +
+              xlab(xlab) + ylab(ylab) +
+              ggtitle(paste("Estimated effects on", outcome_var)) +
+              geom_errorbar(aes(ymax = max_ci, ymin = min_ci), width=0.25) +
+              geom_hline(yintercept = 0) +
+              ylim(c(-1,1)) +
+              theme_bw()
           }
 )
 
