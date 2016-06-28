@@ -11,6 +11,7 @@
 
 <meta name="author" content="John J. Nay, Martin Van der Linden, and Jonathan M. Gilligan" />
 
+<meta name="date" content="2016-06-27" />
 
 <title>Climate Prediction Market Model</title>
 
@@ -116,33 +117,37 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Climate Prediction Market Model</h1>
+<h3 class="subtitle"><em>Overview, Design concepts and Details (ODD)</em></h3>
 <h4 class="author"><em>John J. Nay, Martin Van der Linden, and Jonathan M. Gilligan</em></h4>
+<h4 class="date"><em>June 27, 2016</em></h4>
 
 </div>
 
 
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
-<p>The purpose of this model is to simulate a prediction market for future temperatures in order to study the dynamics by which participation in a market may affect the participants’ beliefs about the causes of climate change. The model is inspired by <span class="citation">(Vandenbergh, Raimi, and Gilligan 2014)</span>, which suggests that people who doubt scientific assessments of climate change for ideological reasons, but place considerable trust in free markets may change their beliefs about the causes of climate change if a prediction market for future climates places high values on predictions based on the scientific consensus view.</p>
+<p>The purpose of this model is to simulate a prediction market for future temperatures in order to study the dynamics by which participation in a market may affect the participants’ beliefs about the causes of climate change. The model is inspired by <span class="citation">Vandenbergh, Raimi, and Gilligan (2014)</span>, which suggests that people who doubt scientific assessments of climate change for ideological reasons, but place considerable trust in free markets may change their beliefs about the causes of climate change if a prediction market for future climates places high values on predictions based on the scientific consensus view.</p>
 </div>
 <div id="entities-state-variables-and-scales" class="section level2">
 <h2>Entities, State Variables, and Scales</h2>
 <p>The <em>entities</em> are traders in a prediction market. Traders are characterized by the following <em>state variables</em>:</p>
 <ul>
-<li><p>The trader’s risk tolerance for bidding in the market. High risk tolerance corresponds to demanding more aggressive prices for buying (the trader sets the price she is willing to pay to buy a security well below the utility she assigns to owning the security) and selling (the trader sets the price she is willing to accept to sell a security well below the utility she assigns to owning the security), and consequently experiencing a higher risk of not completing a trade. Lower risk tolerance corresponds to setting both willing-to-accept and willing-to-pay prices closer to the utility the trader assigns to owning the security.</p></li>
-<li><p>Ideology: More ideological traders are more resistant to changing their beliefs when confronted with evidence.</p></li>
-<li><p>Belief: The trader’s belief about the true cause of climate change. In this model, each trader either believes that global temperature is proportional to the logarithm of the atmospheric carbon dioxide concentration (<span class="math inline">\(\log \mathrm{CO}_2\)</span>) or that it is proportional to the total solar irradiance (TSI). A trader’s belief may change during the simulation.</p>
+<li><p>Risk taking (real, <span class="math inline">\(\in [0,1]\)</span>): Higher values of risk-taking mean the trader will bargain more aggressively in the market, offering less to buy a share and demanding more to sell one. This increases the potential profit of a trade, but incurs a greater risk of not finding a partner willing to execute the trade (see Submodels for details).</p></li>
+<li><p>Ideology (real, <span class="math inline">\(\in [0,1]\)</span>): The degree to which the trader’s beliefs are influenced by ideology. More ideological traders are more resistant to changing their beliefs when confronted with evidence.</p></li>
+<li><p>Belief (categorical): The trader’s belief about the true cause of climate change. Each trader believes that global temperature is proportional either to the logarithm of the atmospheric carbon dioxide concentration (<span class="math inline">\(\log \mathrm{CO}_2\)</span>) or to the total solar irradiance (TSI). Trader’s beliefs may change during the simulation.</p>
 <ul>
 <li>Corresponding to the belief are parameters characterizing a linear model of temperature (see Submodels for details).</li>
 </ul></li>
-<li><p>Wealth: Traders buy and sell securities that represent bets on future global temperature. Traders’ wealth changes as a result of buying, selling, and owning winning securities when they come due. Wealth is measured in ECU’s (experimental currency units).</p></li>
+<li><p>Wealth (real, <span class="math inline">\(\ge 0\)</span>): Traders buy and sell securities that represent bets on future global temperature. Traders’ wealth changes as a result of buying, selling, and owning winning securities when they come due. Wealth is measured in ECU’s (experimental currency units).</p></li>
+<li><p>Securities (list): A list of securities the trader owns during the current trading sequence.</p></li>
 </ul>
 <p>The model is characterized by the following global variables:</p>
 <ul>
-<li><p>True model: the actual cause of climate change. Global temperature in the model may be proportional to <span class="math inline">\(\log \mathrm{CO}_2\)</span> (a simplification of the scientific consensus view) or TSI (a common alternative hypothesis advanced by many people who doubt the scientific consensus).</p></li>
-<li><p>The number of traders</p></li>
-<li><p>The number of edges that connect the traders in social networks. Each trader has a minimum of two edges connecting her to other traders.</p></li>
-<li><p>The segmentation of the market: This represents the traders’ homophily (preference to form social networks with like-minded traders who share their belief in the cause of climate change). A segmentation of zero corresponds to traders being equally likely to make network connections with those who agree and those who disagree, and thus they are exposed to a variety of beliefs. A segmentation of one corresponds to traders making connections only with those who agree with them (an echo chamber).</p></li>
+<li><p>True model (categorical <span class="math inline">\(\in \lbrace \mathrm{CO}_2, \text{TSI} \rbrace\)</span>): the actual cause of climate change. Global temperature in the model may be proportional to <span class="math inline">\(\log \mathrm{CO}_2\)</span> (a simplification of the scientific consensus view) or TSI (a common alternative hypothesis advanced by many people who doubt the scientific consensus).</p></li>
+<li><p>The number of traders (integer <span class="math inline">\(&gt; 0\)</span>).</p></li>
+<li><p>The number of security intervals (integer <span class="math inline">\(&gt;0\)</span>). This corresponds to the kinds of securities issued at the beginning of each trading sequence. The larger the number of intervals, the more fine-grained the bets traders place on global temperatures. See below, under process overview and scheduling for more details.</p></li>
+<li><p>The number of edges that connect the traders in social networks (integer <span class="math inline">\(&gt; 2 \times \text{number of traders}\)</span>). Each trader has a minimum of two edges connecting her to other traders.</p></li>
+<li><p>The segmentation of the market (real <span class="math inline">\(\in [0,1]\)</span>): This represents the traders’ homophily (preference to form social networks with like-minded traders who share their belief in the cause of climate change). A segmentation of zero corresponds to traders being equally likely to make network connections with those who agree and those who disagree, and thus they are exposed to a variety of beliefs. A segmentation of one corresponds to traders making connections only with those who agree with them (an echo chamber).</p></li>
 </ul>
 <p>The market is not explicitly spatial. Each time step represents one year and the model typically runs for several decades to a century. The maximum run length is constrained by the availability of projected vaues for climate forcing terms (<span class="math inline">\(\mathrm{CO}_2\)</span> and TSI).</p>
 </div>
@@ -154,28 +159,28 @@ $(document).ready(function () {
 <ul>
 <li>Securities are issued. Each trader receives one of each type of security.</li>
 </ul>
-<p>Each security represents a range of temperatures, and purchasing that security represents a bet that the global average temperature at the end of the trading sequence will lie within the range corresponding to that security. The possible range of temperatures is divided into 10 equal segments and 12 kinds of securities are issued corresponding to those segments plus one for temperatures above the highest segment and one for temperatures below the lowest segment.</p></li>
+<p>Each security represents a range of temperatures, and purchasing that security represents a bet that the global average temperature at the end of the trading sequence will lie within the range corresponding to that security. If <span class="math inline">\(N\)</span> is the number of security intervals, then the range of likely temperatures is divided into <span class="math inline">\(N\)</span> equal segments and <span class="math inline">\(N + 2\)</span> kinds of securities are issued corresponding to those segments plus one for temperatures above the highest segment and one for temperatures below the lowest segment.</p></li>
 <li><p>At each time-step within a trading sequence, traders:</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>Re-calibrate their approximate model of the climate, based on newly available global temperature data from the previous year.</p></li>
+<li><p>Re-calibrate the parameters for their approximate model of the climate, based on newly available global temperature data from the previous year.</p></li>
 <li><p>Use the updated model to predict a probability distribution for what the temperature will be at the end of the current trading sequence.</p></li>
 <li><p>Use the updated probability distribution to assign values for the various climate securities being traded.</p></li>
 <li>Buy and sell securities on the market. Traders enter the market in random order. When a trader enters the market, she:
 <ul>
-<li>Chooses a random security <span class="math inline">\(s_B\)</span>, which she will attempt to buy. She assigns a willing-to-pay price, <span class="math inline">\(p_B\)</span>, which represents the highest price she will offer for that security. This price will be less than or equal to the actual value she places on the security.</li>
+<li>Chooses a random security <span class="math inline">\(s_B\)</span>, which she will attempt to buy. She assigns a willing-to-pay price, <span class="math inline">\(p_B\)</span>, which represents the highest price she will offer for that security. This price will be less than or equal to the actual value she places on the security (see Submodels for details on setting prices for buying and selling).</li>
 <li>Chooses a random security, <span class="math inline">\(s_S\)</span> out of those she owns, which she will try to sell, and assigns a willing-to-accept price, <span class="math inline">\(p_S\)</span>, which represents the lowest offer she will accept to sell it.</li>
 <li>Places orders to buy and sell in the order book in the market.</li>
-<li>The market-maker attempts to match the new offers with offers previously entered:
+<li>Each time a new trader places buy and sell orders, the market-maker attempts to match the new offers with offers previously entered:
 <ul>
-<li>If there are any outstanding orders to sell the security <span class="math inline">\(s_B\)</span> for a price <span class="math inline">\(p \le p_B\)</span>, then the trader will buy one share of <span class="math inline">\(s_B\)</span> from the trader offering it at the lowest price, and both orders are removed from the trading book.</li>
+<li>If there are any outstanding orders to sell the security <span class="math inline">\(s_B\)</span> for a price <span class="math inline">\(p \le p_B\)</span>, then the trader will buy one share of <span class="math inline">\(s_B\)</span> from the trader offering it at the lowest price, and both orders are removed from the trading book. The price is subtracted from the buyer’s wealth and added to the seller’s. One share of <span class="math inline">\(s_B\)</span> is removed from the seller’s holdings and added to the buyer’s.</li>
 <li>If there are any outstanding orders to buy the security <span class="math inline">\(s_S\)</span> for a price <span class="math inline">\(p \ge p_S\)</span>, then the trader will sell one share of <span class="math inline">\(s_S\)</span> to the trader offering the highest price, and both orders are removed from the trading book.</li>
 </ul></li>
-<li>After all traders have come to the market, any outstanding (unconsummated) offers are removed from the trading book and the turn is over.</li>
 </ul></li>
+<li><p>After all traders have come to the market, any outstanding (unconsummated) offers are removed from the trading book and the turn is over.</p></li>
 </ol></li>
 <li>At the end of the six-year trading sequence:
 <ul>
-<li>Out of the 12 types of security, one will contain the actual global temperature within its temperature range. This security is now worth 1 ECU, and every trader who owns this security will receive 1 ECU per share. All the other securities are worthless.</li>
+<li>Out of the <span class="math inline">\(N + 2\)</span> types of security, one will contain the actual global temperature within its temperature range. This security is now worth 1 ECU, and every trader who owns this security will receive 1 ECU per share. All the other securities are worthless.</li>
 <li>Each trader compares her own wealth to the wealth of her immediate neighbors in her social network and considers changing her belief about climate to the belief of the wealthiest neighbor.</li>
 </ul></li>
 </ol>
@@ -184,6 +189,10 @@ $(document).ready(function () {
 <h2>Design Concepts</h2>
 <div id="basic-principles" class="section level3">
 <h3>Basic principles</h3>
+<p>Global temperature: We model the global temperature as a linear function of the forcing term (which may be either <span class="math inline">\(\log \mathrm{CO}_2\)</span> or TSI, depending on the global “true model” variable) plus an <span class="math inline">\(\text{ARMA}(p,q)\)</span> noise process.</p>
+<p>Traders estimate the probability distribution for future global temperatures by fitting a linear model correesponding to their beliefs about the climate system to past temperatures and the forcing term corresponding to their belief. Traders use Bayesian methods to generate posterior probability distributions for all of the model parameters. Traders use these probability distributions of parameters together with known projections of future driving terms to estimate probability distributions for future global temperatures.</p>
+<p>Traders use their calculated probability distributions of future global temperatures to assign expected values to different climate securities. They then offer to buy or sell securities for prices that would increase their expected wealth.</p>
+<p>Traders may change their beliefs about what is really driving climate change (<span class="math inline">\(\mathrm{CO}_2\)</span> or TSI) if their wealthiest neighbor in the social network has a different belief.</p>
 </div>
 <div id="emergence" class="section level3">
 <h3>Emergence</h3>
@@ -191,11 +200,11 @@ $(document).ready(function () {
 </div>
 <div id="adaptation" class="section level3">
 <h3>Adaptation</h3>
-<p>Traders adapt to changing conditions by buying and selling securities. At each time step, each trader uses her updated approximate probabilistic model of future climate to determine the value she places on each security. Then she uses her risk tolerance to establish her willing-to-pay and willing-to-accept prices for buying and selling, respectively.</p>
+<p>Traders adapt to changing conditions by updating the parameters of their probabilistic models of future global temperature and using those models to update the expected values they assign securities. The expected values then affect the prices they offer in their buy and sell orders.</p>
 </div>
 <div id="objectives" class="section level3">
 <h3>Objectives</h3>
-<p>Traders seek to maximize their wealth by buying securities they believe are likely to pay off and selling securities they believe are unlikely to pay off.</p>
+<p>Traders seek to maximize their wealth by buying and selling securities. They offer to buy securities for lower prices than the expected value they assign the security and offer to sell for higher prices.</p>
 </div>
 <div id="learning" class="section level3">
 <h3>Learning</h3>
@@ -208,7 +217,7 @@ $(document).ready(function () {
 </div>
 <div id="sensing" class="section level3">
 <h3>Sensing</h3>
-<p>Traders sense past and current global average temperature, and know both the past and future values of <span class="math inline">\(\mathrm{CO}_2\)</span> concentration and TSI. Traders also sense the wealth and beliefs about climate change of their immediate neighbors in their social network.</p>
+<p>Traders sense past and current global average temperature, and know both the past and future values of <span class="math inline">\(\mathrm{CO}_2\)</span> concentration and TSI. Note that whereas in the real world, there is considerable uncertainty about future <span class="math inline">\(\mathrm{CO}_2\)</span> concentrations and TSI, in this model, traders have perfect knowledge of the future values of these terms. Traders also sense the wealth and beliefs about climate change of their immediate neighbors in their social network.</p>
 </div>
 <div id="interaction" class="section level3">
 <h3>Interaction</h3>
@@ -216,46 +225,74 @@ $(document).ready(function () {
 </div>
 <div id="stochasticity" class="section level3">
 <h3>Stochasticity</h3>
-<p>Global temperature is represented as a linear fucnction of the climate forcing plus stochastic noise that follows an <span class="math inline">\(\text{ARMA}(p,q)\)</span> model. The values of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> are obtained by fitting models to historical data. Currently, for both <span class="math inline">\(\log \mathrm{CO}_2\)</span> and TSI models, the <span class="math inline">\(\text{AR}(1)\)</span> model fits the data best.</p>
+<p>Global temperature is represented as a linear fucnction of the climate forcing plus stochastic noise that follows an <span class="math inline">\(\text{ARMA}(p,q)\)</span> model (see Submodels for details).</p>
 <p>Traders enter the market in random order, in order to assure that no trader has an advantage by entering at a particular time at every step.</p>
 <p>Traders’ state variables for risk tolerance, ideology, and belief about climate are initialized randomly.</p>
 <p>The social network is constructed by randomly making connections between traders, with the provision that each trader has a minimum of two connections.</p>
-<p>Traders update their beliefs randomly (see above, under Learning).</p>
+<p>There is a stochastic component to the traders’ decisions whether to update their beliefs about what drives changes in the global temperature (see above, under Learning).</p>
 </div>
 <div id="collectives" class="section level3">
 <h3>Collectives</h3>
-<p>There is no collective action, but each trader is a member of a social network.</p>
+<p>There is no explicit collective action, but each trader is a member of a social network.</p>
 </div>
 <div id="observation" class="section level3">
 <h3>Observation</h3>
-<p>We observe the beliefs of the traders and look for whether those beliefs converge toward the true cause of climate change.</p>
+<p>We observe the beliefs of the traders and look for whether those beliefs converge toward a consensus about the true cause of climate change.</p>
 </div>
 </div>
 <div id="initialization" class="section level2">
 <h2>Initialization</h2>
 <p>The “true” model of climate change is prescribed (either global temperature is proportional to <span class="math inline">\(\log \mathrm{CO}_2\)</span> or to TSI), and the parameters of the model (intercept, slope, and noise parameters) are fit to historical data.</p>
 <p>Future temperatures are simulated, using the parameters from the fit.</p>
-<p>Traders are initialized with ideology and risk tolerance set to random values between 0 and 1. Each trader’s belief about climate change is randomly initialized to believing that global temperature is proportional either to <span class="math inline">\(\log \mathrm{CO}_2\)</span> or to TSI.</p>
+<p>Global parameters (real, <span class="math inline">\(\in [0,1]\)</span>) control the maximum ideology and risk taking. Each trader’s ideology and risk-taking are initialized to random values drawn from uniform distribution over <span class="math inline">\([0, \text{ideology}_{\text{max}}]\)</span> and <span class="math inline">\([0, \text{risk-taking}_{\text{max}}]\)</span>, respectively. Each trader’s belief about what causes climate change is randomly initialized to either <span class="math inline">\(\mathrm{CO}_2\)</span> or to TSI.</p>
 <p>Traders’ approximate models are initialized by fitting a linear model corresponding to the agent’s belief about the true driver of global temperature.</p>
-<p>The segmentation of the social network is assigned a random value between 0 and 1.</p>
+<p>The segmentation of the social network is drawn from a uniform distribution on <span class="math inline">\([0,1]\)</span>.</p>
 <p>The social network is initialized by assigning each agent two connections, where the probability of connecting to another agent with matching belief is <span class="math inline">\((1 - \text{segmentation}) / 2\)</span>. After each agent has two connections, additional edges are added to the social network until the network has the specified number of edges.</p>
+<p>The number of closed security intervals <span class="math inline">\(N\)</span>, above) is set to 10, so there are 12 types of security (10 closed intervals plus two open intervals).</p>
 </div>
 <div id="input-data" class="section level2">
 <h2>Input data</h2>
-<p>Historical values for atmospheric <span class="math inline">\(\mathrm{CO}_2\)</span> concentrations, TSI, and global average temperature and projected values of future <span class="math inline">\(\mathrm{CO}_2\)</span> concentrations and TSI are read in from files.</p>
+<p>Historical values for atmospheric <span class="math inline">\(\mathrm{CO}_2\)</span> concentrations, TSI, and global average temperature and projected values of future <span class="math inline">\(\mathrm{CO}_2\)</span> concentrations and TSI are read in from files. We take future <span class="math inline">\(\mathrm{CO}_2\)</span> from the RCP 8.5 pathway <span class="citation">(Riahi et al. 2011,<span class="citation">Kolp and Riahi (2009)</span>)</span> and TSI from <span class="citation">V. M. Velasco Herrera, Mendoza, and Velasco Herrera (2015)</span>.</p>
 </div>
 <div id="submodels" class="section level2">
 <h2>Submodels</h2>
 <div id="global-temperature" class="section level3">
 <h3>Global temperature:</h3>
-<p>Global temperature at time <span class="math inline">\(t\)</span> is modeled as <span class="math display">\[ T(t) = a + b F(t) + \varepsilon\]</span>, where <span class="math inline">\(F\)</span> is the climate forcing (either <span class="math inline">\(\log \mathrm{CO}_2\)</span> or TSI), and <span class="math inline">\(\varepsilon\)</span> is a random deviate drawn from an <span class="math inline">\(\text{ARMA}(p,q)\)</span> process. <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and the parameters characterizing <span class="math inline">\(\varepsilon\)</span> are fit to historical data.</p>
+<p>Global temperature at time <span class="math inline">\(t\)</span> is modeled as <span class="math display">\[T(t) = a + b F(t) + \varepsilon,\]</span> where <span class="math inline">\(F\)</span> is the climate forcing (either <span class="math inline">\(\log \mathrm{CO}_2\)</span> or TSI), and <span class="math inline">\(\varepsilon\)</span> is a random deviate drawn from an <span class="math inline">\(\text{ARMA}(p,q)\)</span> process. Bayesian linear regression on historical data is used to obtain posterior probability distributions for <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and the parameters characterizing the ARMA noise process <span class="math inline">\(\varepsilon\)</span>. The ARMA order <span class="math inline">\((p,q)\)</span> is determined by performing regressions for <span class="math inline">\(p, q \in \lbrace 0, 2, 1 \rbrace\)</span> and choosing the set of <span class="math inline">\((p,q)\)</span> that minimizes the Widely Applicable Information Criterion <span class="citation">(Watanabe 2013,<span class="citation">Gelman, Hwang, and Vehtari (2014)</span>)</span>. For historical data sampled at one-year intervals, this procedure chose <span class="math inline">\(\text{AR}(1)\)</span> for both <span class="math inline">\(\log \mathrm{CO}_2\)</span> and TSI models.</p>
+<p>The model takes historical temperatures for past dates, and simulates the temperature at a future time <span class="math inline">\(t'\)</span> by drawing values for <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> and the parameters for the ARMA noise process from the posterior probability distributions and then calculating the expected value of the temperature <span class="math inline">\(a + b F(t')\)</span> and adding noise drawn from a stochastic <span class="math inline">\(\text{ARMA}(p,q)\)</span> time-series.</p>
+<p>The global temperature time-series for the entire simulation is calculated during initialization.</p>
+</div>
+<div id="traders-models-of-future-global-temperature" class="section level3">
+<h3>Traders’ models of future global temperature:</h3>
+<p>As the simulation progresses, at each time step, traders fit their own models to the equation above, based on the temperature to date (this is the model’s time series, which was created during initialization, so if the model is initialized with historical temperatures through 2015, then in simulating the year 2030, traders would know temperatures through the year 2029, which would correspond to the actual historical temperature record through 2015 plus the model’s simulated time series for 2016–2029 and the traders would fit parameters <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, etc. to this time series).</p>
+<p>At each time step, after the traders fit model parameters to the temperature time-series, they draw 1600 random sets of parameters from the posterior probability distributions and for each set of parameters, they simulate 7 time series from the current time-step through the end of the current trading sequence (1–6 years) to produce an ensemble of 11,200 simulated time-series. The set of temperatures at the final time-step of each simulation in the ensemble form a sample of possible temperatures at the end of the current trading sequence. Traders assign probabilities to each security based on the fraction of temperatures in this sample that fall within that security’s temperature interval.</p>
+</div>
+<div id="generating-buy-and-sell-offers" class="section level3">
+<h3>Generating buy and sell offers</h3>
+<p>Each trader has a risk-taking preference <span class="math inline">\(r \in [0,1]\)</span>. If the trader assigns <span class="math inline">\(v_i\)</span> as the expected value of security <span class="math inline">\(S_i\)</span> at the current time step, then she randomly selects a buying price <span class="math inline">\(p_b \in [(1 - r) v_i, v_i]\)</span> and a selling price <span class="math inline">\(p_s \in [v_i, (1 + r) v_i]\)</span>. The trader will then buy one share of the security if a counterparty offers to sell it for a price <span class="math inline">\(p \le p_b\)</span> and will sell one share if she owns one and a counterparty offers to buy it for a price <span class="math inline">\(p \ge p_s\)</span>.</p>
+<p>Smaller values of <span class="math inline">\(r\)</span> keep the ask and offer prices close to the expected value of the security, which means that a larger fraction of counterparty offers will be acceptable. Larger values of <span class="math inline">\(r\)</span> mean that the trader may assign smaller buy offers and larger sell offers. These would increase the trader’s profits if trades occur, but also increase the probability that no counterparty’s offer will be acceptable.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
 <div id="refs" class="references">
+<div id="ref-Gelman_2014">
+<p>Gelman, Andrew, Jessica Hwang, and Aki Vehtari. 2014. “Understanding Predictive Information Criteria for Bayesian Models.” <em>Statistics and Computing</em> 24: 997–1016. doi:<a href="https://doi.org/10.1007/s11222-013-9416-2">10.1007/s11222-013-9416-2</a>.</p>
+</div>
+<div id="ref-rcp_database_2009">
+<p>Kolp, Peter, and Keywan Riahi. 2009. “RCP Database.” <a href="http://www.iiasa.ac.at/web-apps/tnt/RcpDb" class="uri">http://www.iiasa.ac.at/web-apps/tnt/RcpDb</a>.</p>
+</div>
+<div id="ref-Riahi_2011">
+<p>Riahi, Keywan, Shilpa Rao, Volker Krey, Cheolhung Cho, Vadim Chirkov, Guenther Fischer, Georg Kindermann, Nebojsa Nakicenovic, and Peter Rafaj. 2011. “RCP 8.5: A Scenario of Comparatively High Greenhouse Gas Emissions.” <em>Climatic Change</em> 109: 33–57. doi:<a href="https://doi.org/10.1007/s10584-011-0149-y">10.1007/s10584-011-0149-y</a>.</p>
+</div>
 <div id="ref-Vandenbergh2013f">
 <p>Vandenbergh, Michael P., Kaitlin Toner Raimi, and Jonathan M. Gilligan. 2014. “Energy and Climate Change: A Climate Prediction Market.” <em>UCLA Law Review</em> 61: 1962–2017. <a href="http://papers.ssrn.com/abstract=2372321" class="uri">http://papers.ssrn.com/abstract=2372321</a>.</p>
+</div>
+<div id="ref-Velasco_Herrera_2015">
+<p>Velasco Herrera, V. M., B. Mendoza, and G. Velasco Herrera. 2015. “Reconstruction and Prediction of the Total Solar Irradiance: From the Medieval Warm Period to the 21st Century.” <em>New Astronomy</em> 34: 221–33. doi:<a href="https://doi.org/10.1016/j.newast.2014.07.009">10.1016/j.newast.2014.07.009</a>.</p>
+</div>
+<div id="ref-Watanabe_2013">
+<p>Watanabe, Sumio. 2013. “A Widely Applicable Bayesian Information Criterion.” <em>Journal of Machine Learning</em> 14: 867–97.</p>
 </div>
 </div>
 </div>

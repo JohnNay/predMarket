@@ -32,7 +32,9 @@ knit_hooks$set(small_mar = function(before, options, envir) {
 ```
 ```{r multi_plot, echo=FALSE}
 source("utils/multi_plot.R")
-library(ggplot2)
+# replace ggplot2 with jgplot2 that has my enhancement for outlier.alpha on geom_boxplot.
+# library(ggplot2)
+library(jgplot2) # devtools::install_github('jonathan-g/jgplot2', ref='jgplot2')
 theme_set(theme_classic())
 library(pander)
 ```

@@ -23,7 +23,9 @@ opts_chunk$set(fig.align = "center")
 @
 
 <<setup, echo=F, results='hide', cache=F>>=
-library(ggplot2)
+# replace ggplot2 with jgplot2 that has my enhancement for outlier.alpha on geom_boxplot.
+# library(ggplot2)
+library(jgplot2) # devtools::install_github('jonathan-g/jgplot2', ref='jgplot2')
 library(pander)
 source("utils/multi_plot.R")
 theme_set(theme_classic())
@@ -125,11 +127,11 @@ Agent-based simulations of prediction markets have been studied \shortcite{Kling
 
 \section{MODEL DESIGN}
 
-In our model, traders bet on global temperature anomalies six years in the future. 
-During the six-year period, traders buy and sell futures. 
-Every year, traders update their models and forecast of future temperatures based on newly available data. 
-At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network. 
-In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents. 
+In our model, traders bet on global temperature anomalies six years in the future.
+During the six-year period, traders buy and sell futures.
+Every year, traders update their models and forecast of future temperatures based on newly available data.
+At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network.
+In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents.
 We conclude with details on model dynamics and an overview of the model parameters we experimentally vary.
 
 \subsection{Temperature Models}
@@ -160,40 +162,40 @@ climate_plot() + theme(text=element_text(family='Palatino'))
 
 \subsection{Climate Beliefs}
 
-Traders use one of the two models (temperature depends on \ce{CO2} or TSI) to forecast future temperature. 
-These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures. 
+Traders use one of the two models (temperature depends on \ce{CO2} or TSI) to forecast future temperature.
+These models are interpreted as the trader's beliefs about the true climate process, the driving factor of long-term global temperatures.
 They represent pervasive positions on climate change in the public debate. In order to approximately match the current configuration of beliefs in climate change in the United States, during model initialization, the \ce{CO2} model is randomly assigned to half of the traders, while the TSI model is assigned to the other half of the traders. These random model assignments are made \emph{before} the market initially opens.
 
-Both when the true data generating process is \ce{CO2} and TSI, at model initialization approximately half of the traders use the true data-generating model to make predictions. 
-Traders using the true model do not necessarily make perfectly accurate predictions however. 
-Although these traders believe in the correct \emph{functional form\/} of the model, they still need to calibrate their model based on limited noisy data. 
+Both when the true data generating process is \ce{CO2} and TSI, at model initialization approximately half of the traders use the true data-generating model to make predictions.
+Traders using the true model do not necessarily make perfectly accurate predictions however.
+Although these traders believe in the correct \emph{functional form\/} of the model, they still need to calibrate their model based on limited noisy data.
 Therefore, the values these traders assign to the parameters of the model will typically be different from the exact parameters in the data-generating process.
 
 \subsection{Traders and Markets}
 
-Traders are initially endowed with a single experimental currency unit (ECU). 
+Traders are initially endowed with a single experimental currency unit (ECU).
 Traders use their model to forecast the distribution of future temperature and determine their reservation price for different securities. Each security pays 1 ECU at the end of the trading sequence if the temperature at the end of the sequence falls into a certain range.
 
-Traders are risk-neutral expected utility maximizers. 
+Traders are risk-neutral expected utility maximizers.
 Therefore, their reservation price for a security is simply their assessment of the probability that the temperature will fall in the range covered by the security at the end of the sequence.
 At each time-step (year), the agents use the new year's temperature data to re-estimate the coefficients for the model they believe explains climate change, using Bayesian linear regression with an $\AR(1)$ noise model. Traders use the joint posterior probability distribution of regression and noise coefficients to estimate the probability distribution for the  temperature at the end of the current trading sequence. Stan was sufficiently fast that we could perform a full Bayesian analysis at each time step.
 
-Traders then use this posterior probability distribution to assign reservation prices for buying and selling securities. 
+Traders then use this posterior probability distribution to assign reservation prices for buying and selling securities.
 Based on their reservation price, agents behave as ``zero-intelligence'' traders \shortcite{Gode1993}.
 They attempt to sell securities at a random price above their reservation, and to buy securities at a random price below their reservation.
 These trading strategies are simple but provide accurate approximations of behavior in prediction markets \shortcite{Klingert2012c}, and in financial markets more broadly.
 
-Based on traders' sell and buy orders, traders exchange securities following a continuous-double auction (CDA) procedure (see Model Dynamics below for more details). 
-CDAs or some close variants are common procedures to match buy and sell orders. 
+Based on traders' sell and buy orders, traders exchange securities following a continuous-double auction (CDA) procedure (see Model Dynamics below for more details).
+CDAs or some close variants are common procedures to match buy and sell orders.
 CDA are notably used on large stock markets \shortcite{Tseng2010a}.
- 
+
 \subsection{Social Network}
 
-Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents. 
-Every time securities are realized, each trader looks at the performance of her richest neighbor in the network. 
+Traders are part of a social network where each agent forms two links at random, and then forms links randomly, ensuring that each agent is connected to at least two other agents.
+Every time securities are realized, each trader looks at the performance of her richest neighbor in the network.
 Traders start with the same initial amount of ECU and differences in ECU can only come from market interactions.
 Therefore, if some trader is poorer than her richest neighbor, the trader interprets it as a signal that her richest neighbor may have a better model of the climate.
-Then, the trader considers adopting the model of her richest neighbor. 
+Then, the trader considers adopting the model of her richest neighbor.
 For each trader, the willingness to revise her belief is determined by how ideologically loaded her belief is \shortcite{Kahan_2011}, which is a parameter we vary in our experiments.
 
 \begin{figure}[t]
@@ -203,55 +205,55 @@ For each trader, the willingness to revise her belief is determined by how ideol
 \end{center}
 \end{figure}
 
-An example of a snapshot of a social network is depicted in Fig.~\ref{fig:social_network}. 
+An example of a snapshot of a social network is depicted in Fig.~\ref{fig:social_network}.
 A segmentation parameter controls the homophily of the network: the extent to which traders are preferentially linked with other traders who share their initial belief in the cause of climate change (\ce{CO2} or TSI), as opposed to traders with the opposite intial belief. This parameter varies from 0 (no preference for like-minded traders) to 1 (traders are only connected to like-minded traders).
-%This reflects reality where cultural and social groups are highly correlated with climate change beliefs. 
-Although traders can change their beliefs over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed. 
+%This reflects reality where cultural and social groups are highly correlated with climate change beliefs.
+Although traders can change their beliefs over time, the connections between traders do not change as the market unfolds, i.e the edges are fixed.
 We vary the segmentation parameter in our experiments.
 
 \subsection{Model Dynamics}
 
-The time periods $t$ are grouped into trading \emph{sequences\/}. 
-In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence. 
-For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$. 
-In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security. 
+The time periods $t$ are grouped into trading \emph{sequences\/}.
+In a given sequence, the potential payments associated with traded securities are all based on the temperature at the end of the sequence.
+For instance, the third trading sequence might start in period $t = 1964$ and end in period $t = 1970$.
+In this case, a security traded in the third sequence pays 1 ECU if the temperature at $t = 1970$ falls into the range of temperatures covered by the security.
 
-At each time $t$, traders are assumed to know the past value of the temperature ${T}_{0:t}$, carbon dioxide $\text{CO2}_{0:t}$, and total solar irradiance $\text{TSI}_{0:t}$. 
+At each time $t$, traders are assumed to know the past value of the temperature ${T}_{0:t}$, carbon dioxide $\text{CO2}_{0:t}$, and total solar irradiance $\text{TSI}_{0:t}$.
 In a sequence finishing at time $t^*$, traders also have common knowledge of $\text{CO2}_{t:t^*}$ and $\text{TSI}_{t:t^*}$, the future values of carbon dioxide and total solar irradiance up to $t^*$.
-However, at any $t$, traders do not know the value of any future temperatures. 
-Thus, the traders know the forcing terms for the rest of the trading sequence, but do not know the value of ${T}_{t^*}$. 
+However, at any $t$, traders do not know the value of any future temperatures.
+Thus, the traders know the forcing terms for the rest of the trading sequence, but do not know the value of ${T}_{t^*}$.
 Traders can only predict ${T}_{t^*}$ using their approximate model and their knowledge of ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$.
 Notice that because ${T}_{0:t}$, $\text{CO2}_{0:t^*}$, and $\text{TSI}_{0:t^*}$ are common knowledge, in each period $t$, any two traders with the same approximate model $m$ form the same stochastic beliefs about future temperatures $P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$.
 The probability distribution $P_{t,m}$ incorporates both epistemic uncertainty (the trader does not know the true values of the coefficients of the climate model) and aleatory uncertainty (in addition to deterministic warming, the temperature exhibits stochastic noise that is directly modeled).
-     
+
  At each time $t$, traders:
 \begin{enumerate}
 \item  re-calibrate $m$, their approximate model at time $t$, based on the new set of temperature data available at $t$,
 \label{step:calibrate}
-\item  use the posterior probability distribution from (\ref{step:calibrate}) to 
-assign beliefs about the probability distribution of future temperatures at time $t^*$: 
-$P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$ 
+\item  use the posterior probability distribution from (\ref{step:calibrate}) to
+assign beliefs about the probability distribution of future temperatures at time $t^*$:
+$P_{t,m}({T}_{t^*} ~|~ {T}_{0:t}, \text{CO2}_{0:t^*}, \text{TSI}_{0:t^*})$
 and use it to determine the expected value they attach to each security, and
-\item  trade on the CDA market as follows: 
+\item  trade on the CDA market as follows:
   \begin{itemize}
     \item Every trader $i$ chooses at random a security $s_i^B$ she will try to buy.
     \item Every trader $i$ also chooses at random a security $s_i^S$ she will try to sell among the securities she owns a positive amount of (if any).
-    \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$. 
-  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect to $i$'s approximate model at time $t$). 
+    \item Traders then decide of their selling price $p_i^S$ and buying price $p_i^B$.
+  To do so, traders first compute their expected values $E(s_i^B)$ and $E(s_i^S)$ for securities $s_i^B$ and $s_i^S$ (where expected values are with respect to $i$'s approximate model at time $t$).
   Then traders set $p_i^S$ at random above $E(s_i^S)$ and $p_i^B$ at random below $E(s_i^B)$ (see Model Parameters below for more details).
     \item Traders go to the market one at the time, in an order drawn randomly for each $t$.
-    \item When trader $i$ comes to the market, she places limit orders in the order book. 
+    \item When trader $i$ comes to the market, she places limit orders in the order book.
    These orders specify that $i$ is willing to buy $s_i^B$ at any price below $p_i^B$, and to sell $s_i^S$ at any price above $p_i^S$.
     \item The market maker attempts to match $i$'s orders with some order which was put in the book before $i$ came to the market.
-    \item If there are outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded. 
+    \item If there are outstanding sell offers for $s_i^B$ at a price below $p_i^B$, a trade is concluded.
    Trader $i$ buys one unit of $s_i^B$ from the seller who sells at the lowest price below $p_i^B$, and the sell and buy offers are removed from the order book.
-    \item If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded. 
+    \item If there are outstanding buy offers for $s_i^S$ at price above $p_i^S$, a trade is concluded.
    Trader $i$ sells one unit to the buyer who buys at the highest price above $p_i^S$, and the sell and buy offers are removed from the order book.
-    \item When all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded. 
+    \item When all traders have come to the market, any remaining outstanding offer is removed from the order book, and the trading period is concluded.
   \end{itemize}
 \end{enumerate}
 
-At $t^*$, when the sequence ends, there is only one security $s^*$ associated with a range of temperatures including the actual temperature $T_{t^*}$. 
+At $t^*$, when the sequence ends, there is only one security $s^*$ associated with a range of temperatures including the actual temperature $T_{t^*}$.
 At $t^*$, traders:
 
 \begin{enumerate}
@@ -260,35 +262,35 @@ At $t^*$, traders:
 \end{enumerate}
 
 \subsection{Model Parameters}
-  
+
 The model depends on the following parameters, which we vary in simulation experiments to determine their effects on the convergence of beliefs. We group the parameters into climate, network and individual behavioral factors.
 \begin{itemize}
   \item Climate parameters:
   \begin{itemize}
     \item  \texttt{true.model}: temperature data-generating process (\ce{CO2} or TSI).
   \end{itemize}
-  
+
   \item Network parameters:
   \begin{itemize}
     \item  \texttt{n.traders}: the number of traders.
     \item  \texttt{n.edg}: the number of edges in the social network.
-    \item  \texttt{seg}: the segmentation parameter for the social network. 
+    \item  \texttt{seg}: the segmentation parameter for the social network.
   \end{itemize}
-    
+
   \item Behavioral parameters:
   \begin{itemize}
     \item  \texttt{risk.tak} : determines the distribution of risk tolerance with respect to successfully buying or selling securities.     Higher risk tolerance corresponds to demanding more aggressive prices for buying and selling, and hence, a higher risk of not consummating a trade that would be mutually advantageous to the buyer and seller.
-    
+
     For each trader $i$, the level of $\texttt{risk.tak}_i$ is drawn uniformly at random from $[0,\texttt{risk.tak}]$.
     The higher $\texttt{risk.tak}_i$, the higher the price $i$ will demand for selling securities, and the lower the price $i$ will offer for buying.
-    
-    Formally, in each period, trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval  
-    $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and 
-    $[\texttt{reserv}_{i}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling. 
-  
+
+    Formally, in each period, trader $i$ picks her buying or selling price for $s$ uniformly at random in the interval
+    $[(1 - \texttt{risk.tak}_i) \texttt{reserv}_{i}, \allowbreak  \texttt{reserv}_{i,t}]$ for buying and
+    $[\texttt{reserv}_{i}, \allowbreak (1  + \texttt{risk.tak}_i) \texttt{reserv}_{i,t}]$ for selling.
+
   \item  \texttt{ideo} :  determines the degree of ``ideology'' of traders.
     For each trader $i$, the level of $\texttt{ideo}_i$ is drawn uniformly at random from $[0,\texttt{ideo}]$.
-    If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them. 
+    If \texttt{ideo} is high, traders will not revise their approximate models easily, even when faced with evidence that their richest neighbor is doing better than them.
     Formally, for each trader $i$ and each sequence, $\texttt{ideo}_i$ is the probability that $i$ adopts the approximate model of her richest neighbor if that neighbor is doing better than $i$ at the end of the sequence (in monetary terms).
   \end{itemize}
 \end{itemize}
@@ -297,7 +299,7 @@ The model depends on the following parameters, which we vary in simulation exper
 
 \subsection{Historical Climate}
 
-As a validation that the market is operating correctly, we ran the market using actual historical temperatures from 1880 to 2014, with market betting from 1931 to 2014. Greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}. Consistent with this, our simulated historical trading sequence (Fig.~\ref{fig:time}) shows convergence to belief in the TSI model until the early 1970s, after which traders converge toward believing the \ce{CO2} model. 
+As a validation that the market is operating correctly, we ran the market using actual historical temperatures from 1880 to 2014, with market betting from 1931 to 2014. Greenhouse gas concentrations did not become high enough to begin dominating natural climate variations until the 1970s or so, and it took until the 1990s for the temperature record to show clear signs of anthropogenic interference \shortcite{IPCC_WG1_AR5_2013}. Consistent with this, our simulated historical trading sequence (Fig.~\ref{fig:time}) shows convergence to belief in the TSI model until the early 1970s, after which traders converge toward believing the \ce{CO2} model.
 <<time, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Convergence over trading sequences for different degrees of social-network connection and segmentation.", fig.width=10.5, fig.height=8.5, fig.pos='t'>>=
 source("utils/time_plot.R")
 p1 <- history_box() + theme(text=element_text(family='Palatino'))
@@ -325,7 +327,7 @@ Our primary focus is on simulating the market in future scenarios. This is more 
 
 The future \ce{CO2} forcing is taken from the RCP~8.5 scenario \shortcite{Riahi_2011} and the future TSI forcing is taken from a prediction of 21\textsuperscript{st} Total Solar Irradiance by \shortciteN{Velasco_Herrera_2015}. Because of the stochastic noise term, the temperature time series were different in each simulation.
 
-We used the model to perform 10 full simulations for each of the \Sexpr{n_sims} input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$, 
+We used the model to perform 10 full simulations for each of the \Sexpr{n_sims} input parameter sets and average the 10 convergence scores. We conducted multiple simulations for the same parameter set because there is stochasticity in the tempertature time series, the social network structure, and the agent decision models. We then conducted a partial rank correlation coefficient analysis on the relationship between the input matrix, $X$, and the resulting simulated outcome vector of mean belief convergence scores, $y$ \shortcite{Marino2008,pujol_sensitivity:_2014,saltelli_sensitivity_2009}. Partial correlation computes the linear relationship between the part of the variation of $X_i$ and $y$ that are linearly independent of other $X_j$  ($j \neq i$).  The difference between the partial correlation and the partial rank correlation that we use here is that the outcome variable $y$ is first rank-transformed in order to allow us capture potentially non-linear relationships: every value, $y_s$, in the data set is replaced by $f(y_s) \equiv |\{y_r~|~ y_s > y_r\}|$,
 where $y_r$ are the observed values of $y$ in the data set. We conduct 1,000 bootstrapped estimations of the partial rank correlation coefficients to obtain 95\% confidence intervals.
 
 <<sa, eval=TRUE, echo=FALSE, message=FALSE, fig.cap="Estimated effects of model parameters on convergence of beliefs in future scenario. Positive numbers accelerate convergence and negative numbers retard it. True model refers to the true climate model being \\ce{CO2}, so traders converge to the true model more quickly when carbon dioxide drives climate change than when total solar irradiance does. Bars represent 95\\% confidence intervals.", fig.pos='t', fig.width=3, fig.height=3.5>>=
@@ -361,13 +363,13 @@ All code and data for the model is available at \href{https://github.com/JohnNay
 
 \section*{ACKNOWLEDGEMENTS}
 
-We thank Yevgeniy Vorobeychik for feedback on this project and Manuel Naumovich Velasco for sharing the data from his Total Solar Irradiance prediction. 
+We thank Yevgeniy Vorobeychik for feedback on this project and Manuel Naumovich Velasco for sharing the data from his Total Solar Irradiance prediction.
 U.S. National Science Foundation grants EAR-1416964, EAR-1204685, and 1526860 partially supported this research. The funder had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript. All views expressed are the authors' and not the funder's.
 %We also thank the authors of \href{http://www.r-project.org}{\textsf{R}} \shortcite{r_core}
-%and 
+%and
 %\href{http://mc-stan.org}{Stan} \shortcite{Stan2016}.
-%This manuscript was prepared using 
-%RStudio \shortcite{rstudio} and 
+%This manuscript was prepared using
+%RStudio \shortcite{rstudio} and
 %knitr \shortcite{xie_knitr_2014}.
 
 
