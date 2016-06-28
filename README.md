@@ -12,8 +12,8 @@ If you use these scripts, cite this paper:
 
 Nay, John J., Van der Linden, Martin, Gilligan, Jonathan. (2016) "Betting and Belief: Prediction Markets and Attribution of Climate Change." eprint arXiv:1603.08961
 
-The paper can be downloaded here: <http://arxiv.org/abs/1603.08961>
+The paper can be downloaded here: <http://arxiv.org/abs/1603.08961> and the ODD specification for the agent-based prediction-market model can be found here: <https://github.com/JohnNay/predMarket/blob/master/odd.pdf>
 
 Under most parameterizations, within 15-20 years, the median fraction of traders believing in the true model is over 75%:
 
-![](README-time-1.png)<!-- -->
+![](README-time-1.png)

@@ -19,7 +19,7 @@
 
 <<knitr_setup, echo=F, results='hide', cache=F>>=
 library(knitr)
-opts_chunk$set(fig.align = "center")
+opts_chunk$set(fig.align = "center", cache = FALSE)
 @
 
 <<setup, echo=F, results='hide', cache=F>>=
@@ -132,7 +132,7 @@ During the six-year period, traders buy and sell futures.
 Every year, traders update their models and forecast of future temperatures based on newly available data.
 At the end of each six-year period, winners collect gains and traders revise beliefs about climate models, based on their ideology and the beliefs of top earners in their social network.
 In this section, we describe the models used to generate future temperature data, agents beliefs about those models, the market procedures, and the social network connecting agents.
-We conclude with details on model dynamics and an overview of the model parameters we experimentally vary. A full Overview, Design concepts and Details (ODD) report on our model can be found on \href{https://github.com/JohnNay/predMarket}{the project website}.
+We conclude with details on model dynamics and an overview of the model parameters we experimentally vary. The model code and a full \href{https://github.com/JohnNay/predMarket/blob/master/odd.pdf}{Overview, Design concepts and Details (ODD) specification} can be found on \href{https://github.com/JohnNay/predMarket}{the project website}.
 
 \subsection{Temperature Models}
 \label{sec:temp.models}
@@ -346,7 +346,7 @@ Segmented social networks reduce convergence by creating an ``echo-chamber'' eff
 
 When the true model is \ce{CO2}-driven there is more convergence toward the true model. We believe this is because when models are fit to the historical data, the residuals from the \ce{CO2}-driven model are considerably smaller than those from the TSI-driven model. Thus, projections of future climate change using the TSI model will exhibit significantly larger stochastic noise than the \ce{CO2} models, and this noise makes it more difficult for traders to identify the true model when the true model is TSI.
 
-The higher the risk tolerance, the greater the range of prices at which a trader will buy and sell securities. This creates greater opportunities for traders to profit if their model is correct and to lose money if it is incorrect. This increased volatility puts more information in play, and we believe this is why greater risk taking enables traders to identify the correct model more quickly. We have observed a similar phenomenon in a very different context, where adding stochastic noise to player decisions in iterated games improves the accuracy with which machine-learning algorithms can identify the players' strategies \shortcite{Nay2015}.
+Traders with higher risk tolerance will price buy and sell orders more aggressively, so they will earn more (or lose less) on completed trades, but will have a greater risk of failing to complete trades. Among traders with the correct model of climate, those with higher risk tolerance  will earn more profit on completed trades (and their counterparties will lose more). A trader's wealth is an important source of information, and we believe this is why greater risk taking enables traders to identify the correct model more quickly. Additionally, the risk of failing to complete trades adds volatility, which also puts information in play. We have observed a similar phenomenon in a very different context, where adding stochastic noise to player decisions in iterated games improves the accuracy with which machine-learning algorithms can identify the players' strategies \shortcite{Nay2015}.
 
 What is not clear to us is why increasing the number of traders slows convergence, even if the number of edges per trader remains fixed. This is a topic for future research.
 
@@ -360,7 +360,7 @@ Both the historical and future simulation results suggest that a climate predict
 
 The fact that rapid convergence to the true model occurs regardless of which model is actually ``true'' may persuade those who doubt the scientific consensus that the market is ideologically neutral, and that the deck is not stacked to produce a pre-determined result.
 
-All code and data for the model is available at \href{https://github.com/JohnNay/predMarket}{github.com/JohnNay/predMarket}. This project is a computational test-bed for public policy design: our code can be extended to test the effects that trading strategies, cognitive models, future climate scenarios, and market designs have on the evolution of trader beliefs.
+All code and data for the model is available at \href{https://github.com/JohnNay/predMarket}{github.com/JohnNay/predMarket}. This project is a computational test-bed for public policy design: our code can be extended to test the effects of trading strategies, cognitive models, future climate scenarios, and market designs on the evolution of trader beliefs.
 
 \section*{ACKNOWLEDGEMENTS}
 
