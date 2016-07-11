@@ -49,7 +49,7 @@ In R, install packages and load them to ensure they installed.
     library(tseries)
     library(lhs)
 
-Then in R source the main simulation model file and test it out for a run with randomly chosen parameters.
+Then, in R, source the main simulation model file and test it out for a run with randomly chosen parameters.
 
     source("main.R")
     main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)), visu =T)
