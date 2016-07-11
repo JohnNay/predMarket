@@ -1,10 +1,10 @@
-rm(list=ls())
+# rm(list=ls())
 args <- commandArgs(trailingOnly = TRUE)
 numcores <- as.integer(args[1])
 message(paste("Number of cores", numcores))
 
 source("main.R")
-library(eat)
+library(sa)
 
 ##############################################################################
 ## Set up parameters for climate_model to control level of tracing to screen
@@ -136,7 +136,7 @@ set[[4]] <- list(n.edg = 0.05, seg = 0.05)
 ##############################################################################
 doParallel::registerDoParallel(cores = numcores)
 sample_count <- numcores*6 # numcores*7 takes 8.5 hours to run for past
-past <- FALSE
+past <- TRUE
 future <- TRUE
 true_past <- TRUE
 

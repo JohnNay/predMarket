@@ -16,4 +16,48 @@ The paper can be downloaded here: <http://arxiv.org/abs/1603.08961> and the ODD 
 
 Under most parameterizations, within 15-20 years, the median fraction of traders believing in the true model is over 75%:
 
-![](README-time-1.png)
+![](README-time-1.png)<!-- -->
+
+To run the simulations
+----------------------
+
+In R, install packages and load them to ensure they installed.
+
+    install.packages("devtools")
+    install.packages("igraph")
+    install.packages("ggplot2")
+    install.packages("rstan")
+    install.packages("shinystan")
+    install.packages("dplyr")
+    install.packages("tidyr")
+    install.packages("magrittr")
+    install.packages("purrr")
+    install.packages("stringr")
+    install.packages("tseries")
+    install.packages("lhs")
+
+    devtools::install_github("JohnNay/sa")
+    library(igraph)
+    library(ggplot2)
+    library(rstan)
+    library(shinystan)
+    library(dplyr)
+    library(tidyr)
+    library(magrittr)
+    library(purrr)
+    library(stringr)
+    library(tseries)
+    library(lhs)
+
+Then in R source the main simulation model file and test it out for a run with randomly chosen parameters.
+
+    source("main.R")
+    main(c(runif(3, min = 0.0001, max = 0.9999), 1, runif(2, min = 0.0001, max = 0.9999)), visu =T)
+
+In the terminal run the following to conduct a sensitivity analysis simulation experiment with 8 cores. The only argument to this script is the number of cores to use.
+
+    Rscript master.R 8 &
+
+In the terminal run the following to conduct the time series experiment with 8 cores. The only argument to this script is the number of cores to use.
+
+    Rscript master_timeseries_experiments.R 8 &

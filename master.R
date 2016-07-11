@@ -1,5 +1,5 @@
 # master script for conducting ABM experiments
-rm(list=ls()) # make sure to always run this line of code and see that the next two 
+# rm(list=ls()) # make sure to always run this line of code and see that the next two 
 # lines of code work without error, ensuring that the working of the model is not 
 # dependent on anything in your global workspace, if it is, then you need to create 
 # whatever is in your global workpace in the code
@@ -59,7 +59,7 @@ if(estimate_replicates){
 ##############################################################################
 
 future <- TRUE
-past <- FALSE
+past <- TRUE
 sample_count <- 80
 
 if(past){
