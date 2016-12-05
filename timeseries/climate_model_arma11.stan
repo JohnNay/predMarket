@@ -32,7 +32,7 @@ model {
     real ma;
     vector[T] err;
 
-    
+
     b ~ normal(b0, sb0);
     m ~ normal(m0, sm0);
 #    theta ~ normal(theta0, stheta0);
@@ -40,21 +40,21 @@ model {
     sigma ~ cauchy(0, ssig0);
     phi ~ normal(0,2);
     theta ~ normal(0, 2);
-    
 
-    res <- y - (m * x + b);
-    
-    err <- rep_vector(0.,T);
+
+    res = y - (m * x + b);
+
+    err = rep_vector(0.,T);
 
     #
     # Formulation from eq. 2.26 in R. Prado and M. West, "Time Series: Modeling, Computation, and Finance"
     #
-    ar <- 0;
-    err[1] <- res[1] - ar;
+    ar = 0;
+    err[1] = res[1] - ar;
     for (t in 2:T) {
-      ar <- phi[1] * res[t-1];
-      ma <- theta[1] * err[t-1];
-      err[t] <- res[t] - (ar + ma);
+      ar = phi[1] * res[t-1];
+      ma = theta[1] * err[t-1];
+      err[t] = res[t] - (ar + ma);
       /*
       if (fabs(eps[t]) > 100) {
         print("t = ", t, ", ar = ", ar[t], ", ma = ", ma[t], ", eps = ", eps[t]);
@@ -84,23 +84,23 @@ generated quantities {
     real ma;
 
     for (i in 1:reps) {
-      res <- y - (m * x + b);
+      res = y - (m * x + b);
 
-      yy <- append_row(res, rep_vector(0, T_future));
-      
-      ar <- 0;
-      err[1] <- res[1] - ar;
+      yy = append_row(res, rep_vector(0, T_future));
+
+      ar = 0;
+      err[1] = res[1] - ar;
       for (t in 2:T) {
-        ar <- phi[1] * res[t-1];
-        ma <- theta[1] * err[t-1];
-        err[t] <- res[t] - (ar + ma);
+        ar = phi[1] * res[t-1];
+        ma = theta[1] * err[t-1];
+        err[t] = res[t] - (ar + ma);
       }
       for(t in 1:T_future) {
-        ar <- phi[1] * yy[T + t-1];
-        ma <- theta[1] * err[T + t-1];
-        err[T + t] <- normal_rng(0, sigma);
-        yy[T + t] <- ar + ma + err[T + t];
-        y_future[t,i] <- yy[T + t] + m * x_future[t] + b;
+        ar = phi[1] * yy[T + t-1];
+        ma = theta[1] * err[T + t-1];
+        err[T + t] = normal_rng(0, sigma);
+        yy[T + t] = ar + ma + err[T + t];
+        y_future[t,i] = yy[T + t] + m * x_future[t] + b;
       }
     }
   }

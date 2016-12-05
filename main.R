@@ -14,7 +14,6 @@ source("interact.R")
 source("payoffs.R")
 source("adapt.R")
 source("mixing_matrix.R")
-source("assortativity_coefficient.R")
 
 measure_outcome <- function(outcome = c("converge", "fraction_converge"), net, true.model){
   outcome <- match.arg(outcome)
@@ -56,7 +55,7 @@ main <- function(parameters,
   # TODO: set nyears to adapt to whether there is future or not.
   # TODO: burn.in + n.seq * horizon all need to adapt
   stopifnot((burn.in + n.seq * horizon) == nyears)
-  
+
   ### Market structure parameters:
   # market.complet is number of securities which
   # are traded. With higher securities, traders can trade on
@@ -64,7 +63,7 @@ main <- function(parameters,
   # TODO: market.complet needs an upper bound if its varied
   # or we can keep it fixed, for now we keep it at 10
   market.complet <- 10 #ifelse(parameters[4]*1000 < 1, 1, round(parameters[4]*1000)) # integer in (1, 1000)
-  
+
   # SA creates everything in 0-1 interval, so im scaling things to the interval we want inside here
   seg <- parameters[1] # continuous value in (0,1)
   ideo <- parameters[2] # continuous value in (0,1)
@@ -77,25 +76,25 @@ main <- function(parameters,
     n.traders <- round(parameters[6]*200) + 50 # integer in (50, 250)
     n.edg <- round((parameters[5]*8 + 2) * n.traders) # integer in (2 to 10 per trader)
   }
-  
+
   cat("seg", seg, "ideo", ideo, "risk.tak", risk.tak, "market.complet", market.complet,
       "true.model", true.model, "n.edg", n.edg, "n.traders", n.traders,  "\n")
-  
+
   if (visu){
     source("colored.R")
   }
-  
+
   # Making this a list rather than a vector, because if record==TRUE, each result is itself a vector > length 1
   result_final <- as.list(rep(NA, iterations))
-  
-  
-  
+
+
+
   for(iteration in seq(iterations)){
     #####
     ## Set model's parameters and create corresponding network
     ## with attached value of parameters
     #####
-    net <- generate_model( 
+    net <- generate_model(
       ### Data parameters
       true.model = true.model,
       ### Timing parameters:
@@ -131,7 +130,7 @@ main <- function(parameters,
       ### Market parameters
       market.complet = market.complet
     )
-    
+
     # TODO: run jonathans code and create climate and covariates data
     #conditional on which is TRUE model, only generate that data to save time
     # doing this here inside the loop of iterations allows us to average over the randomness in this
@@ -141,12 +140,12 @@ main <- function(parameters,
     # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for TSI
     # 1 data.frame where rows are time and columns are the securities and the entries are reservation prices for log.co2
     # they need to be attached to the network after generate model and then left alone until this place in next iteration.
-    
+
     #####
     ## Generate data and reservation prices, and attach to network
     #####
-    
-    net <- DataPrediction(net, scenario = 'rcp85', 
+
+    net <- DataPrediction(net, scenario = 'rcp85',
                           true.model = true.model,
                           load_previous = load_previous,
                           load_previous_fp_co2 = load_previous_fp_co2,
@@ -154,55 +153,55 @@ main <- function(parameters,
                           saving = saving,
                           saving_fp = saving_fp,
                           init_with_obs_record = trueHistory)
-    
+
     # Visualize network (optional)
     if (visu){
       net <- Colored(net)
       igraph::plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
     }
-    
-    
+
+
     # net.list the element of which are net at a certain time period
-    
+
     if (full_history){
       net.list <- list()
     }
-    
-      
+
+
     #############################################
     #############################################
     #########           RUN             #########
     #############################################
     #############################################
-    
+
     ########                      ############
     ######   First trading sequence   ########
     ########                      ############
-    
+
     from <- net$burn.in + 1 # the period at which the model starts
     to <- net$burn.in + net$horizon - 1 # the period at which trading stops and securities
     # are realized. The -1 accounts for the fact that no trade occurs in the last
     # periods. Securities are just realized and payoffs distributed.
-    
-    ## Initialize money 
-    
+
+    ## Initialize money
+
     V(net)$money <- rep(1,length(V(net)))
-    
+
     message("sequence 1")
     for (t in from:to){
       message(paste0("period ",t))
-      
-      
+
+
       # net.list the element of which are net at a certain time period
-      
+
       if (full_history){
         net.list[[length(net.list)+1]] <- net
       }
-      
+
       #####
       ## Traders chose their buy and sell orders
       #####
-      
+
       ### BEHAVE
       if (perfect){
       net <- BehavPerfect(net, ct = t)
@@ -210,11 +209,11 @@ main <- function(parameters,
       else {
        net <- Behav(net, ct = t)
       }
-      
+
       #####
       ## Traders exchange on the market
       #####
-      
+
       ### Safeguards & prints
       if(safeNprint){
         money_pre_interact <- V(net)$money
@@ -223,10 +222,10 @@ main <- function(parameters,
         print("V(net)$secu before interact")
         print(unlist(V(net)$secu))
       }
-      
+
       ### TRADE
       net <- Interact(g = net)
-      
+
       ### Safeguards & prints
       if(safeNprint){
         print("Change in V(net)$money from interact")
@@ -238,90 +237,90 @@ main <- function(parameters,
         message(paste0("sum of money equals ", sum(V(net)$money)))
         if(sum(V(net)$money)!=n.traders){
           stop(paste0("In the first sequence, some money is create at t =", t))
-        } 
+        }
       }
       if(any(unlist(V(net)$secu)<0)){
         stop(paste0("Some securities fell below zero in period ",t))
-      } 
+      }
       if(any(V(net)$money<0)){
         stop(paste0("Some securities fell below zero in period ",t))
-      } 
+      }
     }
     #####
     ## Pay the winning securities
     #####
-    
-    ### PAY    
-    
+
+    ### PAY
+
     # See above : to <- net$burn.in + net$horizon - 1
-    
+
     net <- Payoffs(g=net, ct = to +1)
-    
+
     if (full_history){
       net.list[[length(net.list)+1]] <- net
     }
-    
+
     ### Safeguards & prints
     if(safeNprint){
       message(paste0("n.traders is ",n.traders))
               message(paste0("sum of money is ", sum(V(net)$money)))
     }
-    
+
     if(abs(sum(V(net)$money)!= 2*n.traders) > 0.1){
       stop(paste0("After payoffs of the first sequence, some money is create at t =", t,
                   "The money created is ", sum(V(net)$money) - 2*n.traders))
-    } 
+    }
     #####
     ## Adapt approximate model
     #####
     if(adaptation)
       net <- Adapt(g = net)
-    
+
     if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
-    
+
     if(record){
       result <- measure_outcome(outcome = out, net = net, true.model=true.model)
     }
-    
+
     ########                            ############
     ######   Subsequent trading sequences   ########
     ########                            ############
-    
+
     if (net$n.seq>1){
       toto <- net$n.seq  # the number of trading sequences
       for (ts in 2:toto){
         message(paste0("sequence ",ts))
         #TODO: insert initialization of the securities so at beg of each round they dont have leftovers
-        
+
         ### INITIALIZE SECURITIES###
         V(net)$secu <- list(rep(1,market.complet + 2))
-        ### Start trading periods in the sequence ###  
+        ### Start trading periods in the sequence ###
         from <- net$burn.in + (net$horizon * (ts-1)) + 1 # the period at which the sequence starts
         to <- net$burn.in + (net$horizon * ts) - 1 # the period at which trading stops and securities
         # are realized. The -1 accounts for the fact that no trade occurs in the last
         # periods. Securities are just realized and payoffs distributed.
         for (t in from:to){
           message(paste0("period",t))
-          
+
           if (full_history){
             net.list[[length(net.list)+1]] <- net
           }
-          
+
           #####
           ## Traders chose their buy and sell orders
           #####
-          
+
           if (perfect){
             net <- BehavPerfect(net, ct = t)
           }
           else {
             net <- Behav(net, ct = t)
           }
-          
+
           #####
           ## Traders exchange on the market
           #####
-          
+
           ###       Safeguards & prints
           if(safeNprint){
             money_pre_interact <- V(net)$money
@@ -330,11 +329,11 @@ main <- function(parameters,
             print("V(net)$secu before interact")
             print(unlist(V(net)$secu))
           }
-          
+
           ### TRADE
-          
+
           net <- Interact(g = net)
-          
+
           ###       Safeguards & prints
           if(safeNprint){
             print("Change in V(net)$money from interact")
@@ -349,23 +348,23 @@ main <- function(parameters,
           if(abs(sum(V(net)$money)!=(ts)*n.traders)>0.1){
             stop(paste0("In a sequence after the first sequence,
                         some money is create at t =", t,
-                        "The money created is ", sum(V(net)$money) - (ts)*n.traders))  
-          } 
+                        "The money created is ", sum(V(net)$money) - (ts)*n.traders))
+          }
           if(any(unlist(V(net)$secu)<0)){
             stop(paste0("Some securities fell below zero in period ",t))
-          } 
+          }
           if(any(V(net)$money<0)){
             stop(paste0("Some securities fell below zero in period ",t))
-          } 
+          }
         }
         #####
         ## Pay the winning securities
         #####
-        
+
         ### Safeguards & prints
         money_pre_payoff <- V(net)$money # record money pre-payoff for
         # comparison after payoff
-        
+
         if(safeNprint){
           print("V(net)$money before payoff")
           print(V(net)$money)
@@ -373,11 +372,11 @@ main <- function(parameters,
           print(unlist(V(net)$secu))
         }
         ### PAY
-        
+
         # See above : to <- net$burn.in + (net$horizon * ts) - 1
-        
+
         net <- Payoffs(g=net, ct = to + 1)
-        
+
         if (full_history){
           net.list[[length(net.list)+1]] <- net
         }
@@ -388,7 +387,7 @@ main <- function(parameters,
           print(V(net)$money - money_pre_payoff)
           print("V(net)$money after payoff")
           print(V(net)$money)
-          
+
           message(sum(V(net)$money))
           message((ts +1)*n.traders)
         }
@@ -404,31 +403,31 @@ main <- function(parameters,
           stop(paste0("After payoffs of some sequence past the first sequence,
                       some money is create at t =", t,
                       "The money created is ", sum(V(net)$money) - (ts +1)*n.traders))
-        } 
-        
+        }
+
         #####
         ## Adapt approximate model
         #####
         if(adaptation)
           net <- Adapt(g = net)
-        
+
         if (visu) plot.igraph(net,vertex.label=NA,layout=layout.fruchterman.reingold, vertex.size = 7)
-        
+
         if(record){
           result <- append(result, measure_outcome(outcome = out, net = net, true.model=true.model))
         }
       }
     }
-    
+
     if (record == FALSE){
       result <- measure_outcome(outcome = out, net = net, true.model=true.model)
 #       # return difference in utility of network convergence
 #       result <- (length(V(net)$approx[V(net)$approx == 1])/length(V(net))) - net$init.converg.util
     }
-    
+
     result_final[[iteration]] <- result
   }
-  
+
   if (record==FALSE & full_history == FALSE){
     return(mean(sapply(result_final, function(x) x)))
   } else if (record==TRUE & full_history == FALSE){

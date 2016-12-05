@@ -32,7 +32,7 @@ model {
     vector[T] ma;
     vector[T] eps;
 
-    
+
     b ~ normal(b0, sb0);
     m ~ normal(m0, sm0);
     theta ~ normal(theta0, stheta0);
@@ -40,25 +40,25 @@ model {
     sigma ~ cauchy(0, ssig0);
 #    phi ~ normal(0,2);
 #    theta ~ normal(0, 2);
-    
 
-    res <- y - (m * x + b);
-    
-    ar <- rep_vector(0., T);
-    ma <- rep_vector(0., T);
-    eps <- rep_vector(0.,T);
+
+    res = y - (m * x + b);
+
+    ar = rep_vector(0., T);
+    ma = rep_vector(0., T);
+    eps = rep_vector(0.,T);
 
     #
     # Formulation from eq. 2.26 in R. Prado and M. West, "Time Series: Modeling, Computation, and Finance"
     #
     for (t in 1:T) {
       for(p in 1:min(t-1,P)) {
-        ar[t] <- ar[t] + phi[p] * res[t-p]; // autoregressive part
+        ar[t] = ar[t] + phi[p] * res[t-p]; // autoregressive part
       }
-      eps[t] <- res[t] - ar[t];
+      eps[t] = res[t] - ar[t];
       for (q in 1:min(t-1,Q)) {
-        ma[t] <- ma[t] + theta[q] * eps[t-q];
-        eps[t] <- eps[t] - theta[q] * eps[t-q];
+        ma[t] = ma[t] + theta[q] * eps[t-q];
+        eps[t] = eps[t] - theta[q] * eps[t-q];
       }
       /*
       if (fabs(eps[t]) > 100) {
@@ -90,36 +90,36 @@ generated quantities {
     real ma;
 
     for (i in 1:reps) {
-      res <- y - (m * x + b);
+      res = y - (m * x + b);
 
-      yy <- append_row(res, rep_vector(0, T_future));
-      
+      yy = append_row(res, rep_vector(0, T_future));
+
       for (t in 1:T) {
-        ar <-  0;
-        ma <- 0;
+        ar =  0;
+        ma = 0;
         for(p in 1:min(t-1,P)) {
-          ar <- ar + phi[p] * yy[t - p]; // autoregressive part
+          ar = ar + phi[p] * yy[t - p]; // autoregressive part
         }
         for (q in 1:min(t-1,Q)) {
-          ma <- ma + theta[q] * err[t - q]; // moving average part
+          ma = ma + theta[q] * err[t - q]; // moving average part
         }
-        err[t] <- yy[t] - (ar + ma);
-        log_lik[t] <- normal_log(y[t], m * x[t] + b + ar + ma, sigma);
+        err[t] = yy[t] - (ar + ma);
+        log_lik[t] = normal_log(y[t], m * x[t] + b + ar + ma, sigma);
       }
-    
+
       for(t in 1:T_future) {
-        ar <- 0;
-        ma <- 0;
-  
+        ar = 0;
+        ma = 0;
+
         for (p in 1:min(T + t - 1,P)) {
-          ar <- ar + phi[p] * yy[T + t-p];
+          ar = ar + phi[p] * yy[T + t-p];
         }
         for (q in 1:min(T + t - 1,Q)) {
-          ma <- ma + theta[q] * err[T + t-q];
+          ma = ma + theta[q] * err[T + t-q];
         }
-        err[T + t] <- normal_rng(0, sigma);
-        yy[T + t] <- ar + ma + err[T + t];
-        y_future[t,i] <- yy[T + t] + m * x_future[t] + b;
+        err[T + t] = normal_rng(0, sigma);
+        yy[T + t] = ar + ma + err[T + t];
+        y_future[t,i] = yy[T + t] + m * x_future[t] + b;
       }
     }
   }
