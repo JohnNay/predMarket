@@ -2,7 +2,7 @@
 Betting and Belief: Prediction Markets and Attribution of Climate Change
 ========================================================================
 
-[John Nay](http://johnjnay.com/) (previously Vanderbilt University and now NYU and Skopos Labs), [Martin Van der Linden](https://martinvdlinden.wordpress.com/) (previously Dept. of Economics, Vanderbilt University, and now Emory University), and [Jonathan Gilligan](https://my.vanderbilt.edu/jonathangilligan/) (Earth and Environmental Sciences and School of Engineering, Vanderbilt University).
+[John Nay](http://johnjnay.com/), [Martin Van der Linden](https://martinvdlinden.wordpress.com/) (previously Dept. of Economics, Vanderbilt University, and now Emory University), and [Jonathan Gilligan](https://my.vanderbilt.edu/jonathangilligan/) (Earth and Environmental Sciences and School of Engineering, Vanderbilt University).
 
 Despite much scientific evidence, a large fraction of the American public doubts that greenhouse gases are causing global warming. We present a simulation model as a computational test-bed for climate prediction markets. Traders adapt their beliefs about future temperatures based on the profits of other traders in their social network. We simulate two alternative climate futures, in which global temperatures are primarily driven either by carbon dioxide or by solar irradiance. These represent, respectively, the scientific consensus and a hypothesis advanced by prominent skeptics. We conduct sensitivity analyses to determine how a variety of factors describing both the market and the physical climate may affect traders' beliefs about the cause of global climate change. Market participation causes most traders to converge quickly toward believing the "true" climate model, suggesting that a climate market could be useful for building public consensus.
 
@@ -12,7 +12,7 @@ If you use these scripts, cite this paper:
 
 Nay, John J., Van der Linden, Martin, Gilligan, Jonathan. (2016) "Betting and Belief: Prediction Markets and Attribution of Climate Change." eprint arXiv:1603.08961
 
-The paper can be downloaded here: <http://arxiv.org/abs/1603.08961> and the ODD specification for the agent-based prediction-market model can be found here: <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2808284>
+The paper can be downloaded here: <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2808284> and the ODD specification for the agent-based prediction-market model can be found here: <https://github.com/JohnNay/predMarket/blob/master/odd.pdf>
 
 Under most parameterizations, within 15-20 years, the median fraction of traders believing in the true model is over 75%:
 
